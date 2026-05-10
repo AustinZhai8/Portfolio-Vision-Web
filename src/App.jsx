@@ -4,49 +4,112 @@ import {
   breakdownBySector,
   breakdownByCountry,
   convertAmount,
+  isKnownTicker,
+  resolveTicker,
 } from './utils/decompose';
 import Header from './components/Header';
 import PortfolioPanel from './components/PortfolioPanel';
 import ResultsPanel from './components/ResultsPanel';
 
-const TEST_ENTRIES = {
-  VFV: { amount: 5000, currency: 'CAD' },
-  QQQ: { amount: 3000, currency: 'USD' },
-};
+const INITIAL_ROWS = [
+  { id: 1, ticker: 'VFV', amount: '5000', currency: 'CAD' },
+  { id: 2, ticker: 'QQQ', amount: '3000', currency: 'USD' },
+];
+
+let _uid = 3;
+const nextId = () => _uid++;
 
 export default function App() {
   const [displayCurrency, setDisplayCurrency] = useState('USD');
+  // rows = what the user is currently editing
+  const [rows, setRows] = useState(INITIAL_ROWS);
+  // committedRows = the snapshot that was last successfully decomposed
+  const [committedRows, setCommittedRows] = useState(INITIAL_ROWS);
+  const [rowErrors, setRowErrors] = useState({});
+  const [animVersion, setAnimVersion] = useState(0);
 
-  const { decomposed, sectors, countries, portfolioTotal } = useMemo(() => {
+  // Decomposition runs only on committedRows so editing doesn't thrash results
+  const { decomposed, sectors, countries, portfolioTotal, decomposeUnknown } = useMemo(() => {
     const portfolio = {};
-    for (const [ticker, { amount, currency }] of Object.entries(TEST_ENTRIES)) {
-      portfolio[ticker] = convertAmount(amount, currency, displayCurrency);
+    for (const row of committedRows) {
+      const ticker = row.ticker.trim().toUpperCase();
+      const amount = parseFloat(row.amount);
+      if (!ticker || !amount || amount <= 0) continue;
+      portfolio[ticker] = (portfolio[ticker] || 0) + convertAmount(amount, row.currency, displayCurrency);
     }
     const portfolioTotal = Object.values(portfolio).reduce((a, b) => a + b, 0);
-    const { result } = decompose(portfolio);
+    const { result, unknown } = decompose(portfolio);
     return {
       decomposed: result,
       sectors: breakdownBySector(result),
       countries: breakdownByCountry(result),
       portfolioTotal,
+      decomposeUnknown: unknown,
     };
-  }, [displayCurrency]);
+  }, [committedRows, displayCurrency]);
+
+  // Tickers the user entered that aren't in our database at all
+  const unrecognizedInput = useMemo(() =>
+    committedRows
+      .map(r => r.ticker.trim().toUpperCase())
+      .filter(t => t && !isKnownTicker(t))
+      .map(t => resolveTicker(t)),
+    [committedRows],
+  );
+
+  // Combined warning list: unrecognized input tickers + ETFs with no holdings data
+  const warnings = useMemo(() => {
+    const seen = new Set();
+    return [...unrecognizedInput, ...decomposeUnknown].filter(t => {
+      if (seen.has(t)) return false;
+      seen.add(t);
+      return true;
+    });
+  }, [unrecognizedInput, decomposeUnknown]);
+
+  function handleDecompose() {
+    const errors = {};
+    for (const row of rows) {
+      const ticker = row.ticker.trim();
+      const amount = parseFloat(row.amount);
+      if (!ticker) {
+        errors[row.id] = 'Ticker required';
+      } else if (!amount || amount <= 0) {
+        errors[row.id] = 'Enter a positive amount';
+      }
+    }
+    if (Object.keys(errors).length > 0) {
+      setRowErrors(errors);
+      return;
+    }
+    setRowErrors({});
+    setCommittedRows(rows);
+    setAnimVersion(v => v + 1);
+  }
+
+  const animKey = `${displayCurrency}-${animVersion}`;
 
   return (
     <>
       <Header displayCurrency={displayCurrency} setDisplayCurrency={setDisplayCurrency} />
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
         <PortfolioPanel
-          entries={TEST_ENTRIES}
+          rows={rows}
+          setRows={setRows}
+          rowErrors={rowErrors}
+          setRowErrors={setRowErrors}
+          onDecompose={handleDecompose}
           displayCurrency={displayCurrency}
-          total={portfolioTotal}
+          portfolioTotal={portfolioTotal}
+          warnings={warnings}
+          nextId={nextId}
         />
         <ResultsPanel
           decomposed={decomposed}
           sectors={sectors}
           countries={countries}
           portfolioTotal={portfolioTotal}
-          animKey={displayCurrency}
+          animKey={animKey}
         />
       </div>
     </>

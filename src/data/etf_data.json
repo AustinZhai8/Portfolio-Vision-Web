@@ -6075,6 +6075,196 @@
           "weight": 0.41
         }
       ]
+    },
+    "HHIS.TO": {
+      "name": "Harvest Diversified High Income Shares ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Fund-of-Harvest-single-stock-ETFs. Holdings flattened to underlying stocks. Source: harvestportfolios.com Apr 2026.",
+      "holdings": [
+        { "ticker": "GOOGL", "name": "Alphabet Inc", "weight": 7.99 },
+        { "ticker": "TSLA", "name": "Tesla Inc", "weight": 7.29 },
+        { "ticker": "LLY", "name": "Eli Lilly and Company", "weight": 7.29 },
+        { "ticker": "NVDA", "name": "NVIDIA Corporation", "weight": 7.19 },
+        { "ticker": "AVGO", "name": "Broadcom Inc", "weight": 7.09 },
+        { "ticker": "AAPL", "name": "Apple Inc", "weight": 6.99 },
+        { "ticker": "MSFT", "name": "Microsoft Corporation", "weight": 6.49 },
+        { "ticker": "PLTR", "name": "Palantir Technologies Inc", "weight": 6.49 },
+        { "ticker": "AMZN", "name": "Amazon.com Inc", "weight": 6.39 },
+        { "ticker": "AMD", "name": "Advanced Micro Devices Inc", "weight": 6.29 },
+        { "ticker": "META", "name": "Meta Platforms Inc", "weight": 5.59 },
+        { "ticker": "COST", "name": "Costco Wholesale Corp", "weight": 4.50 },
+        { "ticker": "NFLX", "name": "Netflix Inc", "weight": 4.50 },
+        { "ticker": "COIN", "name": "Coinbase Global Inc", "weight": 3.20 },
+        { "ticker": "RDDT", "name": "Reddit Inc", "weight": 3.10 },
+        { "ticker": "SOFI", "name": "SoFi Technologies Inc", "weight": 2.50 },
+        { "ticker": "HOOD", "name": "Robinhood Markets Inc", "weight": 2.40 },
+        { "ticker": "CRCL", "name": "Circle Internet Group Inc", "weight": 2.00 },
+        { "ticker": "MSTR", "name": "Strategy Inc", "weight": 2.00 }
+      ]
+    },
+    "HDIV.TO": {
+      "name": "Hamilton Enhanced Canadian Covered Call ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Multi-sector Canadian covered call ETF-of-ETFs (1.25x leverage). Holds 10 Hamilton sector ETFs (weights normalized). Sub-ETFs not in DB will appear as unknown. Source: stockanalysis.com Apr 2026.",
+      "holdings": [
+        { "ticker": "HFIN.TO", "name": "Hamilton Enhanced Canadian Financials ETF", "weight": 18.72 },
+        { "ticker": "HMAX.TO", "name": "Hamilton Canadian Financials Yield Maximizer ETF", "weight": 17.08 },
+        { "ticker": "EMAX.TO", "name": "Hamilton Energy Yield Maximizer ETF", "weight": 15.10 },
+        { "ticker": "AMAX.TO", "name": "Hamilton Gold Producer Yield Maximizer ETF", "weight": 13.07 },
+        { "ticker": "QMAX.TO", "name": "Hamilton Technology Yield Maximizer ETF", "weight": 12.79 },
+        { "ticker": "UMAX.TO", "name": "Hamilton Utilities YIELD MAXIMIZER ETF", "weight": 9.04 },
+        { "ticker": "CDAY.NE", "name": "Hamilton Enhanced Canadian Equity DayMAX ETF", "weight": 6.71 },
+        { "ticker": "HUTS.TO", "name": "Hamilton Enhanced Utilities ETF", "weight": 3.73 },
+        { "ticker": "RMAX.TO", "name": "Hamilton REITs YIELD MAXIMIZER ETF", "weight": 2.18 },
+        { "ticker": "QDAY.NE", "name": "Hamilton Enhanced Technology DayMAX ETF", "weight": 1.58 }
+      ]
+    },
+    "HYLD.TO": {
+      "name": "Hamilton Enhanced U.S. Covered Call ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Leveraged fund-of-Hamilton-ETFs for U.S. equity income. Top 3 holdings normalized. SDAY partially decomposes via SCHD. Source: stockanalysis.com Mar 2026.",
+      "holdings": [
+        { "ticker": "SMAX.TO", "name": "Hamilton U.S. Equity YIELD MAXIMIZER ETF", "weight": 64.52 },
+        { "ticker": "QMAX.TO", "name": "Hamilton Technology YIELD MAXIMIZER ETF", "weight": 27.07 },
+        { "ticker": "SDAY", "name": "Hamilton Enhanced U.S. Equity DayMAX ETF", "weight": 8.39 }
+      ]
+    },
+    "BANK.TO": {
+      "name": "Evolve Canadian Banks and Lifecos Enhanced Yield Index Fund",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Equal-weight Canadian Big 6 banks + lifecos with covered calls and 1.25x leverage. Weights normalized to 100%. Source: stockanalysis.com Apr 2026.",
+      "holdings": [
+        { "ticker": "NA.TO", "name": "National Bank of Canada", "weight": 11.14 },
+        { "ticker": "CM.TO", "name": "Canadian Imperial Bank of Commerce", "weight": 10.49 },
+        { "ticker": "GWO.TO", "name": "Great-West Lifeco Inc", "weight": 10.29 },
+        { "ticker": "POW.TO", "name": "Power Corporation of Canada", "weight": 10.27 },
+        { "ticker": "TD.TO", "name": "The Toronto-Dominion Bank", "weight": 10.08 },
+        { "ticker": "SLF.TO", "name": "Sun Life Financial Inc", "weight": 9.94 },
+        { "ticker": "BMO.TO", "name": "Bank of Montreal", "weight": 9.75 },
+        { "ticker": "RY.TO", "name": "Royal Bank of Canada", "weight": 9.51 },
+        { "ticker": "MFC.TO", "name": "Manulife Financial Corporation", "weight": 9.28 },
+        { "ticker": "BNS.TO", "name": "Bank of Nova Scotia", "weight": 9.27 }
+      ]
+    },
+    "CAGE.TO": {
+      "name": "Avantis CIBC All-Equity Asset Allocation ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Global all-equity ETF-of-ETFs (40% US, 31% Canada, 17% Intl, 7% small cap, 5% EM). Approximated via VEQT.TO holdings.",
+      "holdings_same_as": "VEQT.TO"
+    },
+    "EASY.TO": {
+      "name": "Evolve All-in-One UltraYield ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Fund-of-Evolve-UltraYield-ETFs: US equities (BIGY), Canadian equities (CANY), International (INTY). Launched Mar 2026. BIGY portion decomposes into stocks.",
+      "holdings": [
+        { "ticker": "BIGY.TO", "name": "Evolve US Equity UltraYield ETF", "weight": 44.44 },
+        { "ticker": "CANY.TO", "name": "Evolve Canadian Equity UltraYield ETF", "weight": 29.80 },
+        { "ticker": "INTY.TO", "name": "Evolve International Equity UltraYield ETF", "weight": 25.76 }
+      ]
+    },
+    "SDAY": {
+      "name": "Hamilton Enhanced U.S. Equity DayMAX ETF",
+      "exchange": "NEO",
+      "currency": "CAD",
+      "description": "Holds Hamilton Champions U.S. Dividend Index ETF + 0DTE S&P 500 options, 1.25x leverage. Approximated via SCHD (U.S. dividend stocks). Source: hamiltonetfs.com.",
+      "holdings_same_as": "SCHD"
+    },
+    "QQCL.TO": {
+      "name": "Global X Enhanced NASDAQ-100 Covered Call ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "CAD-hedged 1.25x leveraged NASDAQ-100 covered call ETF. Approximated via QQQ holdings.",
+      "holdings_same_as": "QQQ"
+    },
+    "BIGY.TO": {
+      "name": "Evolve US Equity UltraYield ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Leveraged US large-cap ETF with covered call strategy. Top 13 of 42 holdings shown (normalized to 100%). Source: stockanalysis.com Apr 2026.",
+      "holdings": [
+        { "ticker": "GOOG", "name": "Alphabet Inc Class C", "weight": 9.09 },
+        { "ticker": "AVGO", "name": "Broadcom Inc", "weight": 8.95 },
+        { "ticker": "AMZN", "name": "Amazon.com Inc", "weight": 8.64 },
+        { "ticker": "MSTR", "name": "Strategy Inc", "weight": 8.57 },
+        { "ticker": "NVDA", "name": "NVIDIA Corporation", "weight": 7.76 },
+        { "ticker": "META", "name": "Meta Platforms Inc", "weight": 7.64 },
+        { "ticker": "COIN", "name": "Coinbase Global Inc", "weight": 7.56 },
+        { "ticker": "MSFT", "name": "Microsoft Corporation", "weight": 7.41 },
+        { "ticker": "JPM", "name": "JPMorgan Chase & Co", "weight": 7.17 },
+        { "ticker": "AAPL", "name": "Apple Inc", "weight": 7.11 },
+        { "ticker": "TSLA", "name": "Tesla Inc", "weight": 6.91 },
+        { "ticker": "LLY", "name": "Eli Lilly and Company", "weight": 6.86 },
+        { "ticker": "PLTR", "name": "Palantir Technologies Inc", "weight": 6.33 }
+      ]
+    },
+    "ECHI.TO": {
+      "name": "Ninepoint Enhanced Canadian HighShares ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Fund-of-Ninepoint-HighShares single-stock ETFs. Holdings flattened to underlying stocks. Source: stockanalysis.com Mar 2026.",
+      "holdings": [
+        { "ticker": "CCO.TO", "name": "Cameco Corporation", "weight": 12.45 },
+        { "ticker": "RY.TO", "name": "Royal Bank of Canada", "weight": 11.04 },
+        { "ticker": "TD.TO", "name": "The Toronto-Dominion Bank", "weight": 11.01 },
+        { "ticker": "ABX.TO", "name": "Barrick Mining Corporation", "weight": 10.67 },
+        { "ticker": "ENB.TO", "name": "Enbridge Inc", "weight": 9.71 },
+        { "ticker": "SU.TO", "name": "Suncor Energy Inc", "weight": 9.29 },
+        { "ticker": "CNQ.TO", "name": "Canadian Natural Resources Limited", "weight": 9.01 },
+        { "ticker": "SHOP", "name": "Shopify Inc", "weight": 9.00 },
+        { "ticker": "CNR.TO", "name": "Canadian National Railway Company", "weight": 8.79 },
+        { "ticker": "BCE.TO", "name": "BCE Inc", "weight": 8.70 }
+      ]
+    },
+    "UTES.TO": {
+      "name": "Evolve Canadian Utilities Enhanced Yield Index Fund",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Canadian utilities and telecoms with covered calls and 1.25x leverage. Top 10 holdings normalized to 100%. Source: evolveetfs.com Jan 2026.",
+      "holdings": [
+        { "ticker": "ALA.TO", "name": "AltaGas Ltd", "weight": 11.46 },
+        { "ticker": "TRP.TO", "name": "TC Energy Corporation", "weight": 10.83 },
+        { "ticker": "ENB.TO", "name": "Enbridge Inc", "weight": 10.59 },
+        { "ticker": "PPL.TO", "name": "Pembina Pipeline Corporation", "weight": 10.55 },
+        { "ticker": "H.TO", "name": "Hydro One Limited", "weight": 10.16 },
+        { "ticker": "EMA.TO", "name": "Emera Incorporated", "weight": 10.11 },
+        { "ticker": "FTS.TO", "name": "Fortis Inc", "weight": 9.99 },
+        { "ticker": "RCI.B.TO", "name": "Rogers Communications Inc Class B", "weight": 9.34 },
+        { "ticker": "BCE.TO", "name": "BCE Inc", "weight": 8.59 },
+        { "ticker": "T.TO", "name": "TELUS Corporation", "weight": 8.38 }
+      ]
+    },
+    "MSTE.TO": {
+      "name": "Harvest MicroStrategy Enhanced High Income Shares ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Single-stock ETF holding Strategy Inc (MSTR) with covered calls and ~25% leverage. Decomposed as 100% MSTR.",
+      "holdings": [
+        { "ticker": "MSTR", "name": "Strategy Inc", "weight": 100.0 }
+      ]
+    },
+    "PLTE.TO": {
+      "name": "Harvest Palantir Enhanced High Income Shares ETF",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "Single-stock ETF holding Palantir Technologies (PLTR) with covered calls and ~25% leverage. Decomposed as 100% PLTR.",
+      "holdings": [
+        { "ticker": "PLTR", "name": "Palantir Technologies Inc", "weight": 100.0 }
+      ]
+    },
+    "YTSL": {
+      "name": "Tesla (TSLA) Yield Shares Purpose ETF",
+      "exchange": "NEO",
+      "currency": "CAD",
+      "description": "Single-stock ETF holding Tesla (TSLA) with covered calls and ~25% leverage. Decomposed as 100% TSLA. Source: purposeinvest.com.",
+      "holdings": [
+        { "ticker": "TSLA", "name": "Tesla Inc", "weight": 100.0 }
+      ]
     }
   },
   "stocks": {
@@ -8292,6 +8482,127 @@
       "name": "Winbond Electronics Corp",
       "sector": "Technology",
       "country": "Taiwan"
+    },
+    "COIN": {
+      "name": "Coinbase Global Inc",
+      "sector": "Financial Services",
+      "country": "United States"
+    },
+    "HOOD": {
+      "name": "Robinhood Markets Inc",
+      "sector": "Financial Services",
+      "country": "United States"
+    },
+    "CRCL": {
+      "name": "Circle Internet Group Inc",
+      "sector": "Financial Services",
+      "country": "United States"
+    },
+    "NOK": {
+      "name": "Nokia Corporation",
+      "sector": "Technology",
+      "country": "Finland"
+    },
+    "RKLB": {
+      "name": "Rocket Lab USA Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "ASTS": {
+      "name": "AST SpaceMobile Inc",
+      "sector": "Communication Services",
+      "country": "United States"
+    },
+    "NBIS": {
+      "name": "Nebius Group N.V.",
+      "sector": "Technology",
+      "country": "Netherlands"
+    },
+    "PNG": {
+      "name": "Kraken Robotics Inc",
+      "sector": "Technology",
+      "country": "Canada"
+    },
+    "MDA.TO": {
+      "name": "MDA Space Ltd",
+      "sector": "Industrials",
+      "country": "Canada"
+    },
+    "CCO.TO": {
+      "name": "Cameco Corporation",
+      "sector": "Energy",
+      "country": "Canada"
+    },
+    "BTC": {
+      "name": "Bitcoin",
+      "sector": "Crypto",
+      "country": "Global"
+    },
+    "ETH": {
+      "name": "Ethereum",
+      "sector": "Crypto",
+      "country": "Global"
+    },
+    "SOL": {
+      "name": "Solana",
+      "sector": "Crypto",
+      "country": "Global"
+    },
+    "ZGLD.TO": {
+      "_type": "commodity",
+      "name": "BMO Gold Bullion ETF",
+      "sector": "Commodity",
+      "country": "Global",
+      "description": "Holds physical gold bullion stored in Toronto. Not decomposable into stock holdings."
+    },
+    "FBTC.TO": {
+      "_type": "commodity",
+      "name": "Fidelity Advantage Bitcoin ETF",
+      "sector": "Crypto",
+      "country": "Global",
+      "description": "Holds Bitcoin directly. Not decomposable into stock holdings."
+    },
+    "CASH.TO": {
+      "_type": "commodity",
+      "name": "Global X High Interest Savings ETF",
+      "sector": "Commodity",
+      "country": "Canada",
+      "description": "High-interest savings account ETF (money market). Not decomposable into stock holdings."
+    },
+    "ZMMK.TO": {
+      "_type": "commodity",
+      "name": "BMO Money Market Fund ETF",
+      "sector": "Commodity",
+      "country": "Canada",
+      "description": "Money market fund holding short-term government and corporate instruments. Not decomposable."
+    },
+    "GLD": {
+      "_type": "commodity",
+      "name": "SPDR Gold Shares",
+      "sector": "Commodity",
+      "country": "Global",
+      "description": "Holds physical gold bullion. Not decomposable into stock holdings."
+    },
+    "SLV": {
+      "_type": "commodity",
+      "name": "iShares Silver Trust",
+      "sector": "Commodity",
+      "country": "Global",
+      "description": "Holds physical silver bullion. Not decomposable into stock holdings."
+    },
+    "IAU": {
+      "_type": "commodity",
+      "name": "iShares Gold Trust",
+      "sector": "Commodity",
+      "country": "Global",
+      "description": "Holds physical gold bullion. Not decomposable into stock holdings."
+    },
+    "SGOL": {
+      "_type": "commodity",
+      "name": "abrdn Physical Gold Shares ETF",
+      "sector": "Commodity",
+      "country": "Global",
+      "description": "Holds physical gold bullion stored in Switzerland. Not decomposable into stock holdings."
     }
   }
 }

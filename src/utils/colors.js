@@ -10,6 +10,8 @@ export const SECTOR_COLORS = {
   Utilities: '#facc15',
   'Basic Materials': '#fb923c',
   'Real Estate': '#84cc16',
+  Commodity: '#f59e0b',
+  Crypto: '#8b5cf6',
   Unknown: '#64748b',
 };
 
@@ -30,6 +32,7 @@ export const COUNTRY_COLORS = {
   Mexico: '#fbbf24',
   India: '#fb7185',
   Bermuda: '#60a5fa',
+  Global: '#94a3b8',
   Unknown: '#64748b',
 };
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getStockInfo, displayTicker } from '../utils/decompose';
+import { getStockInfo, displayTicker, isKnownTicker } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
 import CompanyLogo from './CompanyLogo';
 
@@ -9,6 +9,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
   const [hov, setHov] = useState(false);
   const info = getStockInfo(ticker);
   const dt = displayTicker(ticker);
+  const unknown = !isKnownTicker(ticker);
 
   return (
     <div
@@ -37,7 +38,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         <div
           style={{
             fontSize: 14,
-            color: '#e8f0fb',
+            color: unknown ? '#f4b942' : '#e8f0fb',
             fontWeight: 500,
             lineHeight: 1.2,
             whiteSpace: 'nowrap',
@@ -45,21 +46,23 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
             textOverflow: 'ellipsis',
           }}
         >
-          {info.name}
+          {unknown ? dt : info.name}
         </div>
-        <div
-          style={{
-            fontFamily: 'var(--mono)',
-            fontSize: 11,
-            color: 'var(--text2)',
-            marginTop: 1,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-          }}
-        >
-          {info.sector}
-        </div>
+        {!unknown && (
+          <div
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              color: 'var(--text2)',
+              marginTop: 1,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
+            {info.sector}
+          </div>
+        )}
       </div>
 
       <span
@@ -123,12 +126,12 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         style={{
           fontFamily: 'var(--mono)',
           fontSize: 10,
-          color: 'var(--text3)',
+          color: unknown ? '#f4b942' : 'var(--text3)',
           textTransform: 'uppercase',
           letterSpacing: '0.06em',
         }}
       >
-        STOCK
+        {unknown ? 'UNKNOWN' : 'STOCK'}
       </span>
     </div>
   );

@@ -51,6 +51,11 @@ export function isEtf(ticker) {
   return !!ETF_DATA[resolveTicker(ticker)];
 }
 
+export function isKnownTicker(ticker) {
+  const resolved = resolveTicker(ticker.toUpperCase());
+  return !!ETF_DATA[resolved] || !!STOCK_DATA[resolved];
+}
+
 export function getStockInfo(ticker) {
   const info = STOCK_DATA[resolveTicker(ticker)] || {};
   return {

@@ -3,7 +3,6 @@ import ChartSection from './ChartSection';
 import { sectorColor, countryColor } from '../utils/colors';
 
 const MIN_WEIGHT_PCT = 0.3;
-const MAX_ROWS = 30;
 
 export default function ResultsPanel({
   decomposed,
@@ -14,10 +13,9 @@ export default function ResultsPanel({
 }) {
   const allSorted = Object.entries(decomposed).sort(([, a], [, b]) => b - a);
   const totalCount = allSorted.length;
-  const filtered = allSorted.filter(
+  const shown = allSorted.filter(
     ([, amount]) => (amount / portfolioTotal) * 100 >= MIN_WEIGHT_PCT,
   );
-  const shown = filtered.slice(0, MAX_ROWS);
   const topWeight = shown.length ? (shown[0][1] / portfolioTotal) * 100 : 1;
 
   // Captured = sum of all decomposed holdings. Anything left over was below the
