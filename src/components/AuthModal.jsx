@@ -5,10 +5,10 @@ const ACCENT = '#a78bfa';
 
 const inputStyle = {
   width: '100%',
-  background: '#060c16',
-  border: '1px solid #253548',
+  background: 'var(--input-bg)',
+  border: '1px solid var(--border2)',
   borderRadius: 3,
-  color: '#c8ddf0',
+  color: 'var(--text)',
   fontFamily: 'var(--mono)',
   fontSize: 13,
   padding: '9px 12px',
@@ -71,7 +71,7 @@ export default function AuthModal({ onClose }) {
       style={{
         position: 'fixed',
         inset: 0,
-        background: 'rgba(4,8,16,0.72)',
+        background: 'var(--modal-overlay)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -82,11 +82,11 @@ export default function AuthModal({ onClose }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           width: 380,
-          background: '#0b1119',
-          border: '1px solid #253548',
+          background: 'var(--panel)',
+          border: '1px solid var(--border2)',
           borderRadius: 6,
           overflow: 'hidden',
-          boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.3)',
         }}
       >
         {/* Header */}
@@ -133,7 +133,7 @@ export default function AuthModal({ onClose }) {
             display: 'flex',
             gap: 0,
             padding: '16px 20px 0',
-            borderBottom: '1px solid #182335',
+            borderBottom: '1px solid var(--border)',
           }}
         >
           {[
@@ -148,7 +148,7 @@ export default function AuthModal({ onClose }) {
                 background: 'none',
                 border: 'none',
                 borderBottom: tab === key ? `2px solid ${ACCENT}` : '2px solid transparent',
-                color: tab === key ? '#e8f0fb' : 'var(--text3)',
+                color: tab === key ? 'var(--text)' : 'var(--text3)',
                 fontFamily: 'var(--mono)',
                 fontSize: 11,
                 fontWeight: 600,
@@ -191,7 +191,7 @@ export default function AuthModal({ onClose }) {
                 autoComplete="email"
                 style={{
                   ...inputStyle,
-                  borderColor: focusedField === 'email' ? ACCENT : '#253548',
+                  borderColor: focusedField === 'email' ? ACCENT : 'var(--border2)',
                 }}
               />
             </div>
@@ -220,7 +220,7 @@ export default function AuthModal({ onClose }) {
                 autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
                 style={{
                   ...inputStyle,
-                  borderColor: focusedField === 'password' ? ACCENT : '#253548',
+                  borderColor: focusedField === 'password' ? ACCENT : 'var(--border2)',
                 }}
               />
             </div>

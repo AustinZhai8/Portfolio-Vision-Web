@@ -23,8 +23,8 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         alignItems: 'center',
         padding: '0 16px',
         height: 38,
-        background: hov ? '#131f2e' : even ? '#0f1825' : '#0b1119',
-        borderBottom: '1px solid #0d1520',
+        background: hov ? 'var(--card-hover)' : even ? 'var(--card)' : 'var(--panel)',
+        borderBottom: '1px solid var(--border-sub)',
         transition: 'background 0.1s',
         cursor: 'default',
       }}
@@ -39,7 +39,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         <div
           style={{
             fontSize: 14,
-            color: unknown ? '#f4b942' : '#e8f0fb',
+            color: unknown ? '#f4b942' : 'var(--text)',
             fontWeight: 500,
             lineHeight: 1.2,
             whiteSpace: 'nowrap',
@@ -70,7 +70,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         style={{
           fontFamily: 'var(--mono)',
           fontSize: 13,
-          color: hov ? ACCENT : '#b8d4f1',
+          color: hov ? ACCENT : 'var(--text2)',
           letterSpacing: '0.06em',
           transition: 'color 0.1s',
           overflow: 'hidden',
@@ -88,7 +88,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
           style={{
             flex: 1,
             height: 3,
-            background: '#182335',
+            background: 'var(--bar-track)',
             borderRadius: 2,
             overflow: 'hidden',
           }}
@@ -107,7 +107,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
           style={{
             fontFamily: 'var(--mono)',
             fontSize: 13,
-            color: '#e8f0fb',
+            color: 'var(--text)',
             minWidth: 38,
             textAlign: 'right',
           }}
@@ -120,7 +120,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         style={{
           fontFamily: 'var(--mono)',
           fontSize: 13,
-          color: '#b8d4f1',
+          color: 'var(--text2)',
           textAlign: 'right',
           paddingRight: 12,
         }}

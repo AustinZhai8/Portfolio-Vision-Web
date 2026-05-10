@@ -1,19 +1,54 @@
 :root {
-  --bg: #07090e;
-  --panel: #0b1119;
-  --card: #0f1825;
-  --card-hover: #131f2e;
-  --border: #182335;
-  --text: #e8f0fb;
+  /* structural */
+  --bg:          #07090e;
+  --panel:       #0b1119;
+  --card:        #0f1825;
+  --card-hover:  #131f2e;
+  --border:      #182335;
+  --border2:     #253548;
+  --border-sub:  #0d1520;
+  --input-bg:    #060c16;
+  --footer-bg:   #060c16;
+  --avatar-bg:   #182335;
+  --bar-track:   #182335;
+  --stripe1:     #2d3f55;
+  --stripe2:     #1a2d42;
+  --modal-overlay: rgba(4, 8, 16, 0.72);
+  --scrollbar:   #253548;
+  /* text */
+  --text:  #e8f0fb;
   --text2: #b8d4f1;
   --text3: #8fa8c8;
-  --green: #22d3a0;
-  --red: #f05a7e;
-  --amber: #f4b942;
+  /* accent / status — same in both themes */
+  --green:  #22d3a0;
+  --red:    #f05a7e;
+  --amber:  #f4b942;
   --purple: #a78bfa;
   --accent: #a78bfa;
+  /* fonts */
   --mono: 'IBM Plex Mono', ui-monospace, Consolas, monospace;
   --sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg:          #eef2f7;
+  --panel:       #ffffff;
+  --card:        #f4f7fb;
+  --card-hover:  #e8eff8;
+  --border:      #dce6f2;
+  --border2:     #c0d2e4;
+  --border-sub:  #e8eff8;
+  --input-bg:    #ffffff;
+  --footer-bg:   #f8fafc;
+  --avatar-bg:   #dce6f2;
+  --bar-track:   #dce6f2;
+  --stripe1:     #b8ccd8;
+  --stripe2:     #ccd8e4;
+  --modal-overlay: rgba(15, 30, 50, 0.5);
+  --scrollbar:   #c0d2e4;
+  --text:  #0d1e30;
+  --text2: #2a4a6a;
+  --text3: #5a7a9a;
 }
 
 *, *::before, *::after {
@@ -64,6 +99,6 @@ input[type=number]::-webkit-outer-spin-button {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #253548;
+  background: var(--scrollbar);
   border-radius: 2px;
 }

@@ -10,13 +10,11 @@ export default function HorizBar({ name, w, color, max, animKey }) {
   }, [animKey, w, max]);
 
   const isUnknown = name === 'Unknown';
-  // "Untracked" = holdings below the ETF data cutoff — not in our database at all
   const isUntracked = name === 'Untracked';
   const isDimmed = isUnknown || isUntracked;
 
-  // Untracked uses a diagonal-stripe pattern to signal "incomplete / best-effort"
   const barFill = isUntracked
-    ? 'repeating-linear-gradient(45deg, #2d3f55 0px, #2d3f55 5px, #1a2d42 5px, #1a2d42 10px)'
+    ? 'repeating-linear-gradient(45deg, var(--stripe1) 0px, var(--stripe1) 5px, var(--stripe2) 5px, var(--stripe2) 10px)'
     : color;
 
   return (
@@ -34,18 +32,18 @@ export default function HorizBar({ name, w, color, max, animKey }) {
         style={{
           fontFamily: 'var(--sans)',
           fontSize: 13,
-          color: isDimmed ? '#64748b' : 'var(--text2)',
+          color: isDimmed ? 'var(--text3)' : 'var(--text2)',
           textAlign: 'right',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
           textOverflow: 'ellipsis',
           fontStyle: 'italic',
-          opacity: isDimmed ? 0.85 : 1,
+          opacity: isDimmed ? 0.75 : 1,
         }}
       >
         {isUntracked ? 'Untracked (data cutoff)' : name}
       </span>
-      <div style={{ height: 12, background: '#182335', borderRadius: 2, overflow: 'hidden' }}>
+      <div style={{ height: 12, background: 'var(--bar-track)', borderRadius: 2, overflow: 'hidden' }}>
         <div
           style={{
             width: `${pct}%`,
@@ -61,7 +59,7 @@ export default function HorizBar({ name, w, color, max, animKey }) {
         style={{
           fontFamily: 'var(--mono)',
           fontSize: 12,
-          color: isDimmed ? '#64748b' : '#e8f0fb',
+          color: isDimmed ? 'var(--text3)' : 'var(--text)',
           textAlign: 'right',
         }}
       >

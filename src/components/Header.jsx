@@ -4,8 +4,58 @@ import { supabase } from '../lib/supabase';
 const ACCENT = '#a78bfa';
 
 function avatarInitials(user) {
-  if (!user?.email) return 'AZ';
+  if (!user?.email) return '';
   return user.email.split('@')[0].slice(0, 2).toUpperCase();
+}
+
+function ThemeToggle({ theme, onToggle }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        width: 32,
+        height: 32,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'none',
+        border: '1px solid var(--border2)',
+        borderRadius: 6,
+        cursor: 'pointer',
+        color: 'var(--text3)',
+        flexShrink: 0,
+        transition: 'border-color 0.15s, color 0.15s',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = ACCENT;
+        e.currentTarget.style.color = ACCENT;
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = 'var(--border2)';
+        e.currentTarget.style.color = 'var(--text3)';
+      }}
+    >
+      {theme === 'dark' ? (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+      ) : (
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      )}
+    </button>
+  );
 }
 
 function AvatarButton({ user, onOpenAuth }) {
@@ -34,11 +84,11 @@ function AvatarButton({ user, onOpenAuth }) {
         onClick={onOpenAuth}
         title="Sign in"
         style={{
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           borderRadius: '50%',
-          background: '#182335',
-          border: '1px solid #253548',
+          background: 'var(--avatar-bg)',
+          border: '1px solid var(--border2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -49,11 +99,12 @@ function AvatarButton({ user, onOpenAuth }) {
           transition: 'border-color 0.15s',
         }}
         onMouseEnter={(e) => (e.currentTarget.style.borderColor = ACCENT)}
-        onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#253548')}
+        onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border2)')}
       >
-        <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text2)' }}>
-          AZ
-        </span>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ color: 'var(--text3)', transform: 'translateY(-1px)' }}>
+          <circle cx="12" cy="8" r="4" />
+          <path d="M 12 14 C 8 14 5 16 5 19 L 5 22 L 19 22 L 19 19 C 19 16 16 14 12 14 Z" />
+        </svg>
       </div>
     );
   }
@@ -64,8 +115,8 @@ function AvatarButton({ user, onOpenAuth }) {
         onClick={() => setDropOpen((v) => !v)}
         title={user.email}
         style={{
-          width: 32,
-          height: 32,
+          width: 36,
+          height: 36,
           borderRadius: '50%',
           background: ACCENT,
           display: 'flex',
@@ -98,17 +149,17 @@ function AvatarButton({ user, onOpenAuth }) {
             top: 'calc(100% + 8px)',
             right: 0,
             width: 220,
-            background: '#0f1825',
-            border: '1px solid #253548',
+            background: 'var(--card)',
+            border: '1px solid var(--border2)',
             borderRadius: 4,
             overflow: 'hidden',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
           }}
         >
           <div
             style={{
               padding: '10px 14px 8px',
-              borderBottom: '1px solid #182335',
+              borderBottom: '1px solid var(--border)',
             }}
           >
             <div
@@ -126,7 +177,7 @@ function AvatarButton({ user, onOpenAuth }) {
               style={{
                 fontFamily: 'var(--mono)',
                 fontSize: 11,
-                color: '#c8ddf0',
+                color: 'var(--text)',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
@@ -169,24 +220,23 @@ function AvatarButton({ user, onOpenAuth }) {
   );
 }
 
-export default function Header({ displayCurrency, setDisplayCurrency, user, onOpenAuth }) {
+export default function Header({ displayCurrency, setDisplayCurrency, user, onOpenAuth, theme, onToggleTheme }) {
   return (
     <header
       style={{
         height: 80,
         minHeight: 80,
-        background: '#0b1119',
-        borderBottom: '1px solid #182335',
+        background: 'var(--panel)',
+        borderBottom: '1px solid var(--border)',
         position: 'relative',
         display: 'flex',
         alignItems: 'center',
         padding: '0 20px',
-        gap: 16,
+        gap: 12,
         flexShrink: 0,
         zIndex: 20,
       }}
     >
-      {/* Logo */}
       <img
         src="/PortfolioVision.png"
         alt="Portfolio Vision"
@@ -218,7 +268,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         <span
           style={{
             fontFamily: 'var(--sans)',
-            color: '#e8f0fb',
+            color: 'var(--text)',
             fontWeight: 500,
             letterSpacing: '0.04em',
             whiteSpace: 'nowrap',
@@ -268,10 +318,10 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
           style={{
             display: 'flex',
             gap: 3,
-            background: '#060c16',
+            background: 'var(--input-bg)',
             borderRadius: 4,
             padding: 3,
-            border: '1px solid #253548',
+            border: '1px solid var(--border2)',
           }}
         >
           {['USD', 'CAD'].map((cur) => (
@@ -298,6 +348,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         </div>
       </div>
 
+      <ThemeToggle theme={theme} onToggle={onToggleTheme} />
       <AvatarButton user={user} onOpenAuth={onOpenAuth} />
     </header>
   );

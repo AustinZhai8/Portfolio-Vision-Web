@@ -29,6 +29,12 @@ export default function App() {
   const [animVersion, setAnimVersion] = useState(0);
   const [user, setUser] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [theme, setTheme] = useState(() => localStorage.getItem('pv-theme') || 'dark');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('pv-theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -108,6 +114,8 @@ export default function App() {
         setDisplayCurrency={setDisplayCurrency}
         user={user}
         onOpenAuth={() => setAuthOpen(true)}
+        theme={theme}
+        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
       />
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
@@ -120,6 +128,14 @@ export default function App() {
           displayCurrency={displayCurrency}
           portfolioTotal={portfolioTotal}
           nextId={nextId}
+          user={user}
+          onLoadPortfolio={(holdings) => {
+            const newRows = holdings.map((h) => ({ id: nextId(), ...h }));
+            setRows(newRows);
+            setCommittedRows(newRows);
+            setRowErrors({});
+            setAnimVersion((v) => v + 1);
+          }}
         />
         <ResultsPanel
           decomposed={decomposed}

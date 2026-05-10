@@ -13,6 +13,10 @@
     <title>Portfolio Vision</title>
   </head>
   <body>
+    <script>
+      const t = localStorage.getItem('pv-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

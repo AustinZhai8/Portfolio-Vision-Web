@@ -18,8 +18,6 @@ export default function ResultsPanel({
   );
   const topWeight = shown.length ? (shown[0][1] / portfolioTotal) * 100 : 1;
 
-  // Captured = sum of all decomposed holdings. Anything left over was below the
-  // ETF data cutoff (e.g. VOO only tracks top 160 of ~518 holdings → ~18% untracked).
   const capturedTotal = Object.values(decomposed).reduce((a, b) => a + b, 0);
   const untrackedPct = ((portfolioTotal - capturedTotal) / portfolioTotal) * 100;
   const UNTRACKED_ENTRY = { name: 'Untracked', w: untrackedPct, color: 'untracked' };
@@ -52,8 +50,8 @@ export default function ResultsPanel({
     >
       <div
         style={{
-          background: '#0b1119',
-          border: '1px solid #182335',
+          background: 'var(--panel)',
+          border: '1px solid var(--border)',
           borderRadius: 4,
           display: 'flex',
           flexDirection: 'column',
@@ -69,7 +67,7 @@ export default function ResultsPanel({
             gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
             gap: 0,
             padding: '8px 16px',
-            borderBottom: '1px solid #182335',
+            borderBottom: '1px solid var(--border)',
             flexShrink: 0,
           }}
         >
@@ -120,7 +118,7 @@ export default function ResultsPanel({
         <div
           style={{
             padding: '6px 16px',
-            borderTop: '1px solid #182335',
+            borderTop: '1px solid var(--border)',
             flexShrink: 0,
             fontFamily: 'var(--mono)',
             fontSize: 10,

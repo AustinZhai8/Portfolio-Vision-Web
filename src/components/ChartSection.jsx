@@ -8,8 +8,8 @@ export default function ChartSection({ title, data, animKey }) {
     <div
       style={{
         flex: 1,
-        background: '#0f1825',
-        border: '1px solid #182335',
+        background: 'var(--card)',
+        border: '1px solid var(--border)',
         borderRadius: 4,
         padding: '14px 16px',
         overflow: 'auto',

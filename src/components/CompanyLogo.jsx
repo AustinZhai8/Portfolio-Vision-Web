@@ -47,7 +47,7 @@ export default function CompanyLogo({ ticker, size = 24 }) {
         borderRadius: 4,
         objectFit: 'cover',
         flexShrink: 0,
-        background: '#182335',
+        background: 'var(--card)',
       }}
     />
   );
