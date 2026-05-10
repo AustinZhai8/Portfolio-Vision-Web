@@ -21,6 +21,9 @@ export const TICKER_ALIASES = {
   OIL: 'USO',
   NATURALGAS: 'UNG',
   'NATURAL GAS': 'UNG',
+  VSP: 'VFV.TO',
+  ZSP: 'VFV.TO',
+  YINN: 'FXI',
 };
 
 export function resolveTicker(ticker) {

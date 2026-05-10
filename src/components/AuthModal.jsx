@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';
@@ -17,15 +17,177 @@ const inputStyle = {
   transition: 'border-color 0.12s',
 };
 
+function OtpInput({ email, onVerified, onBack, loading }) {
+  const [code, setCode] = useState(['', '', '', '', '', '']);
+  const [error, setError] = useState('');
+  const inputRefs = useRef([]);
+
+  function handleChange(index, value) {
+    if (!/^\d*$/.test(value)) return;
+    const newCode = [...code];
+    newCode[index] = value.slice(-1);
+    setCode(newCode);
+    if (value && index < 5) {
+      inputRefs.current[index + 1]?.focus();
+    }
+  }
+
+  function handleKeyDown(index, e) {
+    if (e.key === 'Backspace' && !code[index] && index > 0) {
+      inputRefs.current[index - 1]?.focus();
+    }
+  }
+
+  async function handleVerify(e) {
+    e.preventDefault();
+    const token = code.join('');
+    if (token.length !== 6) { setError('Enter all 6 digits.'); return; }
+    setError('');
+    const { error: err } = await supabase.auth.verifyOtp({
+      email,
+      token,
+      type: 'signup',
+    });
+    if (err) {
+      setError(err.message);
+    } else {
+      onVerified();
+    }
+  }
+
+  const codeString = code.join('');
+  return (
+    <div style={{ padding: '20px 20px 24px' }}>
+      <button
+        type="button"
+        onClick={onBack}
+        style={{
+          background: 'none',
+          border: 'none',
+          color: 'var(--text3)',
+          fontFamily: 'var(--mono)',
+          fontSize: 11,
+          cursor: 'pointer',
+          padding: '0 0 14px',
+          letterSpacing: '0.06em',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 5,
+        }}
+      >
+        ← Back
+      </button>
+      <div
+        style={{
+          fontFamily: 'var(--mono)',
+          fontSize: 11,
+          fontWeight: 600,
+          color: 'var(--text2)',
+          letterSpacing: '0.1em',
+          textTransform: 'uppercase',
+          marginBottom: 14,
+        }}
+      >
+        Verify Email
+      </div>
+      <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div>
+          <label
+            style={{
+              display: 'block',
+              fontFamily: 'var(--mono)',
+              fontSize: 9,
+              color: 'var(--text3)',
+              letterSpacing: '0.1em',
+              marginBottom: 10,
+            }}
+          >
+            Enter the 6-digit code sent to<br />{email}
+          </label>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {code.map((digit, i) => (
+              <input
+                key={i}
+                ref={(el) => (inputRefs.current[i] = el)}
+                type="text"
+                inputMode="numeric"
+                maxLength="1"
+                value={digit}
+                onChange={(e) => handleChange(i, e.target.value)}
+                onKeyDown={(e) => handleKeyDown(i, e)}
+                style={{
+                  width: 40,
+                  height: 40,
+                  background: 'var(--input-bg)',
+                  border: `1px solid ${error ? '#f05a7e' : 'var(--border2)'}`,
+                  borderRadius: 3,
+                  color: 'var(--text)',
+                  fontFamily: 'var(--mono)',
+                  fontSize: 18,
+                  fontWeight: 600,
+                  textAlign: 'center',
+                  outline: 'none',
+                  transition: 'border-color 0.12s',
+                }}
+                onFocus={(e) => (e.currentTarget.style.borderColor = ACCENT)}
+                onBlur={(e) => (e.currentTarget.style.borderColor = error ? '#f05a7e' : 'var(--border2)')}
+              />
+            ))}
+          </div>
+        </div>
+
+        {error && (
+          <div
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              color: '#f05a7e',
+              background: 'rgba(240,90,126,0.07)',
+              border: '1px solid rgba(240,90,126,0.2)',
+              borderRadius: 3,
+              padding: '7px 10px',
+            }}
+          >
+            {error}
+          </div>
+        )}
+
+        <button
+          type="submit"
+          disabled={loading || codeString.length !== 6}
+          style={{
+            marginTop: 4,
+            width: '100%',
+            padding: '11px 0',
+            background: codeString.length === 6 && !loading ? ACCENT : '#3d2f6e',
+            border: 'none',
+            borderRadius: 3,
+            color: codeString.length === 6 && !loading ? '#07090e' : '#9b8ec4',
+            fontFamily: 'var(--mono)',
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: '0.14em',
+            cursor: codeString.length === 6 && !loading ? 'pointer' : 'not-allowed',
+            transition: 'opacity 0.15s, background 0.15s',
+          }}
+        >
+          {loading ? '...' : 'VERIFY'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
-  const [view, setView] = useState('form'); // 'form' | 'forgot'
+  const [view, setView] = useState('form');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [focusedField, setFocusedField] = useState(null);
+  const [signupEmail, setSignupEmail] = useState('');
 
   function resetForm() {
     setEmail('');
@@ -91,13 +253,15 @@ export default function AuthModal({ onClose }) {
         setError(error.message);
         setLoading(false);
       } else {
-        setSuccess('Check your email to confirm your account.');
+        setSignupEmail(email);
+        setView('otp');
         setLoading(false);
       }
     }
   }
 
   const isForgot = view === 'forgot';
+  const isOtp = view === 'otp';
 
   return (
     <div
@@ -161,7 +325,14 @@ export default function AuthModal({ onClose }) {
           </button>
         </div>
 
-        {isForgot ? (
+        {isOtp ? (
+          <OtpInput
+            email={signupEmail}
+            onVerified={onClose}
+            onBack={() => { setView('form'); setEmail(signupEmail); setPassword(''); setError(''); }}
+            loading={loading}
+          />
+        ) : isForgot ? (
           /* Forgot password view */
           <div style={{ padding: '20px 20px 24px' }}>
             <button

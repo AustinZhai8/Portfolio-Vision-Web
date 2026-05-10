@@ -6265,6 +6265,77 @@
       "holdings": [
         { "ticker": "TSLA", "name": "Tesla Inc", "weight": 100.0 }
       ]
+    },
+    "FXI": {
+      "name": "iShares China Large-Cap ETF",
+      "exchange": "NYSE",
+      "currency": "USD",
+      "description": "Tracks large-cap Chinese stocks. Top 41 holdings = ~95% coverage. Source: ishares.com 2026.",
+      "holdings": [
+        { "ticker": "9988", "name": "Alibaba Group Holding", "weight": 9.20 },
+        { "ticker": "939", "name": "China Construction Bank", "weight": 8.07 },
+        { "ticker": "700", "name": "Tencent Holdings", "weight": 7.54 },
+        { "ticker": "1398", "name": "Industrial and Commercial Bank of China", "weight": 5.80 },
+        { "ticker": "1810", "name": "Xiaomi Corporation", "weight": 5.58 },
+        { "ticker": "3690", "name": "Meituan Dianping", "weight": 4.66 },
+        { "ticker": "2318", "name": "Ping An Insurance Group", "weight": 4.45 },
+        { "ticker": "1211", "name": "BYD Company", "weight": 3.85 },
+        { "ticker": "3988", "name": "Bank of China", "weight": 3.66 },
+        { "ticker": "9999", "name": "NetEase Inc", "weight": 3.51 },
+        { "ticker": "9888", "name": "Baidu Inc", "weight": 3.06 },
+        { "ticker": "9618", "name": "JD.com Inc", "weight": 2.93 },
+        { "ticker": "9961", "name": "Trip.com Group", "weight": 2.60 },
+        { "ticker": "2628", "name": "China Life Insurance Company", "weight": 2.41 },
+        { "ticker": "2899", "name": "Zijin Mining Group", "weight": 2.37 },
+        { "ticker": "857", "name": "PetroChina Company", "weight": 2.31 },
+        { "ticker": "1288", "name": "Agricultural Bank of China", "weight": 1.91 },
+        { "ticker": "3968", "name": "China Merchants Bank", "weight": 1.88 },
+        { "ticker": "1088", "name": "China Shenhua Energy", "weight": 1.61 },
+        { "ticker": "6160", "name": "BeiGene Ltd", "weight": 1.55 },
+        { "ticker": "3750", "name": "Contemporary Amperex Technology", "weight": 1.45 },
+        { "ticker": "1024", "name": "Kuaishou Technology", "weight": 1.42 },
+        { "ticker": "9992", "name": "Pop Mart International", "weight": 1.12 },
+        { "ticker": "386", "name": "China Petroleum & Chemical Corporation", "weight": 1.10 },
+        { "ticker": "1378", "name": "China Hongqiao Group", "weight": 1.09 },
+        { "ticker": "2328", "name": "PICC Property and Casualty Insurance", "weight": 1.07 },
+        { "ticker": "1109", "name": "China Resources Land", "weight": 1.06 },
+        { "ticker": "2020", "name": "Anta Sports Products", "weight": 1.02 },
+        { "ticker": "2601", "name": "China Pacific Insurance", "weight": 0.95 },
+        { "ticker": "2338", "name": "Weichai Power", "weight": 0.88 },
+        { "ticker": "9633", "name": "Nongfu Spring Company", "weight": 0.88 },
+        { "ticker": "998", "name": "China CITIC Bank", "weight": 0.78 },
+        { "ticker": "3993", "name": "CMOC Group", "weight": 0.74 },
+        { "ticker": "267", "name": "CITIC Limited", "weight": 0.71 },
+        { "ticker": "2359", "name": "WuXi AppTec", "weight": 0.63 },
+        { "ticker": "3328", "name": "Bank of Communications", "weight": 0.55 },
+        { "ticker": "300", "name": "Midea Group Company", "weight": 0.54 },
+        { "ticker": "788", "name": "China Tower Corporation", "weight": 0.53 },
+        { "ticker": "1336", "name": "New China Life Insurance", "weight": 0.53 },
+        { "ticker": "6690", "name": "Haier Smart Home", "weight": 0.52 }
+      ]
+    },
+    "FFN.TO": {
+      "name": "North American Financial 15 Split Corp",
+      "exchange": "TSX",
+      "currency": "CAD",
+      "description": "15 equal-weight holdings of North American financial stocks. Source: split-corp.ca 2026.",
+      "holdings": [
+        { "ticker": "RY.TO", "name": "Royal Bank of Canada", "weight": 6.67 },
+        { "ticker": "TD.TO", "name": "Toronto-Dominion Bank", "weight": 6.67 },
+        { "ticker": "CM.TO", "name": "Canadian Imperial Bank of Commerce", "weight": 6.67 },
+        { "ticker": "BNS.TO", "name": "Bank of Nova Scotia", "weight": 6.67 },
+        { "ticker": "BMO.TO", "name": "Bank of Montreal", "weight": 6.67 },
+        { "ticker": "NA.TO", "name": "National Bank of Canada", "weight": 6.67 },
+        { "ticker": "GWO.TO", "name": "Great-West Lifeco Inc", "weight": 6.67 },
+        { "ticker": "SLF.TO", "name": "Sun Life Financial Inc", "weight": 6.67 },
+        { "ticker": "MFC.TO", "name": "Manulife Financial Corporation", "weight": 6.67 },
+        { "ticker": "JPM", "name": "JPMorgan Chase & Co", "weight": 6.67 },
+        { "ticker": "GS", "name": "The Goldman Sachs Group Inc", "weight": 6.67 },
+        { "ticker": "C", "name": "Citigroup Inc", "weight": 6.67 },
+        { "ticker": "MS", "name": "Morgan Stanley", "weight": 6.67 },
+        { "ticker": "BAC", "name": "Bank of America Corporation", "weight": 6.67 },
+        { "ticker": "WFC", "name": "Wells Fargo & Company", "weight": 6.67 }
+      ]
     }
   },
   "stocks": {
@@ -8671,6 +8742,206 @@
       "sector": "Commodities",
       "country": "Global",
       "description": "Tracks Henry Hub natural gas futures. Not decomposable into stock holdings."
+    },
+    "9988": {
+      "name": "Alibaba Group Holding Limited",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "939": {
+      "name": "China Construction Bank Corporation",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "700": {
+      "name": "Tencent Holdings Limited",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "1398": {
+      "name": "Industrial and Commercial Bank of China Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "1810": {
+      "name": "Xiaomi Corporation",
+      "sector": "Technology",
+      "country": "China"
+    },
+    "3690": {
+      "name": "Meituan Dianping",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "2318": {
+      "name": "Ping An Insurance Group Company of China Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "1211": {
+      "name": "BYD Company Limited",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "3988": {
+      "name": "Bank of China Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "9999": {
+      "name": "NetEase Inc.",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "9888": {
+      "name": "Baidu Inc.",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "9618": {
+      "name": "JD.com Inc.",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "9961": {
+      "name": "Trip.com Group Limited",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "2628": {
+      "name": "China Life Insurance Company Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "2899": {
+      "name": "Zijin Mining Group Company Limited",
+      "sector": "Basic Materials",
+      "country": "China"
+    },
+    "857": {
+      "name": "PetroChina Company Limited",
+      "sector": "Energy",
+      "country": "China"
+    },
+    "1288": {
+      "name": "Agricultural Bank of China Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "3968": {
+      "name": "China Merchants Bank Co., Ltd.",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "1088": {
+      "name": "China Shenhua Energy Company Limited",
+      "sector": "Energy",
+      "country": "China"
+    },
+    "6160": {
+      "name": "BeiGene Ltd.",
+      "sector": "Healthcare",
+      "country": "China"
+    },
+    "3750": {
+      "name": "Contemporary Amperex Technology Co., Limited",
+      "sector": "Industrials",
+      "country": "China"
+    },
+    "1024": {
+      "name": "Kuaishou Technology Limited",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "9992": {
+      "name": "Pop Mart International Company Limited",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "386": {
+      "name": "China Petroleum & Chemical Corporation",
+      "sector": "Energy",
+      "country": "China"
+    },
+    "1378": {
+      "name": "China Hongqiao Group Limited",
+      "sector": "Basic Materials",
+      "country": "China"
+    },
+    "2328": {
+      "name": "PICC Property and Casualty Company Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "1109": {
+      "name": "China Resources Land Limited",
+      "sector": "Real Estate",
+      "country": "China"
+    },
+    "2020": {
+      "name": "Anta Sports Products Limited",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "2601": {
+      "name": "China Pacific Insurance (Group) Company Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "2338": {
+      "name": "Weichai Power Co., Ltd.",
+      "sector": "Industrials",
+      "country": "China"
+    },
+    "9633": {
+      "name": "Nongfu Spring Co., Ltd.",
+      "sector": "Consumer Staples",
+      "country": "China"
+    },
+    "998": {
+      "name": "China CITIC Bank Corporation Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "3993": {
+      "name": "CMOC Group Limited",
+      "sector": "Basic Materials",
+      "country": "China"
+    },
+    "267": {
+      "name": "CITIC Limited",
+      "sector": "Industrials",
+      "country": "China"
+    },
+    "2359": {
+      "name": "WuXi AppTec Co., Ltd.",
+      "sector": "Healthcare",
+      "country": "China"
+    },
+    "3328": {
+      "name": "Bank of Communications Co., Ltd.",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "300": {
+      "name": "Midea Group Co., Ltd.",
+      "sector": "Consumer Discretionary",
+      "country": "China"
+    },
+    "788": {
+      "name": "China Tower Corporation Limited",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "1336": {
+      "name": "New China Life Insurance Company Limited",
+      "sector": "Financial Services",
+      "country": "China"
+    },
+    "6690": {
+      "name": "Haier Smart Home Co., Ltd.",
+      "sector": "Consumer Discretionary",
+      "country": "China"
     }
   }
 }

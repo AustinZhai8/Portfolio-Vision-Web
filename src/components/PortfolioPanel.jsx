@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { convertAmount, isEtf, isKnownTicker } from '../utils/decompose';
+import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
 import { supabase } from '../lib/supabase';
 
@@ -54,8 +54,164 @@ function CurrencyToggle({ value, onChange }) {
   );
 }
 
-function SaveNameModal({ onSave, onClose }) {
-  const [name, setName] = useState('');
+function OverrideModal({ portfolios, onOverride, onClose, loading }) {
+  const [selectedId, setSelectedId] = useState('');
+  const [confirmName, setConfirmName] = useState('');
+  const [error, setError] = useState('');
+  const selectedPortfolio = portfolios.find((p) => p.id === selectedId);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!selectedId) { setError('Select a portfolio.'); return; }
+    if (confirmName !== selectedPortfolio.name) { setError(`Type "${selectedPortfolio.name}" exactly to confirm.`); return; }
+    setError('');
+    const err = await onOverride(selectedId);
+    if (err) { setError(err); }
+  }
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'var(--modal-overlay)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: 340,
+          background: 'var(--panel)',
+          border: '1px solid var(--border2)',
+          borderRadius: 6,
+          padding: '20px',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.3)',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 10,
+            color: 'var(--text2)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            marginBottom: 14,
+          }}
+        >
+          Override Portfolio
+        </div>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <div>
+            <label style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', marginBottom: 5, textTransform: 'uppercase' }}>
+              Select Portfolio
+            </label>
+            <select
+              value={selectedId}
+              onChange={(e) => { setSelectedId(e.target.value); setConfirmName(''); setError(''); }}
+              style={{
+                width: '100%',
+                background: 'var(--input-bg)',
+                border: '1px solid var(--border2)',
+                borderRadius: 3,
+                color: 'var(--text)',
+                fontFamily: 'var(--mono)',
+                fontSize: 13,
+                padding: '8px 10px',
+                outline: 'none',
+                boxSizing: 'border-box',
+              }}
+            >
+              <option value="">-- Choose one --</option>
+              {portfolios.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {selectedId && (
+            <div>
+              <label style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', marginBottom: 5, textTransform: 'uppercase' }}>
+                Type "{selectedPortfolio?.name}" to confirm
+              </label>
+              <input
+                type="text"
+                value={confirmName}
+                onChange={(e) => setConfirmName(e.target.value)}
+                placeholder={selectedPortfolio?.name}
+                style={{
+                  width: '100%',
+                  background: 'var(--input-bg)',
+                  border: '1px solid var(--border2)',
+                  borderRadius: 3,
+                  color: 'var(--text)',
+                  fontFamily: 'var(--mono)',
+                  fontSize: 13,
+                  padding: '8px 10px',
+                  outline: 'none',
+                  boxSizing: 'border-box',
+                }}
+              />
+            </div>
+          )}
+
+          {error && (
+            <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#f05a7e' }}>{error}</div>
+          )}
+
+          <div style={{ display: 'flex', gap: 8 }}>
+            <button
+              type="submit"
+              disabled={loading || !selectedId || confirmName !== selectedPortfolio?.name}
+              style={{
+                flex: 1,
+                padding: '9px 0',
+                background: selectedId && confirmName === selectedPortfolio?.name && !loading ? ACCENT : '#3d2f6e',
+                border: 'none',
+                borderRadius: 3,
+                color: selectedId && confirmName === selectedPortfolio?.name && !loading ? '#07090e' : '#9b8ec4',
+                fontFamily: 'var(--mono)',
+                fontSize: 10,
+                fontWeight: 600,
+                letterSpacing: '0.12em',
+                cursor: selectedId && confirmName === selectedPortfolio?.name && !loading ? 'pointer' : 'not-allowed',
+              }}
+            >
+              {loading ? '...' : 'OVERRIDE'}
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: '9px 0',
+                background: 'none',
+                border: '1px solid var(--border2)',
+                borderRadius: 3,
+                color: 'var(--text3)',
+                fontFamily: 'var(--mono)',
+                fontSize: 10,
+                letterSpacing: '0.12em',
+                cursor: 'pointer',
+              }}
+            >
+              CANCEL
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+function SaveNameModal({ onSave, onClose, mode, currentName }) {
+  const [name, setName] = useState(mode === 'update' ? currentName : '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const inputRef = useRef(null);
@@ -73,6 +229,8 @@ function SaveNameModal({ onSave, onClose }) {
     const err = await onSave(trimmed);
     if (err) { setError(err); setLoading(false); }
   }
+
+  const isUpdate = mode === 'update';
 
   return (
     <div
@@ -108,7 +266,7 @@ function SaveNameModal({ onSave, onClose }) {
             marginBottom: 14,
           }}
         >
-          Save Portfolio
+          {isUpdate ? `Update Portfolio (currently updating: ${currentName})` : 'Save Portfolio'}
         </div>
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           <input
@@ -151,7 +309,7 @@ function SaveNameModal({ onSave, onClose }) {
                 cursor: loading ? 'not-allowed' : 'pointer',
               }}
             >
-              {loading ? '...' : 'SAVE'}
+              {loading ? '...' : isUpdate ? 'UPDATE' : 'SAVE'}
             </button>
             <button
               type="button"
@@ -193,11 +351,16 @@ export default function PortfolioPanel({
 }) {
   const [focusedId, setFocusedId] = useState(null);
   const [saveOpen, setSaveOpen] = useState(false);
+  const [saveMode, setSaveMode] = useState('new'); // 'new' or 'update'
+  const [overrideOpen, setOverrideOpen] = useState(false);
   const [portfolios, setPortfolios] = useState([]);
   const [pfLoading, setPfLoading] = useState(false);
   const [pfError, setPfError] = useState('');
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+  const [loadedPortfolioId, setLoadedPortfolioId] = useState(null);
+  const [sortMode, setSortMode] = useState('default');
+  const [overridingId, setOverridingId] = useState(null);
 
   useEffect(() => {
     if (user) fetchPortfolios();
@@ -221,11 +384,40 @@ export default function PortfolioPanel({
     const holdings = rows
       .filter((r) => r.ticker.trim() && r.amount)
       .map((r) => ({ ticker: r.ticker.trim().toUpperCase(), amount: r.amount, currency: r.currency }));
+
+    if (saveMode === 'update' && loadedPortfolioId) {
+      const { error } = await supabase
+        .from('portfolios')
+        .update({ holdings, name })
+        .eq('id', loadedPortfolioId);
+      if (error) return error.message;
+    } else {
+      const { error } = await supabase
+        .from('portfolios')
+        .insert({ user_id: user.id, name, holdings });
+      if (error) return error.message;
+    }
+
+    setSaveOpen(false);
+    setSaveMode('new');
+    fetchPortfolios();
+    return null;
+  }
+
+  async function handleOverride(portfolioId) {
+    const holdings = rows
+      .filter((r) => r.ticker.trim() && r.amount)
+      .map((r) => ({ ticker: r.ticker.trim().toUpperCase(), amount: r.amount, currency: r.currency }));
+
+    const portfolio = portfolios.find((p) => p.id === portfolioId);
     const { error } = await supabase
       .from('portfolios')
-      .insert({ user_id: user.id, name, holdings });
+      .update({ holdings })
+      .eq('id', portfolioId);
     if (error) return error.message;
-    setSaveOpen(false);
+
+    setOverrideOpen(false);
+    setOverridingId(null);
     fetchPortfolios();
     return null;
   }
@@ -240,10 +432,40 @@ export default function PortfolioPanel({
 
   function handleLoad(portfolio) {
     onLoadPortfolio(portfolio.holdings);
+    setLoadedPortfolioId(portfolio.id);
   }
 
   function addRow() {
     setRows((prev) => [...prev, { id: nextId(), ticker: '', amount: '', currency: 'USD' }]);
+    setSortMode('default');
+  }
+
+  function getSortedRows() {
+    if (sortMode === 'default') return rows;
+    const sorted = [...rows];
+    switch (sortMode) {
+      case 'value-high':
+        sorted.sort((a, b) => {
+          const aVal = convertAmount(parseFloat(a.amount) || 0, a.currency, displayCurrency);
+          const bVal = convertAmount(parseFloat(b.amount) || 0, b.currency, displayCurrency);
+          return bVal - aVal;
+        });
+        break;
+      case 'value-low':
+        sorted.sort((a, b) => {
+          const aVal = convertAmount(parseFloat(a.amount) || 0, a.currency, displayCurrency);
+          const bVal = convertAmount(parseFloat(b.amount) || 0, b.currency, displayCurrency);
+          return aVal - bVal;
+        });
+        break;
+      case 'ticker-az':
+        sorted.sort((a, b) => a.ticker.localeCompare(b.ticker));
+        break;
+      case 'ticker-za':
+        sorted.sort((a, b) => b.ticker.localeCompare(a.ticker));
+        break;
+    }
+    return sorted;
   }
 
   function removeRow(id) {
@@ -256,7 +478,18 @@ export default function PortfolioPanel({
   }
 
   function updateRow(id, field, value) {
-    setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
+    setRows((prev) => prev.map((r) => {
+      if (r.id !== id) return r;
+      const updated = { ...r, [field]: value };
+      // Auto-detect currency for all tickers (ETF or stock)
+      if (field === 'ticker' && value.trim()) {
+        const ticker = value.trim().toUpperCase();
+        if (isKnownTicker(ticker)) {
+          updated.currency = inferCurrency(ticker);
+        }
+      }
+      return updated;
+    }));
     if (rowErrors[id]) {
       setRowErrors((prev) => {
         const next = { ...prev };
@@ -282,9 +515,26 @@ export default function PortfolioPanel({
     fontFamily: 'var(--mono)',
   };
 
+  const currentPortfolio = portfolios.find((p) => p.id === loadedPortfolioId);
+
   return (
     <>
-      {saveOpen && <SaveNameModal onSave={handleSave} onClose={() => setSaveOpen(false)} />}
+      {saveOpen && (
+        <SaveNameModal
+          onSave={handleSave}
+          onClose={() => setSaveOpen(false)}
+          mode={saveMode}
+          currentName={currentPortfolio?.name || ''}
+        />
+      )}
+      {overrideOpen && (
+        <OverrideModal
+          portfolios={portfolios}
+          onOverride={handleOverride}
+          onClose={() => { setOverrideOpen(false); setOverridingId(null); }}
+          loading={false}
+        />
+      )}
       <div
         style={{
           width: 352,
@@ -322,6 +572,53 @@ export default function PortfolioPanel({
           </span>
         </div>
 
+        {/* Sort control */}
+        <div
+          style={{
+            padding: '8px 16px',
+            borderBottom: '1px solid var(--card)',
+          }}
+        >
+          <label
+            style={{
+              display: 'block',
+              fontFamily: 'var(--mono)',
+              fontSize: 8,
+              color: 'var(--text3)',
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              marginBottom: 5,
+            }}
+          >
+            Sort By
+          </label>
+          <select
+            value={sortMode}
+            onChange={(e) => setSortMode(e.target.value)}
+            style={{
+              width: '100%',
+              background: 'var(--input-bg)',
+              border: '1px solid var(--border)',
+              borderRadius: 3,
+              color: 'var(--text)',
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              padding: '6px 8px',
+              outline: 'none',
+              cursor: 'pointer',
+              transition: 'border-color 0.12s',
+            }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = ACCENT)}
+            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
+          >
+            <option value="default">Default (order entered)</option>
+            <option value="value-high">Value: High to Low</option>
+            <option value="value-low">Value: Low to High</option>
+            <option value="ticker-az">Ticker: A to Z</option>
+            <option value="ticker-za">Ticker: Z to A</option>
+          </select>
+        </div>
+
         {/* Column headers */}
         <div
           style={{
@@ -350,7 +647,7 @@ export default function PortfolioPanel({
 
         {/* Scrollable rows */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '3px 16px', minHeight: 0 }}>
-          {rows.map((row) => {
+          {getSortedRows().map((row) => {
             const type = autoType(row.ticker);
             const hasError = !!rowErrors[row.id];
             const isUnknown = type === 'Unknown' && !!row.ticker;
@@ -691,35 +988,89 @@ export default function PortfolioPanel({
           </div>
 
           {user && (
-            <button
-              type="button"
-              onClick={() => setSaveOpen(true)}
-              style={{
-                width: '100%',
-                padding: '8px 0',
-                background: 'none',
-                border: '1px solid var(--border2)',
-                borderRadius: 3,
-                color: 'var(--text2)',
-                fontFamily: 'var(--mono)',
-                fontSize: 10,
-                fontWeight: 600,
-                letterSpacing: '0.12em',
-                cursor: 'pointer',
-                marginBottom: 8,
-                transition: 'border-color 0.15s, color 0.15s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = ACCENT;
-                e.currentTarget.style.color = ACCENT;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--border2)';
-                e.currentTarget.style.color = 'var(--text2)';
-              }}
-            >
-              + SAVE PORTFOLIO
-            </button>
+            <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
+              <button
+                type="button"
+                onClick={() => { setSaveMode('new'); setSaveOpen(true); }}
+                style={{
+                  flex: 1,
+                  padding: '8px 0',
+                  background: 'none',
+                  border: '1px solid var(--border2)',
+                  borderRadius: 3,
+                  color: 'var(--text2)',
+                  fontFamily: 'var(--mono)',
+                  fontSize: 10,
+                  fontWeight: 600,
+                  letterSpacing: '0.12em',
+                  cursor: 'pointer',
+                  transition: 'border-color 0.15s, color 0.15s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = ACCENT;
+                  e.currentTarget.style.color = ACCENT;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--border2)';
+                  e.currentTarget.style.color = 'var(--text2)';
+                }}
+              >
+                + SAVE AS NEW
+              </button>
+              {!loadedPortfolioId && portfolios.length > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => setOverrideOpen(true)}
+                  style={{
+                    flex: 1,
+                    padding: '8px 0',
+                    background: 'none',
+                    border: '1px solid var(--border2)',
+                    borderRadius: 3,
+                    color: 'var(--text2)',
+                    fontFamily: 'var(--mono)',
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    cursor: 'pointer',
+                    transition: 'border-color 0.15s, color 0.15s',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = ACCENT;
+                    e.currentTarget.style.color = ACCENT;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'var(--border2)';
+                    e.currentTarget.style.color = 'var(--text2)';
+                  }}
+                >
+                  OVERRIDE
+                </button>
+              ) : loadedPortfolioId ? (
+                <button
+                  type="button"
+                  onClick={() => { setSaveMode('update'); setSaveOpen(true); }}
+                  style={{
+                    flex: 1,
+                    padding: '8px 0',
+                    background: ACCENT,
+                    border: 'none',
+                    borderRadius: 3,
+                    color: '#07090e',
+                    fontFamily: 'var(--mono)',
+                    fontSize: 10,
+                    fontWeight: 600,
+                    letterSpacing: '0.12em',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.15s',
+                  }}
+                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.88')}
+                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+                >
+                  ⬆ UPDATE
+                </button>
+              ) : null}
+            </div>
           )}
 
           <button
