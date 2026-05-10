@@ -139,6 +139,7 @@ input[type=number]::-webkit-outer-spin-button {
     gap: 2px;
   }
   .header-display-label { display: none !important; }
+  .header-wordmark { font-size: 15px !important; }
 
   /* Layout */
   .app-main {
@@ -203,7 +204,7 @@ input[type=number]::-webkit-outer-spin-button {
   /* Holdings: drop weight column, fix grid */
   .holdings-headers,
   .holding-row {
-    grid-template-columns: 24px 28px 1fr 62px 88px !important;
+    grid-template-columns: 24px 28px 1fr 62px 72px 22px !important;
   }
   .holding-weight { display: none !important; }
 

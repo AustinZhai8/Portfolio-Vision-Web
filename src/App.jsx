@@ -55,7 +55,7 @@ export default function App() {
   }, [user]);
 
   // Decomposition runs only on committedRows so editing doesn't thrash results
-  const { decomposed, sectors, countries, portfolioTotal, decomposeUnknown } = useMemo(() => {
+  const { decomposed, sectors, countries, portfolioTotal, decomposeUnknown, portfolio } = useMemo(() => {
     const portfolio = {};
     for (const row of committedRows) {
       const ticker = row.ticker.trim().toUpperCase();
@@ -71,6 +71,7 @@ export default function App() {
       countries: breakdownByCountry(result),
       portfolioTotal,
       decomposeUnknown: unknown,
+      portfolio,
     };
   }, [committedRows, displayCurrency]);
 
@@ -139,6 +140,7 @@ export default function App() {
                 rowErrors={rowErrors}
                 setRowErrors={setRowErrors}
                 onDecompose={handleDecompose}
+                onAutoDecompose={() => { setCommittedRows(rows); setAnimVersion((v) => v + 1); }}
                 displayCurrency={displayCurrency}
                 portfolioTotal={portfolioTotal}
                 nextId={nextId}
@@ -158,6 +160,7 @@ export default function App() {
                 countries={countries}
                 portfolioTotal={portfolioTotal}
                 animKey={animKey}
+                portfolio={portfolio}
               />
             </div>
           </>

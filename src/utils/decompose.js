@@ -76,6 +76,44 @@ export function getStockInfo(ticker) {
   };
 }
 
+export function getEtfName(ticker) {
+  const etf = ETF_DATA[resolveTicker(ticker)];
+  return etf?.name || ticker;
+}
+
+// Returns [{ source: rawInputTicker, sourceName, amount, isEtf }] for a given output ticker
+export function decomposeContributions(portfolio, targetTicker) {
+  const target = resolveTicker(targetTicker.toUpperCase());
+  const contributions = [];
+  for (const [rawTicker, amount] of Object.entries(portfolio)) {
+    const ticker = resolveTicker(rawTicker.toUpperCase());
+    const contrib = _traceContribution(ticker, amount, target, 0);
+    if (contrib > 0.005) {
+      const etf = isEtf(ticker);
+      contributions.push({
+        source: rawTicker,
+        sourceName: etf ? getEtfName(ticker) : getStockInfo(ticker).name,
+        amount: contrib,
+        isEtf: etf,
+      });
+    }
+  }
+  return contributions.sort((a, b) => b.amount - a.amount);
+}
+
+function _traceContribution(ticker, amount, targetTicker, depth) {
+  if (depth > 5) return 0;
+  if (!isEtf(ticker)) return ticker === targetTicker ? amount : 0;
+  const holdings = getHoldings(ticker);
+  if (!holdings) return 0;
+  let total = 0;
+  for (const h of holdings) {
+    const sub = resolveTicker(h.ticker.toUpperCase());
+    total += _traceContribution(sub, amount * (h.weight / 100), targetTicker, depth + 1);
+  }
+  return total;
+}
+
 // portfolio: { ticker: dollarAmount } — amounts in a single consistent currency
 // Returns { result: { stockTicker: amount }, unknown: string[] }
 export function decompose(portfolio, _depth = 0) {

@@ -342,6 +342,7 @@ export default function PortfolioPanel({
   rowErrors,
   setRowErrors,
   onDecompose,
+  onAutoDecompose,
   displayCurrency,
   portfolioTotal,
   nextId,
@@ -401,6 +402,7 @@ export default function PortfolioPanel({
     setSaveOpen(false);
     setSaveMode('new');
     fetchPortfolios();
+    onAutoDecompose?.();
     return null;
   }
 
@@ -419,6 +421,7 @@ export default function PortfolioPanel({
     setOverrideOpen(false);
     setOverridingId(null);
     fetchPortfolios();
+    onAutoDecompose?.();
     return null;
   }
 

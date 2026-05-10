@@ -319,6 +319,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
           See everything. Invest better.
         </span>
         <span
+          className="header-wordmark"
           style={{
             fontFamily: 'var(--mono)',
             fontWeight: 600,

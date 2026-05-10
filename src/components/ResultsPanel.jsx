@@ -10,6 +10,7 @@ export default function ResultsPanel({
   countries,
   portfolioTotal,
   animKey,
+  portfolio,
 }) {
   const allSorted = Object.entries(decomposed).sort(([, a], [, b]) => b - a);
   const totalCount = allSorted.length;
@@ -67,7 +68,7 @@ export default function ResultsPanel({
           className="holdings-headers"
           style={{
             display: 'grid',
-            gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
+            gridTemplateColumns: '24px 30px 1fr 68px 1fr 84px 24px',
             gap: 0,
             padding: '8px 16px',
             borderBottom: '1px solid var(--border)',
@@ -80,7 +81,8 @@ export default function ResultsPanel({
             { label: 'COMPANY', align: 'left', pl: 10 },
             { label: 'TICKER', align: 'left', pl: 0 },
             { label: 'WEIGHT', align: 'left', pl: 0, className: 'holding-weight' },
-            { label: 'VALUE', align: 'right', pl: 0, pr: 12 },
+            { label: 'VALUE', align: 'right', pl: 0, pr: 4 },
+            { label: '', align: 'left', pl: 0 },
           ].map((col, i) => (
             <span
               key={i}
@@ -113,6 +115,7 @@ export default function ResultsPanel({
                 weight={weight}
                 maxWeight={topWeight}
                 even={i % 2 === 0}
+                portfolio={portfolio}
               />
             );
           })}
