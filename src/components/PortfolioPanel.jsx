@@ -480,6 +480,34 @@ export default function PortfolioPanel({
     });
   }
 
+  function handleTickerBlur(id) {
+    setFocusedId(null);
+    setRows((prev) => {
+      const row = prev.find((r) => r.id === id);
+      if (!row || !row.ticker.trim()) return prev;
+      const ticker = row.ticker.trim().toUpperCase();
+      const allMatching = prev.filter((r) => r.ticker.trim().toUpperCase() === ticker);
+      if (allMatching.length < 2) return prev;
+
+      // Keep the first occurrence; sum all amounts converted to its currency
+      const keeper = allMatching[0];
+      const merged = allMatching.reduce((sum, r) => {
+        const amt = parseFloat(r.amount) || 0;
+        return sum + convertAmount(amt, r.currency, keeper.currency);
+      }, 0);
+      const mergedIds = new Set(allMatching.map((r) => r.id));
+
+      return prev
+        .filter((r) => !mergedIds.has(r.id) || r.id === keeper.id)
+        .map((r) => r.id === keeper.id ? { ...r, amount: String(parseFloat(merged.toFixed(2))) } : r);
+    });
+    setRowErrors((prev) => {
+      const next = { ...prev };
+      delete next[id];
+      return next;
+    });
+  }
+
   function updateRow(id, field, value) {
     setRows((prev) => prev.map((r) => {
       if (r.id !== id) return r;
@@ -687,7 +715,7 @@ export default function PortfolioPanel({
                       placeholder="TICKER"
                       onChange={(e) => updateRow(row.id, 'ticker', e.target.value.toUpperCase())}
                       onFocus={() => setFocusedId(`${row.id}-t`)}
-                      onBlur={() => setFocusedId(null)}
+                      onBlur={() => handleTickerBlur(row.id)}
                       style={{
                         ...inputBase,
                         fontSize: 13,

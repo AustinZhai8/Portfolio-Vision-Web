@@ -17,8 +17,9 @@ const inputStyle = {
   transition: 'border-color 0.12s',
 };
 
-function OtpInput({ email, onVerified, onBack, loading }) {
+function OtpInput({ email, type, onVerified, onBack }) {
   const [code, setCode] = useState(['', '', '', '', '', '']);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const inputRefs = useRef([]);
 
@@ -38,24 +39,34 @@ function OtpInput({ email, onVerified, onBack, loading }) {
     }
   }
 
+  function handlePaste(e) {
+    e.preventDefault();
+    const digits = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+    if (!digits) return;
+    const newCode = [...code];
+    for (let i = 0; i < 6; i++) newCode[i] = digits[i] ?? '';
+    setCode(newCode);
+    const focusIdx = Math.min(digits.length, 5);
+    inputRefs.current[focusIdx]?.focus();
+  }
+
   async function handleVerify(e) {
     e.preventDefault();
     const token = code.join('');
     if (token.length !== 6) { setError('Enter all 6 digits.'); return; }
     setError('');
-    const { error: err } = await supabase.auth.verifyOtp({
-      email,
-      token,
-      type: 'signup',
-    });
+    setLoading(true);
+    const { error: err } = await supabase.auth.verifyOtp({ email, token, type });
     if (err) {
       setError(err.message);
+      setLoading(false);
     } else {
       onVerified();
     }
   }
 
   const codeString = code.join('');
+
   return (
     <div style={{ padding: '20px 20px 24px' }}>
       <button
@@ -88,7 +99,7 @@ function OtpInput({ email, onVerified, onBack, loading }) {
           marginBottom: 14,
         }}
       >
-        Verify Email
+        {type === 'recovery' ? 'Reset Password' : 'Verify Email'}
       </div>
       <form onSubmit={handleVerify} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
         <div>
@@ -115,6 +126,7 @@ function OtpInput({ email, onVerified, onBack, loading }) {
                 value={digit}
                 onChange={(e) => handleChange(i, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(i, e)}
+                onPaste={handlePaste}
                 style={{
                   width: 40,
                   height: 40,
@@ -180,20 +192,19 @@ function OtpInput({ email, onVerified, onBack, loading }) {
 
 export default function AuthModal({ onClose }) {
   const [tab, setTab] = useState('login');
-  const [view, setView] = useState('form');
+  const [view, setView] = useState('form'); // 'form' | 'forgot' | 'otp'
+  const [otpType, setOtpType] = useState('signup'); // 'signup' | 'recovery'
+  const [otpEmail, setOtpEmail] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [focusedField, setFocusedField] = useState(null);
-  const [signupEmail, setSignupEmail] = useState('');
 
   function resetForm() {
     setEmail('');
     setPassword('');
     setError('');
-    setSuccess('');
     setLoading(false);
   }
 
@@ -207,61 +218,53 @@ export default function AuthModal({ onClose }) {
     setView('forgot');
     setPassword('');
     setError('');
-    setSuccess('');
   }
 
   function backToLogin() {
     setView('form');
     setError('');
-    setSuccess('');
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    setSuccess('');
     setLoading(true);
 
     if (view === 'forgot') {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/settings',
-      });
-      if (error) {
-        setError(error.message);
+      const { error: err } = await supabase.auth.resetPasswordForEmail(email);
+      if (err) {
+        setError(err.message);
+        setLoading(false);
       } else {
-        setSuccess('Reset email sent — check your inbox.');
+        setOtpEmail(email);
+        setOtpType('recovery');
+        setView('otp');
+        setLoading(false);
       }
-      setLoading(false);
       return;
     }
 
     if (tab === 'login') {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) {
-        setError(error.message);
+      const { error: err } = await supabase.auth.signInWithPassword({ email, password });
+      if (err) {
+        setError(err.message);
         setLoading(false);
       } else {
         onClose();
       }
     } else {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { emailRedirectTo: window.location.origin },
-      });
-      if (error) {
-        setError(error.message);
+      const { error: err } = await supabase.auth.signUp({ email, password });
+      if (err) {
+        setError(err.message);
         setLoading(false);
       } else {
-        setSignupEmail(email);
+        setOtpEmail(email);
+        setOtpType('signup');
         setView('otp');
         setLoading(false);
       }
     }
   }
-
-  const isForgot = view === 'forgot';
-  const isOtp = view === 'otp';
 
   return (
     <div
@@ -325,15 +328,17 @@ export default function AuthModal({ onClose }) {
           </button>
         </div>
 
-        {isOtp ? (
+        {view === 'otp' ? (
           <OtpInput
-            email={signupEmail}
+            email={otpEmail}
+            type={otpType}
             onVerified={onClose}
-            onBack={() => { setView('form'); setEmail(signupEmail); setPassword(''); setError(''); }}
-            loading={loading}
+            onBack={() => {
+              setView(otpType === 'recovery' ? 'forgot' : 'form');
+              setError('');
+            }}
           />
-        ) : isForgot ? (
-          /* Forgot password view */
+        ) : view === 'forgot' ? (
           <div style={{ padding: '20px 20px 24px' }}>
             <button
               type="button"
@@ -402,11 +407,6 @@ export default function AuthModal({ onClose }) {
                   {error}
                 </div>
               )}
-              {success && (
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#22d3a0', background: 'rgba(34,211,160,0.07)', border: '1px solid rgba(34,211,160,0.2)', borderRadius: 3, padding: '7px 10px' }}>
-                  {success}
-                </div>
-              )}
 
               <button
                 type="submit"
@@ -427,7 +427,7 @@ export default function AuthModal({ onClose }) {
                   transition: 'opacity 0.15s, background 0.15s',
                 }}
               >
-                {loading ? '...' : 'SEND RESET EMAIL'}
+                {loading ? '...' : 'SEND RESET CODE'}
               </button>
             </form>
           </div>
@@ -565,22 +565,6 @@ export default function AuthModal({ onClose }) {
                     }}
                   >
                     {error}
-                  </div>
-                )}
-
-                {success && (
-                  <div
-                    style={{
-                      fontFamily: 'var(--mono)',
-                      fontSize: 11,
-                      color: '#22d3a0',
-                      background: 'rgba(34,211,160,0.07)',
-                      border: '1px solid rgba(34,211,160,0.2)',
-                      borderRadius: 3,
-                      padding: '7px 10px',
-                    }}
-                  >
-                    {success}
                   </div>
                 )}
 
