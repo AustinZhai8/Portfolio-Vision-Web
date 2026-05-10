@@ -604,6 +604,56 @@ export default function PortfolioPanel({
           </span>
         </div>
 
+        {/* Loaded portfolio banner */}
+        {loadedPortfolioId && currentPortfolio && (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '5px 16px',
+              background: 'rgba(167,139,250,0.08)',
+              borderBottom: '1px solid rgba(167,139,250,0.18)',
+              gap: 8,
+            }}
+          >
+            <span
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 9,
+                color: ACCENT,
+                letterSpacing: '0.08em',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+              title={currentPortfolio.name}
+            >
+              EDITING: {currentPortfolio.name}
+            </span>
+            <button
+              type="button"
+              title="Stop editing this portfolio"
+              onClick={() => setLoadedPortfolioId(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--text3)',
+                cursor: 'pointer',
+                fontSize: 14,
+                lineHeight: 1,
+                padding: '0 0 0 4px',
+                flexShrink: 0,
+                transition: 'color 0.12s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#f05a7e')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
+            >
+              ×
+            </button>
+          </div>
+        )}
+
         {/* Sort control */}
         <div
           style={{
@@ -852,6 +902,37 @@ export default function PortfolioPanel({
           >
             + ADD POSITION
           </button>
+
+          {/* Clear */}
+          {rows.length > 0 && (
+            <button
+              type="button"
+              onClick={() => {
+                setRows([]);
+                setRowErrors({});
+                setSortMode('default');
+                setLoadedPortfolioId(null);
+              }}
+              style={{
+                width: '100%',
+                marginTop: 6,
+                padding: '7px 0',
+                background: 'none',
+                border: '1px solid transparent',
+                borderRadius: 3,
+                cursor: 'pointer',
+                color: 'var(--text3)',
+                fontFamily: 'var(--mono)',
+                fontSize: 10,
+                letterSpacing: '0.12em',
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = '#f05a7e')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
+            >
+              CLEAR ALL
+            </button>
+          )}
         </div>
 
         {/* My Portfolios section */}
