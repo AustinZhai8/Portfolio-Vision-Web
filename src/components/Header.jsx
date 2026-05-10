@@ -274,6 +274,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
       <img
         src="/PortfolioVision.png"
         alt="Portfolio Vision"
+        className="header-logo"
         style={{
           height: 78,
           width: 'auto',
@@ -287,6 +288,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
 
       {/* Title — absolutely centered */}
       <div
+        className="header-title"
         style={{
           position: 'absolute',
           left: 0,
@@ -355,6 +357,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
 
       {/* Right controls */}
       <div
+        className="header-controls"
         style={{
           display: 'flex',
           alignItems: 'center',

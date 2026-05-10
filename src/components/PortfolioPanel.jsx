@@ -536,6 +536,7 @@ export default function PortfolioPanel({
         />
       )}
       <div
+        className="portfolio-panel"
         style={{
           width: 352,
           minWidth: 352,

@@ -38,6 +38,7 @@ export default function ResultsPanel({
 
   return (
     <div
+      className="results-panel"
       style={{
         flex: 1,
         display: 'flex',

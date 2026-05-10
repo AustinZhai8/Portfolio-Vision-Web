@@ -132,7 +132,7 @@ export default function App() {
               onToggleTheme={toggleTheme}
             />
             {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
-            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }} className="app-main">
               <PortfolioPanel
                 rows={rows}
                 setRows={setRows}

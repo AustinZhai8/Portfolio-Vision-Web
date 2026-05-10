@@ -74,9 +74,15 @@ export default function InfoModal({ open, onClose }) {
             into a unified view across all your positions.
           </p>
           <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            Portfolio Vision was built with one belief: that truly understanding what you own is the most important part of investing. The goal is to give you a complete, transparent view of your portfolio, not just ticker symbols, but the actual companies and sectors your money is working in. Note that some weightings may be off by a percent or so due to database update timing and partial holdings data.
+          </p>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            A few things are intentionally excluded. Most covered call ETFs are not supported, since the covered call strategy means you don't fully participate in the underlying stock's growth, the holdings don't reflect true ownership in the same way. Leveraged ETFs are also not included. If you hold a leveraged ETF, simply enter the underlying ETF instead and mentally double the exposure to simulate the effect.
+          </p>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
             Our stock and ETF database is updated constantly. If a ticker you entered is highlighted in
             yellow, it simply means it isn't in our database yet — you can still enter it and track
-            it as-is. To request an addition, email{' '}
+            it as-is. If you have an addition or any feedback, feel free to email{' '}
             <span style={{ color: ACCENT }}>austinhzhai@gmail.com</span>
           </p>
           <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>

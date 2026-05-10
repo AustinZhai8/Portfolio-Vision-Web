@@ -61,6 +61,12 @@ html {
   zoom: 1.1;
 }
 
+@media (max-width: 767px) {
+  html {
+    zoom: 1;
+  }
+}
+
 html, body {
   height: 100%;
   overflow: hidden;
@@ -105,4 +111,65 @@ input[type=number]::-webkit-outer-spin-button {
 ::-webkit-scrollbar-thumb {
   background: var(--scrollbar);
   border-radius: 2px;
+}
+
+/* Mobile responsive */
+@media (max-width: 767px) {
+  .app-main {
+    flex-direction: column !important;
+  }
+
+  .app-main > div {
+    width: 100% !important;
+    min-width: unset !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  /* Header mobile */
+  header {
+    height: 56px !important;
+    min-height: 56px !important;
+    padding: 0 12px !important;
+    gap: 8px !important;
+  }
+
+  .header-logo {
+    display: none !important;
+  }
+
+  .header-title {
+    display: none !important;
+  }
+
+  .header-controls {
+    flex: 1;
+    justify-content: flex-start !important;
+  }
+
+  .header-controls > span {
+    display: none !important;
+  }
+
+  .header-controls > div {
+    display: flex !important;
+  }
+
+  /* Portfolio panel mobile */
+  .portfolio-panel {
+    width: 100% !important;
+    min-width: unset !important;
+    max-height: 45% !important;
+    overflow-y: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+  }
+
+  /* Results panel mobile */
+  .results-panel {
+    flex: 1 !important;
+    width: 100% !important;
+    min-width: unset !important;
+    overflow-y: auto !important;
+  }
 }
