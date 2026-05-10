@@ -1,4 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import {
   decompose,
   breakdownBySector,
@@ -12,6 +13,7 @@ import Header from './components/Header';
 import PortfolioPanel from './components/PortfolioPanel';
 import ResultsPanel from './components/ResultsPanel';
 import AuthModal from './components/AuthModal';
+import Settings from './pages/Settings';
 
 const INITIAL_ROWS = [
   { id: 1, ticker: 'VFV', amount: '5000', currency: 'CAD' },
@@ -45,6 +47,12 @@ export default function App() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  // Sync display currency from user metadata on login
+  useEffect(() => {
+    const saved = user?.user_metadata?.defaultCurrency;
+    if (saved === 'USD' || saved === 'CAD') setDisplayCurrency(saved);
+  }, [user]);
 
   // Decomposition runs only on committedRows so editing doesn't thrash results
   const { decomposed, sectors, countries, portfolioTotal, decomposeUnknown } = useMemo(() => {
@@ -107,45 +115,66 @@ export default function App() {
 
   const animKey = `${displayCurrency}-${animVersion}`;
 
+  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+
   return (
-    <>
-      <Header
-        displayCurrency={displayCurrency}
-        setDisplayCurrency={setDisplayCurrency}
-        user={user}
-        onOpenAuth={() => setAuthOpen(true)}
-        theme={theme}
-        onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <>
+            <Header
+              displayCurrency={displayCurrency}
+              setDisplayCurrency={setDisplayCurrency}
+              user={user}
+              onOpenAuth={() => setAuthOpen(true)}
+              theme={theme}
+              onToggleTheme={toggleTheme}
+            />
+            {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
+            <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
+              <PortfolioPanel
+                rows={rows}
+                setRows={setRows}
+                rowErrors={rowErrors}
+                setRowErrors={setRowErrors}
+                onDecompose={handleDecompose}
+                displayCurrency={displayCurrency}
+                portfolioTotal={portfolioTotal}
+                nextId={nextId}
+                user={user}
+                onOpenAuth={() => setAuthOpen(true)}
+                onLoadPortfolio={(holdings) => {
+                  const newRows = holdings.map((h) => ({ id: nextId(), ...h }));
+                  setRows(newRows);
+                  setCommittedRows(newRows);
+                  setRowErrors({});
+                  setAnimVersion((v) => v + 1);
+                }}
+              />
+              <ResultsPanel
+                decomposed={decomposed}
+                sectors={sectors}
+                countries={countries}
+                portfolioTotal={portfolioTotal}
+                animKey={animKey}
+              />
+            </div>
+          </>
+        }
       />
-      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
-        <PortfolioPanel
-          rows={rows}
-          setRows={setRows}
-          rowErrors={rowErrors}
-          setRowErrors={setRowErrors}
-          onDecompose={handleDecompose}
-          displayCurrency={displayCurrency}
-          portfolioTotal={portfolioTotal}
-          nextId={nextId}
-          user={user}
-          onOpenAuth={() => setAuthOpen(true)}
-          onLoadPortfolio={(holdings) => {
-            const newRows = holdings.map((h) => ({ id: nextId(), ...h }));
-            setRows(newRows);
-            setCommittedRows(newRows);
-            setRowErrors({});
-            setAnimVersion((v) => v + 1);
-          }}
-        />
-        <ResultsPanel
-          decomposed={decomposed}
-          sectors={sectors}
-          countries={countries}
-          portfolioTotal={portfolioTotal}
-          animKey={animKey}
-        />
-      </div>
-    </>
+      <Route
+        path="/settings"
+        element={
+          <Settings
+            user={user}
+            displayCurrency={displayCurrency}
+            setDisplayCurrency={setDisplayCurrency}
+            theme={theme}
+            onToggleTheme={toggleTheme}
+          />
+        }
+      />
+    </Routes>
   );
 }

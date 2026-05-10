@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';
@@ -61,6 +62,7 @@ function ThemeToggle({ theme, onToggle }) {
 function AvatarButton({ user, onOpenAuth }) {
   const [dropOpen, setDropOpen] = useState(false);
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!dropOpen) return;
@@ -187,6 +189,34 @@ function AvatarButton({ user, onOpenAuth }) {
               {user.email}
             </div>
           </div>
+          <button
+            type="button"
+            onClick={() => { setDropOpen(false); navigate('/settings'); }}
+            style={{
+              width: '100%',
+              padding: '9px 14px',
+              background: 'none',
+              border: 'none',
+              borderBottom: '1px solid var(--border)',
+              color: 'var(--text2)',
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'background 0.12s, color 0.12s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'var(--card-hover)';
+              e.currentTarget.style.color = 'var(--text)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'none';
+              e.currentTarget.style.color = 'var(--text2)';
+            }}
+          >
+            Settings
+          </button>
           <button
             type="button"
             onClick={handleLogout}
