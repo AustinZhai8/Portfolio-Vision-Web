@@ -74,7 +74,7 @@ export default function InfoModal({ open, onClose }) {
             into a unified view across all your positions.
           </p>
           <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
-            Our stock and ETF database is updated monthly. If a ticker you entered is highlighted in
+            Our stock and ETF database is updated constantly. If a ticker you entered is highlighted in
             yellow, it simply means it isn't in our database yet — you can still enter it and track
             it as-is. To request an addition, email{' '}
             <span style={{ color: ACCENT }}>austinhzhai@gmail.com</span>
