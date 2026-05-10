@@ -50,6 +50,7 @@ export default function ResultsPanel({
       }}
     >
       <div
+        className="holdings-table"
         style={{
           background: 'var(--panel)',
           border: '1px solid var(--border)',
@@ -98,7 +99,7 @@ export default function ResultsPanel({
         </div>
 
         {/* Scrollable rows */}
-        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+        <div className="holdings-rows" style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
           {shown.map(([ticker, amount], i) => {
             const weight = (amount / portfolioTotal) * 100;
             return (
@@ -131,7 +132,7 @@ export default function ResultsPanel({
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 10, flexShrink: 0, height: 240 }}>
+      <div className="charts-row" style={{ display: 'flex', gap: 10, flexShrink: 0, height: 240 }}>
         <ChartSection title="SECTOR BREAKDOWN" data={sectorData} animKey={animKey} />
         <ChartSection title="GEOGRAPHIC EXPOSURE" data={countryData} animKey={animKey} />
       </div>

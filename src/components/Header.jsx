@@ -257,6 +257,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
   return (
     <>
       <header
+        className="app-header"
         style={{
           height: 80,
           minHeight: 80,
@@ -284,11 +285,11 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         }}
       />
 
-      <div style={{ flex: 1 }} />
+      <div className="header-spacer" style={{ flex: 1 }} />
 
       {/* Title — absolutely centered */}
       <div
-        className="header-title"
+        className="header-center"
         style={{
           position: 'absolute',
           left: 0,
@@ -304,6 +305,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         }}
       >
         <span
+          className="header-tagline"
           style={{
             fontFamily: 'var(--sans)',
             color: 'var(--text)',
@@ -367,6 +369,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         }}
       >
         <span
+          className="header-display-label"
           style={{
             fontFamily: 'var(--mono)',
             color: 'var(--text3)',

@@ -115,61 +115,87 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Mobile responsive */
 @media (max-width: 767px) {
-  .app-main {
-    flex-direction: column !important;
-  }
+  html { zoom: 1; }
+  html, body { overflow-y: auto !important; height: auto !important; }
+  #root { height: auto !important; min-height: 100dvh; }
 
-  .app-main > div {
-    width: 100% !important;
-    min-width: unset !important;
-    border-right: none !important;
-    border-bottom: 1px solid var(--border) !important;
-  }
-
-  /* Header mobile */
-  header {
+  /* Header */
+  header.app-header {
     height: 56px !important;
     min-height: 56px !important;
-    padding: 0 12px !important;
-    gap: 8px !important;
+    padding: 0 14px !important;
   }
-
-  .header-logo {
-    display: none !important;
-  }
-
-  .header-title {
-    display: none !important;
-  }
-
-  .header-controls {
+  .header-logo { display: none !important; }
+  .header-spacer { display: none !important; }
+  .header-tagline { display: none !important; }
+  .header-center {
+    position: static !important;
+    transform: none !important;
+    pointer-events: auto !important;
     flex: 1;
-    justify-content: flex-start !important;
-  }
-
-  .header-controls > span {
-    display: none !important;
-  }
-
-  .header-controls > div {
     display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
   }
+  .header-display-label { display: none !important; }
 
-  /* Portfolio panel mobile */
+  /* Layout */
+  .app-main {
+    flex-direction: column !important;
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+  }
   .portfolio-panel {
     width: 100% !important;
     min-width: unset !important;
-    max-height: 45% !important;
-    overflow-y: auto !important;
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
     border-right: none !important;
     border-bottom: 1px solid var(--border) !important;
   }
-
-  /* Results panel mobile */
-  .results-panel {
-    flex: 1 !important;
-    width: 100% !important;
-    min-width: unset !important;
-    overflow-y: auto !important;
+  .portfolio-panel-rows {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
   }
+  .results-panel {
+    flex: none !important;
+    width: 100% !important;
+    overflow: visible !important;
+    height: auto !important;
+    padding: 12px !important;
+    gap: 12px !important;
+  }
+
+  /* Holdings table — no inner scroll, full natural height */
+  .holdings-table {
+    flex: none !important;
+    height: auto !important;
+    overflow: visible !important;
+    min-height: 0 !important;
+  }
+  .holdings-rows {
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
+    flex: none !important;
+  }
+
+  /* Charts — stack vertically */
+  .charts-row {
+    flex-direction: column !important;
+    height: auto !important;
+    gap: 12px !important;
+  }
+  .charts-row > * {
+    flex: none !important;
+    height: auto !important;
+    min-height: 200px;
+  }
+
+  /* Touch targets */
+  button { min-height: 36px; }
 }

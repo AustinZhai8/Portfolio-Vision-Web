@@ -647,7 +647,7 @@ export default function PortfolioPanel({
         </div>
 
         {/* Scrollable rows */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '3px 16px', minHeight: 0 }}>
+        <div className="portfolio-panel-rows" style={{ flex: 1, overflowY: 'auto', padding: '3px 16px', minHeight: 0 }}>
           {getSortedRows().map((row) => {
             const type = autoType(row.ticker);
             const hasError = !!rowErrors[row.id];
