@@ -77,12 +77,19 @@ export default function InfoModal({ open, onClose }) {
             Our stock and ETF database is updated monthly. If a ticker you entered is highlighted in
             yellow, it simply means it isn't in our database yet — you can still enter it and track
             it as-is. To request an addition, email{' '}
-            <span style={{ color: ACCENT }}>austinhsi@gmail.com</span>
+            <span style={{ color: ACCENT }}>austinhzhai@gmail.com</span>
           </p>
           <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
             Holding spot price assets? If you hold any ETF tracking a physical commodity, just type
             the asset name directly. For example, type "Gold" instead of GLD, "Silver" instead of
             SLV, "Copper" instead of CPER. Portfolio Vision will recognize it automatically.
+          </p>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            What does "Untracked" mean? At the bottom of your results you may see a small percentage
+            listed as untracked. This simply means that either the ETF holds too many positions to
+            list individually (so only the largest holdings are tracked), or that only partial public
+            data is available for that fund. Your total invested amount is still accurate — untracked
+            just refers to holdings we cannot break down further.
           </p>
         </div>
       </div>
