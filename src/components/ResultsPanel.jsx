@@ -66,7 +66,7 @@ export default function ResultsPanel({
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px 60px',
+            gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
             gap: 0,
             padding: '8px 16px',
             borderBottom: '1px solid #182335',
@@ -80,7 +80,6 @@ export default function ResultsPanel({
             { label: 'TICKER', align: 'left', pl: 0 },
             { label: 'WEIGHT', align: 'left', pl: 0 },
             { label: 'VALUE', align: 'right', pl: 0, pr: 12 },
-            { label: 'TYPE', align: 'left', pl: 0 },
           ].map((col, i) => (
             <span
               key={i}

@@ -13,6 +13,14 @@ export const TICKER_ALIASES = {
   XEQT: 'VEQT.TO',
   XSP: 'VFV.TO',
   XSU: 'VFV.TO',
+  GOLD: 'GLD',
+  SILVER: 'SLV',
+  COPPER: 'CPER',
+  PLATINUM: 'PPLT',
+  PALLADIUM: 'PALL',
+  OIL: 'USO',
+  NATURALGAS: 'UNG',
+  'NATURAL GAS': 'UNG',
 };
 
 export function resolveTicker(ticker) {

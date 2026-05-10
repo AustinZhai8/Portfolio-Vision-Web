@@ -10,7 +10,7 @@ export const SECTOR_COLORS = {
   Utilities: '#facc15',
   'Basic Materials': '#fb923c',
   'Real Estate': '#84cc16',
-  Commodity: '#f59e0b',
+  Commodities: '#f59e0b',
   Crypto: '#8b5cf6',
   Unknown: '#64748b',
 };

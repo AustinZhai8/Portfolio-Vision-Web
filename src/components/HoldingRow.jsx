@@ -10,6 +10,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
   const info = getStockInfo(ticker);
   const dt = displayTicker(ticker);
   const unknown = !isKnownTicker(ticker);
+  const tickerDisplay = dt.length > 8 ? dt.slice(0, 7) + '…' : dt;
 
   return (
     <div
@@ -17,7 +18,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
       onMouseLeave={() => setHov(false)}
       style={{
         display: 'grid',
-        gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px 60px',
+        gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
         gap: 0,
         alignItems: 'center',
         padding: '0 16px',
@@ -72,9 +73,14 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
           color: hov ? ACCENT : '#b8d4f1',
           letterSpacing: '0.06em',
           transition: 'color 0.1s',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          display: 'block',
         }}
+        title={dt.length > 8 ? dt : undefined}
       >
-        {dt}
+        {tickerDisplay}
       </span>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingRight: 8 }}>
@@ -120,18 +126,6 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         }}
       >
         {fmtMoney(amount)}
-      </span>
-
-      <span
-        style={{
-          fontFamily: 'var(--mono)',
-          fontSize: 10,
-          color: unknown ? '#f4b942' : 'var(--text3)',
-          textTransform: 'uppercase',
-          letterSpacing: '0.06em',
-        }}
-      >
-        {unknown ? 'UNKNOWN' : 'STOCK'}
       </span>
     </div>
   );

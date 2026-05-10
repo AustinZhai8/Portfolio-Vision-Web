@@ -8551,7 +8551,7 @@
     "ZGLD.TO": {
       "_type": "commodity",
       "name": "BMO Gold Bullion ETF",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Global",
       "description": "Holds physical gold bullion stored in Toronto. Not decomposable into stock holdings."
     },
@@ -8565,44 +8565,107 @@
     "CASH.TO": {
       "_type": "commodity",
       "name": "Global X High Interest Savings ETF",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Canada",
       "description": "High-interest savings account ETF (money market). Not decomposable into stock holdings."
     },
     "ZMMK.TO": {
       "_type": "commodity",
       "name": "BMO Money Market Fund ETF",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Canada",
       "description": "Money market fund holding short-term government and corporate instruments. Not decomposable."
     },
     "GLD": {
       "_type": "commodity",
       "name": "SPDR Gold Shares",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Global",
       "description": "Holds physical gold bullion. Not decomposable into stock holdings."
     },
     "SLV": {
       "_type": "commodity",
       "name": "iShares Silver Trust",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Global",
       "description": "Holds physical silver bullion. Not decomposable into stock holdings."
     },
     "IAU": {
       "_type": "commodity",
       "name": "iShares Gold Trust",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Global",
       "description": "Holds physical gold bullion. Not decomposable into stock holdings."
     },
     "SGOL": {
       "_type": "commodity",
       "name": "abrdn Physical Gold Shares ETF",
-      "sector": "Commodity",
+      "sector": "Commodities",
       "country": "Global",
       "description": "Holds physical gold bullion stored in Switzerland. Not decomposable into stock holdings."
+    },
+    "AAAU": {
+      "_type": "commodity",
+      "name": "Goldman Sachs Physical Gold ETF",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Holds physical gold bullion. Not decomposable into stock holdings."
+    },
+    "PSLV": {
+      "_type": "commodity",
+      "name": "Sprott Physical Silver Trust",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Holds physical silver bullion. Not decomposable into stock holdings."
+    },
+    "CPER": {
+      "_type": "commodity",
+      "name": "United States Copper Index Fund",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Tracks copper futures prices. Not decomposable into stock holdings."
+    },
+    "PPLT": {
+      "_type": "commodity",
+      "name": "abrdn Physical Platinum Shares ETF",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Holds physical platinum bullion. Not decomposable into stock holdings."
+    },
+    "PALL": {
+      "_type": "commodity",
+      "name": "abrdn Physical Palladium Shares ETF",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Holds physical palladium bullion. Not decomposable into stock holdings."
+    },
+    "URANIUM": {
+      "_type": "commodity",
+      "name": "Uranium (spot price)",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Generic uranium commodity entry. Pass-through holding."
+    },
+    "OIL": {
+      "_type": "commodity",
+      "name": "iPath Pure Beta Crude Oil ETN",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Tracks crude oil prices. Not decomposable into stock holdings."
+    },
+    "USO": {
+      "_type": "commodity",
+      "name": "United States Oil Fund",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Tracks WTI crude oil futures. Not decomposable into stock holdings."
+    },
+    "UNG": {
+      "_type": "commodity",
+      "name": "United States Natural Gas Fund",
+      "sector": "Commodities",
+      "country": "Global",
+      "description": "Tracks Henry Hub natural gas futures. Not decomposable into stock holdings."
     }
   }
 }

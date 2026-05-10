@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   decompose,
   breakdownBySector,
@@ -7,9 +7,11 @@ import {
   isKnownTicker,
   resolveTicker,
 } from './utils/decompose';
+import { supabase } from './lib/supabase';
 import Header from './components/Header';
 import PortfolioPanel from './components/PortfolioPanel';
 import ResultsPanel from './components/ResultsPanel';
+import AuthModal from './components/AuthModal';
 
 const INITIAL_ROWS = [
   { id: 1, ticker: 'VFV', amount: '5000', currency: 'CAD' },
@@ -21,12 +23,22 @@ const nextId = () => _uid++;
 
 export default function App() {
   const [displayCurrency, setDisplayCurrency] = useState('USD');
-  // rows = what the user is currently editing
   const [rows, setRows] = useState(INITIAL_ROWS);
-  // committedRows = the snapshot that was last successfully decomposed
   const [committedRows, setCommittedRows] = useState(INITIAL_ROWS);
   const [rowErrors, setRowErrors] = useState({});
   const [animVersion, setAnimVersion] = useState(0);
+  const [user, setUser] = useState(null);
+  const [authOpen, setAuthOpen] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Decomposition runs only on committedRows so editing doesn't thrash results
   const { decomposed, sectors, countries, portfolioTotal, decomposeUnknown } = useMemo(() => {
@@ -91,7 +103,13 @@ export default function App() {
 
   return (
     <>
-      <Header displayCurrency={displayCurrency} setDisplayCurrency={setDisplayCurrency} />
+      <Header
+        displayCurrency={displayCurrency}
+        setDisplayCurrency={setDisplayCurrency}
+        user={user}
+        onOpenAuth={() => setAuthOpen(true)}
+      />
+      {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
       <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }}>
         <PortfolioPanel
           rows={rows}
@@ -101,7 +119,6 @@ export default function App() {
           onDecompose={handleDecompose}
           displayCurrency={displayCurrency}
           portfolioTotal={portfolioTotal}
-          warnings={warnings}
           nextId={nextId}
         />
         <ResultsPanel

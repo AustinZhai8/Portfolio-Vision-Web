@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { convertAmount, isEtf, isKnownTicker, resolveTicker } from '../utils/decompose';
+import { useState, useRef } from 'react';
+import { convertAmount, isEtf, isKnownTicker } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
 
 const ACCENT = '#a78bfa';
-const AMBER = '#f4b942';
 
 function autoType(ticker) {
   const t = ticker.trim().toUpperCase();
@@ -11,6 +10,112 @@ function autoType(ticker) {
   if (isEtf(t)) return 'ETF';
   if (isKnownTicker(t)) return 'Stock';
   return 'Unknown';
+}
+
+function InfoTooltip() {
+  const [show, setShow] = useState(false);
+  const hideTimer = useRef(null);
+
+  function scheduleHide() {
+    hideTimer.current = setTimeout(() => setShow(false), 150);
+  }
+
+  function cancelHide() {
+    if (hideTimer.current) {
+      clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+  }
+
+  return (
+    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
+      <span
+        onMouseEnter={() => { cancelHide(); setShow(true); }}
+        onMouseLeave={scheduleHide}
+        style={{
+          cursor: 'default',
+          fontSize: 13,
+          color: 'var(--text3)',
+          marginLeft: 7,
+          lineHeight: 1,
+          userSelect: 'none',
+        }}
+      >
+        ⓘ
+      </span>
+      {show && (
+        <div
+          onMouseEnter={cancelHide}
+          onMouseLeave={scheduleHide}
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 10px)',
+            left: -50,
+            width: 288,
+            background: '#0f1825',
+            border: '1px solid #253548',
+            borderRadius: 4,
+            padding: '12px 14px',
+            zIndex: 200,
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 10,
+              color: ACCENT,
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              marginBottom: 8,
+            }}
+          >
+            How Portfolio Vision works
+          </div>
+          <p
+            style={{
+              fontFamily: 'var(--sans, sans-serif)',
+              fontSize: 11.5,
+              color: 'var(--text2)',
+              lineHeight: 1.6,
+              margin: '0 0 8px',
+            }}
+          >
+            Enter any combination of ETFs and stocks with their invested amounts. Portfolio Vision
+            recursively decomposes each ETF into its underlying holdings, then aggregates everything
+            into a unified view across all your positions.
+          </p>
+          <p
+            style={{
+              fontFamily: 'var(--sans, sans-serif)',
+              fontSize: 11.5,
+              color: 'var(--text2)',
+              lineHeight: 1.6,
+              margin: '0 0 8px',
+            }}
+          >
+            Our stock and ETF database is updated monthly. If a ticker you entered is highlighted in
+            yellow, it simply means it isn't in our database yet — you can still enter it and track
+            it as-is. To request an addition, email{' '}
+            <span style={{ color: ACCENT }}>austinhsi@gmail.com</span>
+          </p>
+          <p
+            style={{
+              fontFamily: 'var(--sans, sans-serif)',
+              fontSize: 11.5,
+              color: 'var(--text2)',
+              lineHeight: 1.6,
+              margin: 0,
+            }}
+          >
+            Holding spot price assets? If you hold any ETF tracking a physical commodity, just type
+            the asset name directly. For example, type "Gold" instead of GLD, "Silver" instead of
+            SLV, "Copper" instead of CPER. Portfolio Vision will recognize it automatically.
+          </p>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function CurrencyToggle({ value, onChange }) {
@@ -62,7 +167,6 @@ export default function PortfolioPanel({
   onDecompose,
   displayCurrency,
   portfolioTotal,
-  warnings,
   nextId,
 }) {
   const [focusedId, setFocusedId] = useState(null);
@@ -82,7 +186,6 @@ export default function PortfolioPanel({
 
   function updateRow(id, field, value) {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, [field]: value } : r)));
-    // Clear error for this row when user edits it
     if (rowErrors[id]) {
       setRowErrors((prev) => {
         const next = { ...prev };
@@ -92,7 +195,6 @@ export default function PortfolioPanel({
     }
   }
 
-  // Live total from current form state (updates as user types)
   const liveTotal = rows.reduce((sum, row) => {
     const amt = parseFloat(row.amount) || 0;
     return sum + convertAmount(amt, row.currency, displayCurrency);
@@ -131,17 +233,20 @@ export default function PortfolioPanel({
           alignItems: 'center',
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--mono)',
-            fontSize: 10,
-            color: 'var(--text2)',
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-          }}
-        >
-          Portfolio
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <span
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 10,
+              color: 'var(--text2)',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Portfolio
+          </span>
+          <InfoTooltip />
+        </div>
         <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>
           {rows.length} POSITION{rows.length !== 1 ? 'S' : ''}
         </span>
@@ -178,8 +283,21 @@ export default function PortfolioPanel({
         {rows.map((row) => {
           const type = autoType(row.ticker);
           const hasError = !!rowErrors[row.id];
+          const isUnknown = type === 'Unknown' && !!row.ticker;
+          const showTypeBadge = !!row.ticker && type !== 'Unknown';
           return (
-            <div key={row.id} style={{ borderBottom: '1px solid #0d1520', paddingBottom: 2 }}>
+            <div
+              key={row.id}
+              style={{
+                borderBottom: '1px solid ' + (isUnknown ? 'rgba(244,185,66,0.15)' : '#0d1520'),
+                background: isUnknown ? 'rgba(244,185,66,0.04)' : 'transparent',
+                paddingBottom: 2,
+                marginLeft: -16,
+                marginRight: -16,
+                paddingLeft: 16,
+                paddingRight: 16,
+              }}
+            >
               <div
                 style={{
                   display: 'grid',
@@ -205,48 +323,56 @@ export default function PortfolioPanel({
                       fontWeight: 500,
                       letterSpacing: '0.1em',
                       borderColor: hasError ? '#f05a7e' : focusedId === `${row.id}-t` ? ACCENT : '#182335',
-                      color: type === 'Unknown' && row.ticker ? '#f4b942' : '#c8ddf0',
+                      color: isUnknown ? '#f4b942' : '#c8ddf0',
                     }}
                   />
-                  {/* Auto-detected type badge */}
-                  {row.ticker && (
-                    <span
-                      style={{
-                        position: 'absolute',
-                        right: 5,
-                        top: '50%',
-                        transform: 'translateY(-50%)',
-                        fontFamily: 'var(--mono)',
-                        fontSize: 8,
-                        color: type === 'ETF' ? ACCENT : type === 'Unknown' ? AMBER : 'var(--text3)',
-                        letterSpacing: '0.06em',
-                        pointerEvents: 'none',
-                      }}
-                    >
-                      {type}
-                    </span>
-                  )}
                 </div>
 
                 {/* Amount */}
-                <input
-                  type="number"
-                  value={row.amount}
-                  placeholder="0"
-                  min="0"
-                  step="any"
-                  onChange={(e) => updateRow(row.id, 'amount', e.target.value)}
-                  onFocus={() => setFocusedId(`${row.id}-a`)}
-                  onBlur={() => setFocusedId(null)}
-                  style={{
-                    ...inputBase,
-                    fontSize: 13,
-                    textAlign: 'right',
-                    borderColor: hasError && !rowErrors[row.id]?.includes('Ticker')
-                      ? '#f05a7e'
-                      : focusedId === `${row.id}-a` ? ACCENT : '#182335',
-                  }}
-                />
+                <div style={{ position: 'relative' }}>
+                  {showTypeBadge && (
+                    <span
+                      style={{
+                        position: 'absolute',
+                        left: 6,
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        fontFamily: 'var(--mono)',
+                        fontSize: 7.5,
+                        fontWeight: 600,
+                        color: type === 'ETF' ? ACCENT : 'var(--text3)',
+                        letterSpacing: '0.06em',
+                        pointerEvents: 'none',
+                        lineHeight: 1,
+                      }}
+                    >
+                      {type === 'ETF' ? 'ETF' : 'STK'}
+                    </span>
+                  )}
+                  <input
+                    type="number"
+                    value={row.amount}
+                    placeholder="0"
+                    min="0"
+                    step="any"
+                    onChange={(e) => updateRow(row.id, 'amount', e.target.value)}
+                    onFocus={() => setFocusedId(`${row.id}-a`)}
+                    onBlur={() => setFocusedId(null)}
+                    style={{
+                      ...inputBase,
+                      fontSize: 13,
+                      textAlign: 'right',
+                      paddingLeft: showTypeBadge ? 30 : 8,
+                      paddingRight: 6,
+                      borderColor:
+                        hasError && !rowErrors[row.id]?.includes('Ticker')
+                          ? '#f05a7e'
+                          : focusedId === `${row.id}-a`
+                          ? ACCENT
+                          : '#182335',
+                    }}
+                  />
+                </div>
 
                 {/* Currency toggle */}
                 <CurrencyToggle
@@ -328,35 +454,6 @@ export default function PortfolioPanel({
         >
           + ADD POSITION
         </button>
-
-        {/* Unrecognized tickers warning */}
-        {warnings.length > 0 && (
-          <div
-            style={{
-              marginTop: 10,
-              padding: '7px 10px',
-              background: 'rgba(244, 185, 66, 0.07)',
-              border: '1px solid rgba(244, 185, 66, 0.3)',
-              borderRadius: 3,
-            }}
-          >
-            <div
-              style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 9,
-                color: AMBER,
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                marginBottom: 3,
-              }}
-            >
-              Unrecognized tickers
-            </div>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#b8a060', lineHeight: 1.5 }}>
-              {warnings.join(', ')} — included in results as Unknown
-            </div>
-          </div>
-        )}
       </div>
 
       {/* Footer */}

@@ -1,6 +1,175 @@
+import { useState, useRef, useEffect } from 'react';
+import { supabase } from '../lib/supabase';
+
 const ACCENT = '#a78bfa';
 
-export default function Header({ displayCurrency, setDisplayCurrency }) {
+function avatarInitials(user) {
+  if (!user?.email) return 'AZ';
+  return user.email.split('@')[0].slice(0, 2).toUpperCase();
+}
+
+function AvatarButton({ user, onOpenAuth }) {
+  const [dropOpen, setDropOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    if (!dropOpen) return;
+    function handleClick(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setDropOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [dropOpen]);
+
+  async function handleLogout() {
+    setDropOpen(false);
+    await supabase.auth.signOut();
+  }
+
+  if (!user) {
+    return (
+      <div
+        onClick={onOpenAuth}
+        title="Sign in"
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: '#182335',
+          border: '1px solid #253548',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
+          zIndex: 1,
+          flexShrink: 0,
+          cursor: 'pointer',
+          transition: 'border-color 0.15s',
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.borderColor = ACCENT)}
+        onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#253548')}
+      >
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text2)' }}>
+          AZ
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div ref={containerRef} style={{ position: 'relative', zIndex: 100, flexShrink: 0 }}>
+      <div
+        onClick={() => setDropOpen((v) => !v)}
+        title={user.email}
+        style={{
+          width: 32,
+          height: 32,
+          borderRadius: '50%',
+          background: ACCENT,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          border: '1px solid transparent',
+          transition: 'opacity 0.15s',
+        }}
+        onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+        onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+      >
+        <span
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 12,
+            fontWeight: 700,
+            color: '#07090e',
+            letterSpacing: '0.04em',
+          }}
+        >
+          {avatarInitials(user)}
+        </span>
+      </div>
+
+      {dropOpen && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 'calc(100% + 8px)',
+            right: 0,
+            width: 220,
+            background: '#0f1825',
+            border: '1px solid #253548',
+            borderRadius: 4,
+            overflow: 'hidden',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            style={{
+              padding: '10px 14px 8px',
+              borderBottom: '1px solid #182335',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 9,
+                color: 'var(--text3)',
+                letterSpacing: '0.1em',
+                marginBottom: 3,
+              }}
+            >
+              SIGNED IN AS
+            </div>
+            <div
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 11,
+                color: '#c8ddf0',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+              title={user.email}
+            >
+              {user.email}
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleLogout}
+            style={{
+              width: '100%',
+              padding: '9px 14px',
+              background: 'none',
+              border: 'none',
+              color: 'var(--text2)',
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              cursor: 'pointer',
+              textAlign: 'left',
+              transition: 'background 0.12s, color 0.12s',
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = 'rgba(240,90,126,0.08)';
+              e.currentTarget.style.color = '#f05a7e';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'none';
+              e.currentTarget.style.color = 'var(--text2)';
+            }}
+          >
+            Log out
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function Header({ displayCurrency, setDisplayCurrency, user, onOpenAuth }) {
   return (
     <header
       style={{
@@ -17,7 +186,7 @@ export default function Header({ displayCurrency, setDisplayCurrency }) {
         zIndex: 20,
       }}
     >
-      {/* Logo — marginLeft mirrors the visual offset of the right-controls group */}
+      {/* Logo */}
       <img
         src="/PortfolioVision.png"
         alt="Portfolio Vision"
@@ -30,10 +199,9 @@ export default function Header({ displayCurrency, setDisplayCurrency }) {
         }}
       />
 
-      {/* Pushes right controls to the far right */}
       <div style={{ flex: 1 }} />
 
-      {/* Title — absolutely centered on the full header width, non-interactive */}
+      {/* Title — absolutely centered */}
       <div
         style={{
           position: 'absolute',
@@ -75,7 +243,7 @@ export default function Header({ displayCurrency, setDisplayCurrency }) {
         </span>
       </div>
 
-      {/* Right controls — z-index keeps them clickable above the absolute title */}
+      {/* Right controls */}
       <div
         style={{
           display: 'flex',
@@ -130,25 +298,7 @@ export default function Header({ displayCurrency, setDisplayCurrency }) {
         </div>
       </div>
 
-      <div
-        style={{
-          width: 32,
-          height: 32,
-          borderRadius: '50%',
-          background: '#182335',
-          border: '1px solid #253548',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          position: 'relative',
-          zIndex: 1,
-          flexShrink: 0,
-        }}
-      >
-        <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text2)' }}>
-          AZ
-        </span>
-      </div>
+      <AvatarButton user={user} onOpenAuth={onOpenAuth} />
     </header>
   );
 }
