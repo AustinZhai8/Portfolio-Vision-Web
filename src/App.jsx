@@ -129,6 +129,7 @@ export default function App() {
           portfolioTotal={portfolioTotal}
           nextId={nextId}
           user={user}
+          onOpenAuth={() => setAuthOpen(true)}
           onLoadPortfolio={(holdings) => {
             const newRows = holdings.map((h) => ({ id: nextId(), ...h }));
             setRows(newRows);

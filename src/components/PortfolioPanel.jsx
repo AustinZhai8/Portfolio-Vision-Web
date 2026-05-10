@@ -270,6 +270,7 @@ export default function PortfolioPanel({
   portfolioTotal,
   nextId,
   user,
+  onOpenAuth,
   onLoadPortfolio,
 }) {
   const [focusedId, setFocusedId] = useState(null);
@@ -610,6 +611,37 @@ export default function PortfolioPanel({
         </div>
 
         {/* My Portfolios section */}
+        {!user ? (
+          <div
+            style={{
+              borderTop: '1px solid var(--border)',
+              flexShrink: 0,
+              padding: '14px 16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <span
+              onClick={onOpenAuth}
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 14,
+                color: 'var(--text3)',
+                letterSpacing: '0.06em',
+                cursor: 'pointer',
+                textDecoration: 'underline',
+                textDecorationColor: 'var(--border2)',
+                textUnderlineOffset: 3,
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
+            >
+              Sign in to save portfolios
+            </span>
+          </div>
+        ) : (
         <div
           style={{
             borderTop: '1px solid var(--border)',
@@ -647,19 +679,7 @@ export default function PortfolioPanel({
             )}
           </div>
 
-          {!user ? (
-            <div
-              style={{
-                padding: '4px 16px 12px',
-                fontFamily: 'var(--mono)',
-                fontSize: 10,
-                color: 'var(--text3)',
-                lineHeight: 1.5,
-              }}
-            >
-              Sign in to save portfolios
-            </div>
-          ) : pfLoading ? (
+          {pfLoading ? (
             <div style={{ padding: '4px 16px 12px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>
               Loading…
             </div>
@@ -727,6 +747,7 @@ export default function PortfolioPanel({
             </div>
           )}
         </div>
+        )}
 
         {/* Footer */}
         <div
