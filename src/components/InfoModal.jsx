@@ -1,0 +1,91 @@
+const ACCENT = '#a78bfa';
+
+export default function InfoModal({ open, onClose }) {
+  if (!open) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'var(--modal-overlay)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 1000,
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: 'calc(100% - 40px)',
+          maxWidth: 520,
+          background: 'var(--panel)',
+          border: '1px solid var(--border2)',
+          borderRadius: 6,
+          overflow: 'hidden',
+          boxShadow: '0 24px 64px rgba(0,0,0,0.3)',
+        }}
+      >
+        <div
+          style={{
+            padding: '20px 24px',
+            borderBottom: '1px solid var(--border)',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
+          }}
+        >
+          <div
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 11,
+              fontWeight: 600,
+              color: 'var(--text2)',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            How Portfolio Vision Works
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text3)',
+              cursor: 'pointer',
+              fontSize: 20,
+              lineHeight: 1,
+              padding: '2px 6px',
+              marginTop: -2,
+            }}
+          >
+            ×
+          </button>
+        </div>
+
+        <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            Enter any combination of ETFs and stocks with their invested amounts. Portfolio Vision
+            recursively decomposes each ETF into its underlying holdings, then aggregates everything
+            into a unified view across all your positions.
+          </p>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            Our stock and ETF database is updated monthly. If a ticker you entered is highlighted in
+            yellow, it simply means it isn't in our database yet — you can still enter it and track
+            it as-is. To request an addition, email{' '}
+            <span style={{ color: ACCENT }}>austinhsi@gmail.com</span>
+          </p>
+          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
+            Holding spot price assets? If you hold any ETF tracking a physical commodity, just type
+            the asset name directly. For example, type "Gold" instead of GLD, "Silver" instead of
+            SLV, "Copper" instead of CPER. Portfolio Vision will recognize it automatically.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}

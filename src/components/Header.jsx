@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import InfoModal from './InfoModal';
 
 const ACCENT = '#a78bfa';
 
@@ -251,22 +252,25 @@ function AvatarButton({ user, onOpenAuth }) {
 }
 
 export default function Header({ displayCurrency, setDisplayCurrency, user, onOpenAuth, theme, onToggleTheme }) {
+  const [infoOpen, setInfoOpen] = useState(false);
+
   return (
-    <header
-      style={{
-        height: 80,
-        minHeight: 80,
-        background: 'var(--panel)',
-        borderBottom: '1px solid var(--border)',
-        position: 'relative',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 20px',
-        gap: 12,
-        flexShrink: 0,
-        zIndex: 20,
-      }}
-    >
+    <>
+      <header
+        style={{
+          height: 80,
+          minHeight: 80,
+          background: 'var(--panel)',
+          borderBottom: '1px solid var(--border)',
+          position: 'relative',
+          display: 'flex',
+          alignItems: 'center',
+          padding: '0 20px',
+          gap: 12,
+          flexShrink: 0,
+          zIndex: 20,
+        }}
+      >
       <img
         src="/PortfolioVision.png"
         alt="Portfolio Vision"
@@ -287,6 +291,8 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
           position: 'absolute',
           left: 0,
           right: 0,
+          top: '50%',
+          transform: 'translateY(calc(-50% + 8px))',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -321,6 +327,30 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         >
           PORTFOLIO<span style={{ color: ACCENT }}>VISION</span>
         </span>
+        <button
+          type="button"
+          onClick={() => setInfoOpen(true)}
+          style={{
+            background: 'none',
+            border: 'none',
+            fontFamily: 'var(--mono)',
+            fontSize: 9,
+            color: 'var(--text3)',
+            cursor: 'pointer',
+            padding: '2px 0 0',
+            marginTop: 0,
+            letterSpacing: '0.04em',
+            textDecoration: 'underline',
+            textDecorationColor: 'var(--border2)',
+            textUnderlineOffset: 2,
+            transition: 'color 0.12s',
+            pointerEvents: 'auto',
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = ACCENT)}
+          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
+        >
+          How does this work?
+        </button>
       </div>
 
       {/* Right controls */}
@@ -380,6 +410,8 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
 
       <ThemeToggle theme={theme} onToggle={onToggleTheme} />
       <AvatarButton user={user} onOpenAuth={onOpenAuth} />
-    </header>
+      </header>
+      <InfoModal open={infoOpen} onClose={() => setInfoOpen(false)} />
+    </>
   );
 }

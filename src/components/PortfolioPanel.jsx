@@ -13,88 +13,6 @@ function autoType(ticker) {
   return 'Unknown';
 }
 
-function InfoTooltip() {
-  const [show, setShow] = useState(false);
-  const hideTimer = useRef(null);
-
-  function scheduleHide() {
-    hideTimer.current = setTimeout(() => setShow(false), 150);
-  }
-
-  function cancelHide() {
-    if (hideTimer.current) {
-      clearTimeout(hideTimer.current);
-      hideTimer.current = null;
-    }
-  }
-
-  return (
-    <div style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}>
-      <span
-        onMouseEnter={() => { cancelHide(); setShow(true); }}
-        onMouseLeave={scheduleHide}
-        style={{
-          cursor: 'default',
-          fontSize: 13,
-          color: 'var(--text3)',
-          marginLeft: 7,
-          lineHeight: 1,
-          userSelect: 'none',
-        }}
-      >
-        ⓘ
-      </span>
-      {show && (
-        <div
-          onMouseEnter={cancelHide}
-          onMouseLeave={scheduleHide}
-          style={{
-            position: 'absolute',
-            top: 'calc(100% + 10px)',
-            left: -50,
-            width: 288,
-            background: 'var(--card)',
-            border: '1px solid var(--border2)',
-            borderRadius: 4,
-            padding: '12px 14px',
-            zIndex: 200,
-            boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
-          }}
-        >
-          <div
-            style={{
-              fontFamily: 'var(--mono)',
-              fontSize: 10,
-              color: ACCENT,
-              letterSpacing: '0.1em',
-              textTransform: 'uppercase',
-              marginBottom: 8,
-            }}
-          >
-            How Portfolio Vision works
-          </div>
-          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 11.5, color: 'var(--text2)', lineHeight: 1.6, margin: '0 0 8px' }}>
-            Enter any combination of ETFs and stocks with their invested amounts. Portfolio Vision
-            recursively decomposes each ETF into its underlying holdings, then aggregates everything
-            into a unified view across all your positions.
-          </p>
-          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 11.5, color: 'var(--text2)', lineHeight: 1.6, margin: '0 0 8px' }}>
-            Our stock and ETF database is updated monthly. If a ticker you entered is highlighted in
-            yellow, it simply means it isn't in our database yet — you can still enter it and track
-            it as-is. To request an addition, email{' '}
-            <span style={{ color: ACCENT }}>austinhsi@gmail.com</span>
-          </p>
-          <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 11.5, color: 'var(--text2)', lineHeight: 1.6, margin: 0 }}>
-            Holding spot price assets? If you hold any ETF tracking a physical commodity, just type
-            the asset name directly. For example, type "Gold" instead of GLD, "Silver" instead of
-            SLV, "Copper" instead of CPER. Portfolio Vision will recognize it automatically.
-          </p>
-        </div>
-      )}
-    </div>
-  );
-}
-
 function CurrencyToggle({ value, onChange }) {
   return (
     <div
@@ -388,20 +306,17 @@ export default function PortfolioPanel({
             alignItems: 'center',
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <span
-              style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 10,
-                color: 'var(--text2)',
-                letterSpacing: '0.12em',
-                textTransform: 'uppercase',
-              }}
-            >
-              Portfolio
-            </span>
-            <InfoTooltip />
-          </div>
+          <span
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 10,
+              color: 'var(--text2)',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+            }}
+          >
+            Portfolio
+          </span>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>
             {rows.length} POSITION{rows.length !== 1 ? 'S' : ''}
           </span>
