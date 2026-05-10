@@ -196,6 +196,17 @@ input[type=number]::-webkit-outer-spin-button {
     min-height: 200px;
   }
 
+  /* Header: move USD/CAD to left, wordmark centered */
+  .header-controls { order: -1; }
+  .header-center { gap: 2px !important; }
+
+  /* Holdings: drop weight column, fix grid */
+  .holdings-headers,
+  .holding-row {
+    grid-template-columns: 24px 28px 1fr 62px 88px !important;
+  }
+  .holding-weight { display: none !important; }
+
   /* Touch targets */
   button { min-height: 36px; }
 }

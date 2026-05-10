@@ -16,6 +16,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
+      className="holding-row"
       style={{
         display: 'grid',
         gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
@@ -83,7 +84,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         {tickerDisplay}
       </span>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingRight: 8 }}>
+      <div className="holding-weight" style={{ display: 'flex', alignItems: 'center', gap: 6, paddingRight: 8 }}>
         <div
           style={{
             flex: 1,

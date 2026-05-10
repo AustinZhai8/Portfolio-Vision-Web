@@ -64,6 +64,7 @@ export default function ResultsPanel({
       >
         {/* Column headers */}
         <div
+          className="holdings-headers"
           style={{
             display: 'grid',
             gridTemplateColumns: '24px 30px 1fr 68px 1fr 100px',
@@ -78,11 +79,12 @@ export default function ResultsPanel({
             { label: '', align: 'left', pl: 0 },
             { label: 'COMPANY', align: 'left', pl: 10 },
             { label: 'TICKER', align: 'left', pl: 0 },
-            { label: 'WEIGHT', align: 'left', pl: 0 },
+            { label: 'WEIGHT', align: 'left', pl: 0, className: 'holding-weight' },
             { label: 'VALUE', align: 'right', pl: 0, pr: 12 },
           ].map((col, i) => (
             <span
               key={i}
+              className={col.className}
               style={{
                 fontFamily: 'var(--mono)',
                 fontSize: 9,
