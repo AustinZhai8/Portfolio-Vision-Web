@@ -177,6 +177,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
         </div>
 
         <span
+          className="holding-ticker"
           style={{
             fontFamily: 'var(--mono)',
             fontSize: 13,

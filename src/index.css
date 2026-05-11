@@ -180,10 +180,12 @@ input[type=number]::-webkit-outer-spin-button {
   /* Header: move USD/CAD to left, wordmark centered */
   .header-controls { order: -1; }
   .header-center { gap: 2px !important; }
+  /* Remove touch-target min-height from the info link so it doesn't push wordmark up */
+  .header-center button { min-height: auto !important; }
 
   /* Holdings: show percentage, hide bar */
   .holdings-headers {
-    grid-template-columns: 24px 28px 1fr 62px 0 72px 22px !important;
+    grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
   }
   .holding-row {
     grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
@@ -191,6 +193,8 @@ input[type=number]::-webkit-outer-spin-button {
   .holdings-headers .holding-weight { display: none !important; }
   .holding-weight { display: flex !important; gap: 0 !important; }
   .holding-weight-bar { display: none !important; }
+  /* Gap between company ellipsis and ticker, shift ticker/% right */
+  .holding-ticker { padding-left: 8px !important; }
 
   /* Touch targets */
   button { min-height: 36px; }

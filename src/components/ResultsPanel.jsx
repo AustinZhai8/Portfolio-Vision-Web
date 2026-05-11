@@ -79,7 +79,7 @@ export default function ResultsPanel({
             { label: '#', align: 'left', pl: 0 },
             { label: '', align: 'left', pl: 0 },
             { label: 'COMPANY', align: 'left', pl: 10 },
-            { label: 'TICKER', align: 'left', pl: 0 },
+            { label: 'TICKER', align: 'left', pl: 0, className: 'holding-ticker' },
             { label: 'WEIGHT', align: 'left', pl: 0, className: 'holding-weight' },
             { label: 'VALUE', align: 'right', pl: 0, pr: 4 },
             { label: '', align: 'left', pl: 0 },
