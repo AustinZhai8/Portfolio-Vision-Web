@@ -103,6 +103,7 @@ input[type=number]::-webkit-outer-spin-button {
     height: 56px !important;
     min-height: 56px !important;
     padding: 0 14px !important;
+    justify-content: space-between !important;
   }
   .header-logo { display: none !important; }
   .header-spacer { display: none !important; }
@@ -192,7 +193,7 @@ input[type=number]::-webkit-outer-spin-button {
   .holding-row {
     grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
   }
-  .holdings-headers .holding-weight { display: none !important; }
+  .holdings-headers .holding-weight { visibility: hidden !important; }
   .holding-weight { display: flex !important; gap: 0 !important; }
   .holding-weight-bar { display: none !important; }
   /* Gap between company ellipsis and ticker, shift ticker/% right */
