@@ -31,12 +31,6 @@ export default function App() {
   const [animVersion, setAnimVersion] = useState(0);
   const [user, setUser] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
-  const [theme, setTheme] = useState(() => localStorage.getItem('pv-theme') || 'dark');
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('pv-theme', theme);
-  }, [theme]);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -116,8 +110,6 @@ export default function App() {
 
   const animKey = `${displayCurrency}-${animVersion}`;
 
-  const toggleTheme = () => setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
-
   return (
     <Routes>
       <Route
@@ -129,8 +121,6 @@ export default function App() {
               setDisplayCurrency={setDisplayCurrency}
               user={user}
               onOpenAuth={() => setAuthOpen(true)}
-              theme={theme}
-              onToggleTheme={toggleTheme}
             />
             {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
             <div style={{ flex: 1, display: 'flex', overflow: 'hidden', minHeight: 0 }} className="app-main">
@@ -173,8 +163,6 @@ export default function App() {
             user={user}
             displayCurrency={displayCurrency}
             setDisplayCurrency={setDisplayCurrency}
-            theme={theme}
-            onToggleTheme={toggleTheme}
           />
         }
       />

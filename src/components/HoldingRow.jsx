@@ -195,6 +195,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
 
         <div className="holding-weight" style={{ display: 'flex', alignItems: 'center', gap: 6, paddingRight: 8 }}>
           <div
+            className="holding-weight-bar"
             style={{
               flex: 1,
               height: 3,
@@ -222,7 +223,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
               textAlign: 'right',
             }}
           >
-            {weight.toFixed(2)}%
+            {weight.toFixed(1)}%
           </span>
         </div>
 

@@ -30,27 +30,6 @@
   --sans: 'IBM Plex Sans', system-ui, 'Segoe UI', Roboto, sans-serif;
 }
 
-[data-theme="light"] {
-  --bg:          #eef2f7;
-  --panel:       #ffffff;
-  --card:        #f4f7fb;
-  --card-hover:  #e8eff8;
-  --border:      #dce6f2;
-  --border2:     #c0d2e4;
-  --border-sub:  #e8eff8;
-  --input-bg:    #ffffff;
-  --footer-bg:   #f8fafc;
-  --avatar-bg:   #dce6f2;
-  --bar-track:   #dce6f2;
-  --stripe1:     #b8ccd8;
-  --stripe2:     #ccd8e4;
-  --modal-overlay: rgba(15, 30, 50, 0.5);
-  --scrollbar:   #c0d2e4;
-  --text:  #0d1e30;
-  --text2: #2a4a6a;
-  --text3: #5a7a9a;
-}
-
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -136,7 +115,8 @@ input[type=number]::-webkit-outer-spin-button {
     display: flex !important;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 2px !important;
+    justify-content: center !important;
   }
   .header-display-label { display: none !important; }
   .header-wordmark { font-size: 15px !important; }
@@ -201,12 +181,16 @@ input[type=number]::-webkit-outer-spin-button {
   .header-controls { order: -1; }
   .header-center { gap: 2px !important; }
 
-  /* Holdings: drop weight column, fix grid */
-  .holdings-headers,
-  .holding-row {
-    grid-template-columns: 24px 28px 1fr 62px 72px 22px !important;
+  /* Holdings: show percentage, hide bar */
+  .holdings-headers {
+    grid-template-columns: 24px 28px 1fr 62px 0 72px 22px !important;
   }
-  .holding-weight { display: none !important; }
+  .holding-row {
+    grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
+  }
+  .holdings-headers .holding-weight { display: none !important; }
+  .holding-weight { display: flex !important; gap: 0 !important; }
+  .holding-weight-bar { display: none !important; }
 
   /* Touch targets */
   button { min-height: 36px; }

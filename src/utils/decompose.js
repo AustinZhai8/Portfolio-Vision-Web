@@ -24,6 +24,7 @@ export const TICKER_ALIASES = {
   VSP: 'VFV.TO',
   ZSP: 'VFV.TO',
   YINN: 'FXI',
+  SVR: 'SLV',
 };
 
 export function resolveTicker(ticker) {
