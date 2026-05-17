@@ -1,6 +1,10 @@
 const priceCache = {};
 const CACHE_TTL = 5 * 60 * 1000;
 
+function isCad(ticker) {
+  return ticker.endsWith('.TO') || ticker.endsWith('.V');
+}
+
 export async function fetchPrices(tickers, { force = false } = {}) {
   const now = Date.now();
   const result = {};
@@ -21,30 +25,29 @@ export async function fetchPrices(tickers, { force = false } = {}) {
 
   if (toFetch.length === 0) return result;
 
-  const rawResults = await Promise.all(
-    toFetch.map(async (ticker) => {
-      try {
-        const res = await fetch(
-          `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(ticker)}`
-        );
-        if (!res.ok) return { ticker, price: null, currency: null };
-        const data = await res.json();
-        const meta = data.chart?.result?.[0]?.meta;
-        if (!meta?.regularMarketPrice) return { ticker, price: null, currency: null };
-        return {
-          ticker,
-          price: meta.regularMarketPrice,
-          currency: (meta.currency ?? 'USD').toUpperCase(),
-        };
-      } catch {
-        return { ticker, price: null, currency: null };
-      }
-    })
-  );
+  const apiKey = import.meta.env.VITE_TWELVE_DATA_KEY;
+  const symbols = toFetch.join(',');
 
-  const needsConversion = rawResults.some((r) => r.price != null && r.currency !== 'CAD');
+  let rawData;
+  try {
+    const res = await fetch(
+      `https://api.twelvedata.com/price?symbol=${encodeURIComponent(symbols)}&apikey=${apiKey}`
+    );
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    rawData = await res.json();
+  } catch {
+    for (const ticker of toFetch) result[ticker] = null;
+    return result;
+  }
+
+  // Normalize: single-ticker response is { price: "..." }, multi-ticker is { TICKER: { price: "..." } }
+  const normalized = toFetch.length === 1
+    ? { [toFetch[0]]: rawData }
+    : rawData;
+
+  const usdTickers = toFetch.filter((t) => !isCad(t) && normalized[t]?.price != null);
   let usdCadRate = 1.385;
-  if (needsConversion) {
+  if (usdTickers.length > 0) {
     try {
       const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=CAD');
       const data = await res.json();
@@ -52,12 +55,14 @@ export async function fetchPrices(tickers, { force = false } = {}) {
     } catch { /* use built-in fallback */ }
   }
 
-  for (const { ticker, price, currency } of rawResults) {
-    if (price == null) {
+  for (const ticker of toFetch) {
+    const entry = normalized[ticker];
+    const price = entry?.price != null ? parseFloat(entry.price) : null;
+    if (price == null || isNaN(price)) {
       result[ticker] = null;
       continue;
     }
-    const priceCAD = currency === 'CAD' ? price : price * usdCadRate;
+    const priceCAD = isCad(ticker) ? price : price * usdCadRate;
     priceCache[ticker] = { priceCAD, fetchedAt: now };
     result[ticker] = priceCAD;
   }
