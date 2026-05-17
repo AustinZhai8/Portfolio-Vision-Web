@@ -308,7 +308,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, defaultInp
         </button>
       </div>
 
-      {/* Right controls */}
+      {/* Right controls: currency toggle */}
       <div
         className="header-controls"
         style={{
@@ -363,45 +363,46 @@ export default function Header({ displayCurrency, setDisplayCurrency, defaultInp
             </button>
           ))}
         </div>
+      </div>
 
-        <div className="header-ctrl-sep" style={{ width: 1, height: 18, background: 'var(--border2)', flexShrink: 0 }} />
-
-        <div
-          className="header-input-type-ctrl"
-          title="Default input type for new rows"
-          style={{
-            display: 'flex',
-            gap: 3,
-            background: 'var(--input-bg)',
-            borderRadius: 4,
-            padding: 3,
-            border: '1px solid var(--border2)',
-          }}
-        >
-          {[{ key: 'amount', short: '$', long: '$ Amount' }, { key: 'shares', short: '#', long: '# Shares' }].map(({ key, short, long }) => (
-            <button
-              key={key}
-              onClick={() => setDefaultInputType(key)}
-              title={key === 'amount' ? 'New rows: dollar amount' : 'New rows: share count'}
-              style={{
-                padding: '4px 10px',
-                background: defaultInputType === key ? ACCENT : 'transparent',
-                border: 'none',
-                borderRadius: 2,
-                cursor: 'pointer',
-                fontFamily: 'var(--mono)',
-                fontWeight: 600,
-                color: defaultInputType === key ? '#07090e' : 'var(--text3)',
-                transition: 'all 0.15s',
-                letterSpacing: '0.08em',
-                fontSize: 10,
-              }}
-            >
-              <span className="header-ctrl-long">{long}</span>
-              <span className="header-ctrl-short">{short}</span>
-            </button>
-          ))}
-        </div>
+      {/* $/# toggle — direct header child so position:absolute references the header */}
+      <div
+        className="header-input-type-ctrl"
+        title="Default input type for new rows"
+        style={{
+          display: 'flex',
+          gap: 3,
+          background: 'var(--input-bg)',
+          borderRadius: 4,
+          padding: 3,
+          border: '1px solid var(--border2)',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {[{ key: 'amount', short: '$', long: '$ Amount' }, { key: 'shares', short: '#', long: '# Shares' }].map(({ key, short, long }) => (
+          <button
+            key={key}
+            onClick={() => setDefaultInputType(key)}
+            title={key === 'amount' ? 'New rows: dollar amount' : 'New rows: share count'}
+            style={{
+              padding: '4px 10px',
+              background: defaultInputType === key ? ACCENT : 'transparent',
+              border: 'none',
+              borderRadius: 2,
+              cursor: 'pointer',
+              fontFamily: 'var(--mono)',
+              fontWeight: 600,
+              color: defaultInputType === key ? '#07090e' : 'var(--text3)',
+              transition: 'all 0.15s',
+              letterSpacing: '0.08em',
+              fontSize: 10,
+            }}
+          >
+            <span className="header-ctrl-long">{long}</span>
+            <span className="header-ctrl-short">{short}</span>
+          </button>
+        ))}
       </div>
 
       <AvatarButton user={user} onOpenAuth={onOpenAuth} />
