@@ -59,6 +59,8 @@ export async function fetchPrices(tickers, { force = false } = {}) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     rawData = await res.json();
   } catch {
+    // If force-deleted entries before the failed fetch, persist the deletion
+    if (force) saveToStorage(priceCache);
     for (const ticker of toFetch) result[ticker] = null;
     return result;
   }
