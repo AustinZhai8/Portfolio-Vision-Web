@@ -16,8 +16,8 @@ import AuthModal from './components/AuthModal';
 import Settings from './pages/Settings';
 
 const INITIAL_ROWS = [
-  { id: 1, ticker: 'VFV', amount: '5000', currency: 'CAD' },
-  { id: 2, ticker: 'QQQ', amount: '3000', currency: 'USD' },
+  { id: 1, ticker: 'VFV', inputType: 'amount', amount: '5000', currency: 'CAD', shares: '' },
+  { id: 2, ticker: 'QQQ', inputType: 'amount', amount: '3000', currency: 'USD', shares: '' },
 ];
 
 let _uid = 3;
@@ -31,6 +31,7 @@ export default function App() {
   const [animVersion, setAnimVersion] = useState(0);
   const [user, setUser] = useState(null);
   const [authOpen, setAuthOpen] = useState(false);
+  const [defaultInputType, setDefaultInputType] = useState('amount');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -88,23 +89,11 @@ export default function App() {
     });
   }, [unrecognizedInput, decomposeUnknown]);
 
-  function handleDecompose() {
-    const errors = {};
-    for (const row of rows) {
-      const ticker = row.ticker.trim();
-      const amount = parseFloat(row.amount);
-      if (!ticker) {
-        errors[row.id] = 'Ticker required';
-      } else if (!amount || amount <= 0) {
-        errors[row.id] = 'Enter a positive amount';
-      }
-    }
-    if (Object.keys(errors).length > 0) {
-      setRowErrors(errors);
-      return;
-    }
+  // Called by PortfolioPanel after it has already validated, fetched prices for # rows,
+  // and converted everything to { id, ticker, amount, currency } format.
+  function handleDecomposeComputed(mergedRows) {
+    setCommittedRows(mergedRows);
     setRowErrors({});
-    setCommittedRows(rows);
     setAnimVersion(v => v + 1);
   }
 
@@ -119,6 +108,8 @@ export default function App() {
             <Header
               displayCurrency={displayCurrency}
               setDisplayCurrency={setDisplayCurrency}
+              defaultInputType={defaultInputType}
+              setDefaultInputType={setDefaultInputType}
               user={user}
               onOpenAuth={() => setAuthOpen(true)}
             />
@@ -129,19 +120,28 @@ export default function App() {
                 setRows={setRows}
                 rowErrors={rowErrors}
                 setRowErrors={setRowErrors}
-                onDecompose={handleDecompose}
-                onAutoDecompose={() => { setCommittedRows(rows); setAnimVersion((v) => v + 1); }}
+                onDecomposeComputed={handleDecomposeComputed}
+                onAutoDecompose={(mergedRows) => {
+                  setCommittedRows(mergedRows);
+                  setAnimVersion((v) => v + 1);
+                }}
                 displayCurrency={displayCurrency}
                 portfolioTotal={portfolioTotal}
                 nextId={nextId}
+                defaultInputType={defaultInputType}
                 user={user}
                 onOpenAuth={() => setAuthOpen(true)}
-                onLoadPortfolio={(holdings) => {
-                  const newRows = holdings.map((h) => ({ id: nextId(), ...h }));
+                onLoadPortfolio={(rowsData) => {
+                  const newRows = rowsData.map((h) => ({
+                    id: nextId(),
+                    ticker: h.ticker ?? '',
+                    inputType: h.inputType ?? 'amount',
+                    amount: h.amount ?? '',
+                    currency: h.currency ?? 'USD',
+                    shares: h.shares ?? '',
+                  }));
                   setRows(newRows);
-                  setCommittedRows(newRows);
                   setRowErrors({});
-                  setAnimVersion((v) => v + 1);
                 }}
               />
               <ResultsPanel

@@ -92,6 +92,10 @@ input[type=number]::-webkit-outer-spin-button {
   border-radius: 2px;
 }
 
+/* Header label responsive helpers */
+.header-ctrl-short { display: none; }
+.header-ctrl-long  { display: inline; }
+
 /* Mobile responsive */
 @media (max-width: 767px) {
   html { zoom: 1; }
@@ -186,6 +190,11 @@ input[type=number]::-webkit-outer-spin-button {
   .header-controls { order: -1; }
   /* USD/CAD toggle slightly smaller on mobile */
   .header-controls button { padding: 3px 7px !important; font-size: 9px !important; }
+  /* Show short label on mobile, hide long one */
+  .header-ctrl-long { display: none !important; }
+  .header-ctrl-short { display: inline !important; }
+  /* Portfolio row toggles: compact height + smaller padding, no touch-target min-height */
+  .row-toggle-btn { min-height: unset !important; padding: 2px 4px !important; }
   /* Holdings: show percentage, hide bar */
   .holdings-headers {
     grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
