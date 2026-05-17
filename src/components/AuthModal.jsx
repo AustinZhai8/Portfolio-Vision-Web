@@ -198,6 +198,7 @@ export default function AuthModal({ onClose }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState('');
   const [focusedField, setFocusedField] = useState(null);
 
@@ -212,6 +213,15 @@ export default function AuthModal({ onClose }) {
     setTab(t);
     setView('form');
     resetForm();
+  }
+
+  async function handleGoogleLogin() {
+    setGoogleLoading(true);
+    await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: { redirectTo: 'https://portfoliovision.online' },
+    });
+    setGoogleLoading(false);
   }
 
   function openForgot() {
@@ -470,8 +480,52 @@ export default function AuthModal({ onClose }) {
               ))}
             </div>
 
+            {/* Google OAuth */}
+            <div style={{ padding: '16px 20px 0' }}>
+              <button
+                type="button"
+                onClick={handleGoogleLogin}
+                disabled={googleLoading}
+                style={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 10,
+                  padding: '10px 0',
+                  background: 'var(--card)',
+                  border: '1px solid var(--border2)',
+                  borderRadius: 3,
+                  color: 'var(--text)',
+                  fontFamily: 'var(--mono)',
+                  fontSize: 11,
+                  fontWeight: 600,
+                  letterSpacing: '0.1em',
+                  cursor: googleLoading ? 'not-allowed' : 'pointer',
+                  opacity: googleLoading ? 0.6 : 1,
+                  transition: 'border-color 0.12s, background 0.12s',
+                }}
+                onMouseEnter={(e) => { if (!googleLoading) e.currentTarget.style.borderColor = 'var(--border)'; }}
+                onMouseLeave={(e) => { if (!googleLoading) e.currentTarget.style.borderColor = 'var(--border2)'; }}
+              >
+                <svg width="16" height="16" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#EA4335" d="M24 9.5c3.14 0 5.95 1.08 8.17 2.86l6.1-6.1C34.46 3.1 29.56 1 24 1 14.82 1 7.01 6.48 3.6 14.27l7.1 5.52C12.36 13.67 17.71 9.5 24 9.5z"/>
+                  <path fill="#4285F4" d="M46.52 24.5c0-1.64-.15-3.22-.42-4.74H24v9h12.68c-.55 2.97-2.22 5.49-4.72 7.19l7.27 5.65C43.36 37.66 46.52 31.55 46.52 24.5z"/>
+                  <path fill="#FBBC05" d="M10.7 28.21A14.57 14.57 0 0 1 9.5 24c0-1.46.25-2.87.7-4.21l-7.1-5.52A23.94 23.94 0 0 0 0 24c0 3.88.93 7.55 2.6 10.77l7.1-5.52-.01-.04z"/>
+                  <path fill="#34A853" d="M24 47c5.56 0 10.22-1.84 13.63-4.99l-7.27-5.65c-1.84 1.24-4.19 1.96-6.36 1.96-6.29 0-11.64-4.17-13.3-9.79l-7.1 5.52C7.01 41.52 14.82 47 24 47z"/>
+                </svg>
+                {googleLoading ? '...' : 'CONTINUE WITH GOOGLE'}
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '14px 0 0' }}>
+                <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', letterSpacing: '0.08em' }}>or</span>
+                <div style={{ flex: 1, height: 1, background: 'var(--border)' }} />
+              </div>
+            </div>
+
             {/* Form */}
-            <form onSubmit={handleSubmit} style={{ padding: '20px 20px 24px' }}>
+            <form onSubmit={handleSubmit} style={{ padding: '14px 20px 24px' }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                 <div>
                   <label

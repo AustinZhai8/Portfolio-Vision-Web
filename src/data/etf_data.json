@@ -15,7 +15,8 @@
       "XIU_XIC_VCN": "Top 25 holdings = ~46-50% of fund",
       "VDY": "Top 15 holdings = ~78% of fund",
       "IWM": "Top 10 holdings = ~6% of fund — NOT suitable for decomposition",
-      "VTI": "Top 25 holdings = ~50% of fund"
+      "VTI": "Top 25 holdings = ~50% of fund",
+      "BAI": "Top 30 holdings = ~87% of fund"
     }
   },
   "etfs": {
@@ -7121,6 +7122,164 @@
           "weight": 0.59
         }
       ]
+    },
+    "BAI": {
+      "name": "iShares A.I. Innovation and Tech Active ETF",
+      "exchange": "NASDAQ",
+      "currency": "USD",
+      "description": "Active ETF focused on AI innovation and technology. Top 30 holdings shown (~87% coverage). Source: BlackRock/iShares May 2026.",
+      "holdings": [
+        {
+          "ticker": "000660",
+          "name": "SK Hynix Inc",
+          "weight": 6.28
+        },
+        {
+          "ticker": "NVDA",
+          "name": "NVIDIA Corp",
+          "weight": 5.65
+        },
+        {
+          "ticker": "AVGO",
+          "name": "Broadcom Inc",
+          "weight": 5.52
+        },
+        {
+          "ticker": "AMD",
+          "name": "Advanced Micro Devices Inc",
+          "weight": 4.48
+        },
+        {
+          "ticker": "TSM",
+          "name": "Taiwan Semiconductor Manufacturing ADR",
+          "weight": 4.29
+        },
+        {
+          "ticker": "LRCX",
+          "name": "Lam Research Corp",
+          "weight": 4.25
+        },
+        {
+          "ticker": "MU",
+          "name": "Micron Technology Inc",
+          "weight": 4.22
+        },
+        {
+          "ticker": "TSEM",
+          "name": "Tower Semiconductor Ltd",
+          "weight": 4.19
+        },
+        {
+          "ticker": "GOOGL",
+          "name": "Alphabet Inc Class A",
+          "weight": 3.94
+        },
+        {
+          "ticker": "LITE",
+          "name": "Lumentum Holdings Inc",
+          "weight": 3.23
+        },
+        {
+          "ticker": "INTC",
+          "name": "Intel Corporation",
+          "weight": 2.92
+        },
+        {
+          "ticker": "2383",
+          "name": "Elite Material Ltd",
+          "weight": 2.88
+        },
+        {
+          "ticker": "3661",
+          "name": "Alchip Technologies Ltd",
+          "weight": 2.73
+        },
+        {
+          "ticker": "FN",
+          "name": "Fabrinet",
+          "weight": 2.71
+        },
+        {
+          "ticker": "WDC",
+          "name": "Western Digital Corp",
+          "weight": 2.61
+        },
+        {
+          "ticker": "VRT",
+          "name": "Vertiv Holdings Class A",
+          "weight": 2.28
+        },
+        {
+          "ticker": "MTSI",
+          "name": "MACOM Technology Solutions Inc",
+          "weight": 2.28
+        },
+        {
+          "ticker": "2308",
+          "name": "Delta Electronics Inc",
+          "weight": 2.23
+        },
+        {
+          "ticker": "MPWR",
+          "name": "Monolithic Power Systems Inc",
+          "weight": 2.21
+        },
+        {
+          "ticker": "AAOI",
+          "name": "Applied Optoelectronics Inc",
+          "weight": 2.07
+        },
+        {
+          "ticker": "3017",
+          "name": "Asia Vital Components Ltd",
+          "weight": 1.83
+        },
+        {
+          "ticker": "ENR",
+          "name": "Siemens Energy AG",
+          "weight": 1.83
+        },
+        {
+          "ticker": "SNDK",
+          "name": "SanDisk Corp",
+          "weight": 1.79
+        },
+        {
+          "ticker": "6857",
+          "name": "Advantest Corp",
+          "weight": 1.77
+        },
+        {
+          "ticker": "CLS",
+          "name": "Celestica Inc",
+          "weight": 1.64
+        },
+        {
+          "ticker": "TSLA",
+          "name": "Tesla Inc",
+          "weight": 1.56
+        },
+        {
+          "ticker": "XTSLA",
+          "name": "BLK CSH FND Treasury SL Agency",
+          "weight": 1.44
+        },
+        {
+          "ticker": "LSCC",
+          "name": "Lattice Semiconductor Corp",
+          "weight": 1.42
+        },
+        {
+          "ticker": "CRDO",
+          "name": "Credo Technology Group Holding Ltd",
+          "weight": 1.30
+        },
+        {
+          "ticker": "3711",
+          "name": "ASE Technology Holding Ltd",
+          "weight": 1.20
+        }
+      ]
     }
   },
   "stocks": {
@@ -9957,6 +10116,76 @@
       "name": "XRP",
       "sector": "Crypto",
       "country": "Global"
+    },
+    "000660": {
+      "name": "SK Hynix Inc",
+      "sector": "Information Technology",
+      "country": "South Korea"
+    },
+    "TSEM": {
+      "name": "Tower Semiconductor Ltd",
+      "sector": "Information Technology",
+      "country": "Israel"
+    },
+    "2383": {
+      "name": "Elite Material Ltd",
+      "sector": "Information Technology",
+      "country": "Taiwan"
+    },
+    "3661": {
+      "name": "Alchip Technologies Ltd",
+      "sector": "Information Technology",
+      "country": "Taiwan"
+    },
+    "MTSI": {
+      "name": "MACOM Technology Solutions Inc",
+      "sector": "Information Technology",
+      "country": "United States"
+    },
+    "AAOI": {
+      "name": "Applied Optoelectronics Inc",
+      "sector": "Information Technology",
+      "country": "United States"
+    },
+    "2308": {
+      "name": "Delta Electronics Inc",
+      "sector": "Information Technology",
+      "country": "Taiwan"
+    },
+    "3017": {
+      "name": "Asia Vital Components Ltd",
+      "sector": "Information Technology",
+      "country": "Taiwan"
+    },
+    "ENR": {
+      "name": "Siemens Energy AG",
+      "sector": "Industrials",
+      "country": "Germany"
+    },
+    "6857": {
+      "name": "Advantest Corp",
+      "sector": "Information Technology",
+      "country": "Japan"
+    },
+    "CLS": {
+      "name": "Celestica Inc",
+      "sector": "Information Technology",
+      "country": "Canada"
+    },
+    "LSCC": {
+      "name": "Lattice Semiconductor Corp",
+      "sector": "Information Technology",
+      "country": "United States"
+    },
+    "3711": {
+      "name": "ASE Technology Holding Ltd",
+      "sector": "Information Technology",
+      "country": "Taiwan"
+    },
+    "XTSLA": {
+      "name": "BLK CSH FND Treasury SL Agency",
+      "sector": "Cash & Equivalents",
+      "country": "United States"
     }
   }
 }
