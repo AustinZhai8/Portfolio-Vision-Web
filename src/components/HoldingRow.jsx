@@ -224,7 +224,7 @@ export default function HoldingRow({ rank, ticker, amount, weight, maxWeight, ev
               textAlign: 'right',
             }}
           >
-            {weight.toFixed(1)}%
+            {weight.toFixed(window.innerWidth >= 768 ? 2 : 1)}%
           </span>
         </div>
 

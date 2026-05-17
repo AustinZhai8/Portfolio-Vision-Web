@@ -63,7 +63,7 @@ export default function HorizBar({ name, w, color, max, animKey }) {
           textAlign: 'right',
         }}
       >
-        {w.toFixed(1)}%
+        {w.toFixed(window.innerWidth >= 768 ? 2 : 1)}%
       </span>
     </div>
   );
