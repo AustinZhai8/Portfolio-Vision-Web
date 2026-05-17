@@ -364,9 +364,10 @@ export default function Header({ displayCurrency, setDisplayCurrency, defaultInp
           ))}
         </div>
 
-        <div style={{ width: 1, height: 18, background: 'var(--border2)', flexShrink: 0 }} />
+        <div className="header-ctrl-sep" style={{ width: 1, height: 18, background: 'var(--border2)', flexShrink: 0 }} />
 
         <div
+          className="header-input-type-ctrl"
           title="Default input type for new rows"
           style={{
             display: 'flex',

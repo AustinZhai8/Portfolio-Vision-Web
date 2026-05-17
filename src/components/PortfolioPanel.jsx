@@ -32,7 +32,7 @@ function CurrencyToggle({ value, onChange }) {
         <button
           key={cur}
           type="button"
-          className="row-toggle-btn"
+          className="currency-toggle-btn"
           onClick={() => onChange(cur)}
           style={{
             padding: '3px 5px',
@@ -76,7 +76,7 @@ function InputTypeToggle({ value, onChange, sharesDisabled = false }) {
           <button
             key={key}
             type="button"
-            className="row-toggle-btn"
+            className="input-type-toggle-btn"
             onClick={() => !disabled && onChange(key)}
             title={key === 'amount' ? 'Dollar amount' : disabled ? 'Shares not available for TSX tickers' : 'Share count'}
             style={{
@@ -661,7 +661,7 @@ export default function PortfolioPanel({
         </div>
 
         {/* Column headers */}
-        <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, padding: '7px 16px 5px', borderBottom: '1px solid var(--card)', alignItems: 'end' }}>
+        <div className="portfolio-row-grid" style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, padding: '7px 16px 5px', borderBottom: '1px solid var(--card)', alignItems: 'end' }}>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.08em' }}>TICKER</span>
           <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.08em', textAlign: 'right' }}>VALUE: AMOUNT/SHARES</span>
           <span />
@@ -695,7 +695,7 @@ export default function PortfolioPanel({
                   paddingLeft: 16, paddingRight: 16,
                 }}
               >
-                <div style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, alignItems: 'center', paddingTop: 5, paddingBottom: hasError ? 2 : 5 }}>
+                <div className="portfolio-row-grid" style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, alignItems: 'center', paddingTop: 5, paddingBottom: hasError ? 2 : 5 }}>
 
                   {/* Ticker */}
                   <div style={{ position: 'relative' }}>
@@ -731,6 +731,7 @@ export default function PortfolioPanel({
                     )}
                     <input
                       type="number"
+                      className="portfolio-value-input"
                       value={isShares ? row.shares : row.amount}
                       placeholder="0"
                       min="0"

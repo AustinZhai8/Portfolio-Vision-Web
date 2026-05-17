@@ -186,15 +186,34 @@ input[type=number]::-webkit-outer-spin-button {
     min-height: 200px;
   }
 
-  /* Header: move USD/CAD to left, wordmark absolutely centered */
+  /* Header: USD/CAD to left, wordmark absolutely centered */
   .header-controls { order: -1; }
-  /* USD/CAD toggle slightly smaller on mobile */
   .header-controls button { padding: 3px 7px !important; font-size: 9px !important; }
   /* Show short label on mobile, hide long one */
   .header-ctrl-long { display: none !important; }
   .header-ctrl-short { display: inline !important; }
-  /* Portfolio row toggles: compact height + smaller padding, no touch-target min-height */
-  .row-toggle-btn { min-height: unset !important; padding: 2px 4px !important; }
+  /* Hide separator; absolutely position $/# toggle just left of avatar */
+  .header-ctrl-sep { display: none !important; }
+  .header-input-type-ctrl {
+    position: absolute;
+    right: 58px; /* 14px padding + 36px avatar + 8px gap */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+  .header-input-type-ctrl button { min-height: unset !important; padding: 3px 7px !important; font-size: 9px !important; }
+
+  /* Portfolio row grid: wider toggle columns on mobile */
+  .portfolio-row-grid {
+    grid-template-columns: 78px 1fr 50px 58px 20px !important;
+    gap: 5px !important;
+  }
+  /* $/# toggle: bigger on mobile (main ask) */
+  .input-type-toggle-btn { min-height: unset !important; padding: 3px 6px !important; font-size: 11px !important; }
+  /* CCY toggle: stay compact to fit column */
+  .currency-toggle-btn { min-height: unset !important; padding: 2px 3px !important; font-size: 9px !important; }
+  /* Value input: slightly smaller to balance the bigger toggles */
+  .portfolio-value-input { font-size: 12px !important; }
   /* Holdings: show percentage, hide bar */
   .holdings-headers {
     grid-template-columns: 24px 28px 1fr 62px 48px 72px 22px !important;
