@@ -2,7 +2,7 @@ import HoldingRow from './HoldingRow';
 import ChartSection from './ChartSection';
 import { sectorColor, countryColor } from '../utils/colors';
 
-const MIN_WEIGHT_PCT = 0.3;
+const MIN_WEIGHT_PCT = 0.25;
 
 export default function ResultsPanel({
   decomposed,
