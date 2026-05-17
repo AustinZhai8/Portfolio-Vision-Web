@@ -195,11 +195,11 @@ input[type=number]::-webkit-outer-spin-button {
   /* Hide separator; absolutely position $/# toggle just left of avatar */
   .header-ctrl-sep { display: none !important; }
   .header-input-type-ctrl {
-    position: absolute;
-    right: 58px; /* 14px padding + 36px avatar + 8px gap */
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1;
+    position: absolute !important;
+    right: 58px !important; /* 14px padding + 36px avatar + 8px gap */
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    z-index: 2 !important;
   }
   .header-input-type-ctrl button { min-height: unset !important; padding: 3px 7px !important; font-size: 9px !important; }
 
