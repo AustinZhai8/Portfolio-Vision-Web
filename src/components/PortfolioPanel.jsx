@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { convertAmount, isEtf, isKnownTicker, inferCurrency, resolveTicker } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
-import { fetchPrices, getCachedPrice } from '../utils/fetchPrices';
+import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../utils/fetchPrices';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';
@@ -100,6 +100,40 @@ function InputTypeToggle({ value, onChange, sharesDisabled = false }) {
         );
       })}
     </div>
+  );
+}
+
+function InfoTooltip({ text }) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <span
+      style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+    >
+      <span style={{
+        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+        width: 12, height: 12, borderRadius: '50%',
+        border: '1px solid var(--text3)', color: 'var(--text3)',
+        fontSize: 8, fontFamily: 'var(--mono)', cursor: 'default',
+        userSelect: 'none', lineHeight: 1, marginLeft: 4, flexShrink: 0,
+      }}>
+        i
+      </span>
+      {visible && (
+        <div style={{
+          position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%',
+          transform: 'translateX(-50%)', width: 230,
+          background: 'var(--card)', border: '1px solid var(--border2)',
+          borderRadius: 4, padding: '8px 10px',
+          boxShadow: '0 4px 16px rgba(0,0,0,0.35)', zIndex: 200, pointerEvents: 'none',
+        }}>
+          <span style={{ fontFamily: 'var(--sans)', fontSize: 11, color: 'var(--text2)', lineHeight: 1.5, display: 'block' }}>
+            {text}
+          </span>
+        </div>
+      )}
+    </span>
   );
 }
 
@@ -224,6 +258,7 @@ export default function PortfolioPanel({
   const [priceFetching, setPriceFetching] = useState(false);
   const [pricesFetchedAt, setPricesFetchedAt] = useState(null);
   const [priceError, setPriceError] = useState('');
+  const [priceStatusMsg, setPriceStatusMsg] = useState('');
 
   const [focusedId, setFocusedId] = useState(null);
   const [saveOpen, setSaveOpen] = useState(false);
@@ -500,7 +535,11 @@ export default function PortfolioPanel({
       return { id: row.id, ticker, amount: row.amount, currency: row.currency };
     });
 
-    if (shareRows.length > 0) setPricesFetchedAt(new Date());
+    if (shareRows.length > 0) {
+      const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+      const oldest = getOldestFetchedAt(tickers);
+      setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
+    }
     setRowErrors({});
     onDecomposeComputed(mergedRows);
   }
@@ -542,8 +581,8 @@ export default function PortfolioPanel({
   };
 
   const currentPortfolio = portfolios.find((p) => p.id === loadedPortfolioId);
-  const fetchedTime = pricesFetchedAt
-    ? pricesFetchedAt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+  const fetchedTimeLabel = pricesFetchedAt
+    ? pricesFetchedAt.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
     : null;
 
   // Grid: ticker | value | $/# toggle | USD/CAD toggle | delete
@@ -863,20 +902,44 @@ export default function PortfolioPanel({
           </button>
 
           {/* Prices as of / Refresh — only shown after a shares fetch */}
-          {fetchedTime && (
+          {fetchedTimeLabel && (
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 7 }}>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.05em' }}>
-                Prices as of {fetchedTime}
+              <span style={{ display: 'flex', alignItems: 'center', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.05em' }}>
+                Prices as of {fetchedTimeLabel}
+                <InfoTooltip text="Stock prices are fetched once per day per ticker to minimise API usage. New holdings are fetched immediately. Click Refresh to fetch any tickers not yet updated today." />
               </span>
               <button type="button" disabled={priceFetching}
                 onClick={async () => {
                   const shareRows = rows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
                   if (shareRows.length === 0) return;
+                  const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+
+                  // If all tickers have valid cached prices, skip the network fetch entirely
+                  const allCached = tickers.every((t) => getCachedPrice(t) != null);
+                  if (allCached) {
+                    const prices = {};
+                    for (const t of tickers) prices[t] = getCachedPrice(t);
+                    const mergedRows = rows.map((row) => {
+                      const ticker = row.ticker.trim().toUpperCase();
+                      if (row.inputType === 'shares') {
+                        const priceCAD = prices[resolveTicker(ticker)];
+                        return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
+                      }
+                      return { id: row.id, ticker, amount: row.amount, currency: row.currency };
+                    });
+                    setRowErrors({});
+                    onDecomposeComputed(mergedRows);
+                    setPriceStatusMsg('Prices are up to date');
+                    setTimeout(() => setPriceStatusMsg(''), 3000);
+                    return;
+                  }
+
+                  // Some tickers are stale or missing — fetch only those (fetchPrices skips valid cache entries)
                   setPriceFetching(true);
                   setPriceError('');
-                  const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+                  setPriceStatusMsg('');
                   try {
-                    const prices = await fetchPrices(tickers, { force: true });
+                    const prices = await fetchPrices(tickers);
                     const priceErrors = {};
                     const mergedRows = rows.map((row) => {
                       const ticker = row.ticker.trim().toUpperCase();
@@ -889,7 +952,8 @@ export default function PortfolioPanel({
                     });
                     setPriceFetching(false);
                     if (Object.keys(priceErrors).length > 0) { setRowErrors(priceErrors); return; }
-                    setPricesFetchedAt(new Date());
+                    const oldest = getOldestFetchedAt(tickers);
+                    setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
                     setRowErrors({});
                     onDecomposeComputed(mergedRows);
                   } catch {
@@ -900,6 +964,12 @@ export default function PortfolioPanel({
                 style={{ background: 'none', border: 'none', color: priceFetching ? 'var(--text3)' : ACCENT, fontFamily: 'var(--mono)', fontSize: 10, cursor: priceFetching ? 'not-allowed' : 'pointer', padding: 0, letterSpacing: '0.06em' }}>
                 ↻ Refresh
               </button>
+            </div>
+          )}
+
+          {priceStatusMsg && (
+            <div style={{ marginTop: 6, fontFamily: 'var(--mono)', fontSize: 10, color: '#6ee7b7', background: 'rgba(110,231,183,0.06)', border: '1px solid rgba(110,231,183,0.2)', borderRadius: 3, padding: '6px 8px' }}>
+              {priceStatusMsg}
             </div>
           )}
 

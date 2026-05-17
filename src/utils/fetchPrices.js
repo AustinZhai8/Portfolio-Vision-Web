@@ -28,6 +28,18 @@ export function getCachedPrice(ticker) {
   return entry.priceCAD;
 }
 
+// Returns the oldest fetchedAt (Unix ms) among the given tickers that are in cache,
+// or null if none are cached. Used to show an honest "Prices as of" timestamp.
+export function getOldestFetchedAt(tickers) {
+  let oldest = null;
+  for (const ticker of tickers) {
+    const entry = priceCache[ticker];
+    if (!entry) continue;
+    if (oldest === null || entry.fetchedAt < oldest) oldest = entry.fetchedAt;
+  }
+  return oldest;
+}
+
 export async function fetchPrices(tickers, { force = false } = {}) {
   const now = Date.now();
   const result = {};
