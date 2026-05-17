@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { convertAmount, isEtf, isKnownTicker, inferCurrency, resolveTicker } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
-import { fetchPrices } from '../utils/fetchPrices';
+import { fetchPrices, getCachedPrice } from '../utils/fetchPrices';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';
@@ -474,12 +474,30 @@ export default function PortfolioPanel({
     onDecomposeComputed(mergedRows);
   }
 
-  // Live total from $ rows only (# rows require a price fetch)
-  const liveTotal = rows.reduce((sum, row) => {
-    if (row.inputType !== 'amount') return sum;
-    return sum + convertAmount(parseFloat(row.amount) || 0, row.currency, displayCurrency);
-  }, 0);
   const hasSharesRows = rows.some((r) => r.inputType === 'shares');
+
+  const liveTotal = rows.reduce((sum, row) => {
+    if (row.inputType === 'amount') {
+      return sum + convertAmount(parseFloat(row.amount) || 0, row.currency, displayCurrency);
+    }
+    // Shares row: use cached price if available
+    const shares = parseFloat(row.shares) || 0;
+    if (!shares || !row.ticker.trim()) return sum;
+    const priceCAD = getCachedPrice(resolveTicker(row.ticker.trim().toUpperCase()));
+    if (priceCAD == null) return sum;
+    return sum + convertAmount(shares * priceCAD, 'CAD', displayCurrency);
+  }, 0);
+
+  const hasSharesWithCachedPrice = rows.some((r) => {
+    if (r.inputType !== 'shares' || !r.ticker.trim() || !r.shares) return false;
+    return getCachedPrice(resolveTicker(r.ticker.trim().toUpperCase())) != null;
+  });
+
+  const totalLabel = !hasSharesRows
+    ? 'TOTAL INVESTED'
+    : hasSharesWithCachedPrice
+    ? 'TOTAL (EST.)'
+    : 'TOTAL ($ ROWS)';
 
   const inputBase = {
     background: 'var(--input-bg)',
@@ -589,6 +607,9 @@ export default function PortfolioPanel({
             const isUnknown = type === 'Unknown' && !!row.ticker;
             const showTypeBadge = !!row.ticker && type !== 'Unknown';
             const isShares = row.inputType === 'shares';
+            const rawTicker = row.ticker.trim().toUpperCase();
+            const resolvedForPrice = rawTicker ? resolveTicker(rawTicker) : null;
+            const showResolvedHint = isShares && resolvedForPrice && resolvedForPrice !== rawTicker;
 
             return (
               <div
@@ -621,6 +642,11 @@ export default function PortfolioPanel({
                         color: isUnknown ? '#f4b942' : 'var(--text)',
                       }}
                     />
+                    {showResolvedHint && (
+                      <span style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)', letterSpacing: '0.04em', marginTop: 2, paddingLeft: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                        → {resolvedForPrice}
+                      </span>
+                    )}
                   </div>
 
                   {/* Amount or Shares */}
@@ -757,9 +783,9 @@ export default function PortfolioPanel({
         <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border)', background: 'var(--footer-bg)', flexShrink: 0 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
             <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.1em' }}>
-              {hasSharesRows ? 'TOTAL ($ ROWS)' : 'TOTAL INVESTED'}
+              {totalLabel}
             </span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 22, fontWeight: 600, color: hasSharesRows ? 'var(--text3)' : 'var(--text)' }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 22, fontWeight: 600, color: hasSharesRows && !hasSharesWithCachedPrice ? 'var(--text3)' : 'var(--text)' }}>
               {fmtMoney(liveTotal)}{' '}
               <span style={{ fontSize: 12, color: 'var(--text3)' }}>{displayCurrency}</span>
             </span>

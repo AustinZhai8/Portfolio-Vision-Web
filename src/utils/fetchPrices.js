@@ -1,8 +1,31 @@
-const priceCache = {};
-const CACHE_TTL = 5 * 60 * 1000;
+const CACHE_TTL = 24 * 60 * 60 * 1000;
+const STORAGE_KEY = 'pv_price_cache';
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw);
+  } catch { return {}; }
+}
+
+function saveToStorage(cache) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
+  } catch {}
+}
+
+const priceCache = loadFromStorage();
 
 function isCad(ticker) {
   return ticker.endsWith('.TO') || ticker.endsWith('.V');
+}
+
+export function getCachedPrice(ticker) {
+  const entry = priceCache[ticker];
+  if (!entry) return null;
+  if (Date.now() - entry.fetchedAt > CACHE_TTL) return null;
+  return entry.priceCAD;
 }
 
 export async function fetchPrices(tickers, { force = false } = {}) {
@@ -67,5 +90,6 @@ export async function fetchPrices(tickers, { force = false } = {}) {
     result[ticker] = priceCAD;
   }
 
+  saveToStorage(priceCache);
   return result;
 }
