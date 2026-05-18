@@ -32,6 +32,22 @@ export const TICKER_ALIASES = {
   MX: 'MX.TO',
   SOL: 'SOL-USD',
   SOLANA: 'SOL-USD',
+  // Dual-listed Canadian: VEQT holdings use .TO form but stocks DB has bare ticker
+  'SHOP.TO': 'SHOP',
+  'BN.TO': 'BN',
+  BAM: 'BAM.TO',
+  'TOU.TO': 'TOU',
+  'WCP.TO': 'WCP',
+  'ARX.TO': 'ARX',
+  // International alts that map to an existing US ADR / HK numeric
+  'AZN.L': 'AZN',
+  'NESN.SW': 'NSRGY',
+  'SHEL.L': 'SHEL',
+  '7203.T': 'TM',
+  'NOVO-B.CO': 'NVO',
+  '0700.HK': '700',
+  '9988.HK': '9988',
+  '6857.T': '6857',
 };
 
 // Yahoo Finance uses a different suffix than our ETF database for some tickers.
