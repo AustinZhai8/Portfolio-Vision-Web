@@ -25,8 +25,13 @@ export const TICKER_ALIASES = {
   ZSP: 'VFV.TO',
   YINN: 'FXI',
   SVR: 'SLV',
-  FINN: 'FINN.NE',
-  'FINN.NE': 'FINN',
+  FINN: 'FINN.TO',
+};
+
+// Yahoo Finance uses a different suffix than our ETF database for some tickers.
+// Map resolved-ticker → the symbol that /api/price should actually request.
+export const PRICE_TICKER_OVERRIDES = {
+  'FINN.TO': 'FINN.NE',
 };
 
 export function resolveTicker(ticker) {
