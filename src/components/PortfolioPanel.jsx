@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { convertAmount, isEtf, isKnownTicker, inferCurrency, resolveTicker } from '../utils/decompose';
+import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
 import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../utils/fetchPrices';
 import { supabase } from '../lib/supabase';
@@ -477,7 +477,7 @@ export default function PortfolioPanel({
       setPriceFetching(true);
       setPriceError('');
       setRowErrors({});
-      const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+      const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
       try {
         prices = await fetchPrices(tickers);
       } catch {
@@ -491,8 +491,8 @@ export default function PortfolioPanel({
     // 3. Check for unavailable prices
     const priceErrors = {};
     for (const row of shareRows) {
-      const resolved = resolveTicker(row.ticker.trim().toUpperCase());
-      if (prices[resolved] == null) priceErrors[row.id] = 'Price unavailable';
+      const t = row.ticker.trim().toUpperCase();
+      if (prices[t] == null) priceErrors[row.id] = 'Price unavailable';
     }
     if (Object.keys(priceErrors).length > 0) { setRowErrors(priceErrors); return; }
 
@@ -500,14 +500,14 @@ export default function PortfolioPanel({
     const mergedRows = rows.map((row) => {
       const ticker = row.ticker.trim().toUpperCase();
       if (row.inputType === 'shares') {
-        const priceCAD = prices[resolveTicker(ticker)];
+        const priceCAD = prices[ticker];
         return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
       }
       return { id: row.id, ticker, amount: row.amount, currency: row.currency };
     });
 
     if (shareRows.length > 0) {
-      const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+      const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
       const oldest = getOldestFetchedAt(tickers);
       setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
     }
@@ -524,14 +524,14 @@ export default function PortfolioPanel({
     // Shares row: use cached price if available
     const shares = parseFloat(row.shares) || 0;
     if (!shares || !row.ticker.trim()) return sum;
-    const priceCAD = getCachedPrice(resolveTicker(row.ticker.trim().toUpperCase()));
+    const priceCAD = getCachedPrice(row.ticker.trim().toUpperCase());
     if (priceCAD == null) return sum;
     return sum + convertAmount(shares * priceCAD, 'CAD', displayCurrency);
   }, 0);
 
   const hasSharesWithCachedPrice = rows.some((r) => {
     if (r.inputType !== 'shares' || !r.ticker.trim() || !r.shares) return false;
-    return getCachedPrice(resolveTicker(r.ticker.trim().toUpperCase())) != null;
+    return getCachedPrice(r.ticker.trim().toUpperCase()) != null;
   });
 
   const totalLabel = !hasSharesRows
@@ -872,7 +872,7 @@ export default function PortfolioPanel({
                 onClick={async () => {
                   const shareRows = rows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
                   if (shareRows.length === 0) return;
-                  const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
+                  const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
 
                   setPriceFetching(true);
                   setPriceError('');
@@ -883,7 +883,7 @@ export default function PortfolioPanel({
                     const mergedRows = rows.map((row) => {
                       const ticker = row.ticker.trim().toUpperCase();
                       if (row.inputType === 'shares') {
-                        const priceCAD = prices[resolveTicker(ticker)];
+                        const priceCAD = prices[ticker];
                         if (priceCAD == null) { priceErrors[row.id] = 'Price unavailable'; return row; }
                         return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
                       }

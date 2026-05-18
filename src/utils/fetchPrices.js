@@ -1,4 +1,4 @@
-import { PRICE_TICKER_OVERRIDES } from './decompose';
+import { PRICE_ALIASES } from './decompose';
 
 const STORAGE_KEY = 'pv_price_cache';
 
@@ -68,7 +68,7 @@ export async function fetchPrices(tickers, usdCadRate, _force = false) {
   }
 
   const fetched = await Promise.all(
-    toFetch.map((t) => fetchOnePrice(PRICE_TICKER_OVERRIDES[t] || t))
+    toFetch.map((t) => fetchOnePrice(PRICE_ALIASES[t] || t))
   );
 
   for (let i = 0; i < toFetch.length; i++) {

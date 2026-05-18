@@ -5,41 +5,46 @@ const STOCK_DATA = ETF_DATA_RAW.stocks;
 
 export const USDCAD = 1.385;
 
-// Duplicate keys in the Python source: XSP and XSU both resolve to VFV.TO
-// (later assignment wins, matching Python dict behaviour)
-export const TICKER_ALIASES = {
-  QQQM: 'QQQ',
-  ITOT: 'VTI',
+// Maps input ticker → ETF/stock DB key. Two patterns:
+//   (a) ETFs that share holdings collapse onto a single data entry (XEQT → VEQT.TO)
+//   (b) Internal holdings-list tickers normalize to the canonical DB key (SHOP.TO → SHOP)
+// Used only by resolveTicker for DB lookups. Does NOT affect price fetching.
+export const HOLDINGS_ALIASES = {
+  // Holdings-equivalence (ETF shares same basket as target)
   XEQT: 'VEQT.TO',
   XSP: 'VFV.TO',
   XSU: 'VFV.TO',
+  VSP: 'VFV.TO',
+  ZSP: 'VFV.TO',
+  ZNQ: 'QQC.TO',
+  QQQM: 'QQQ',
+  ITOT: 'VTI',
+  YINN: 'FXI',
+  // Commodity-name conveniences (so decompose finds the proxy ETF entry)
   GOLD: 'GLD',
   SILVER: 'SLV',
+  SVR: 'SLV',
   COPPER: 'CPER',
   PLATINUM: 'PPLT',
   PALLADIUM: 'PALL',
   OIL: 'USO',
   NATURALGAS: 'UNG',
   'NATURAL GAS': 'UNG',
-  VSP: 'VFV.TO',
-  ZSP: 'VFV.TO',
-  YINN: 'FXI',
-  SVR: 'SLV',
+  // Crypto convenience aliases
+  SOL: 'SOL-USD',
+  SOLANA: 'SOL-USD',
+  // Single-stock input convenience (bare → DB key form)
   FINN: 'FINN.TO',
-  ZNQ: 'QQQ.TO',
   T: 'T.TO',
   AQN: 'AQN.TO',
   MX: 'MX.TO',
-  SOL: 'SOL-USD',
-  SOLANA: 'SOL-USD',
-  // Dual-listed Canadian: VEQT holdings use .TO form but stocks DB has bare ticker
+  BAM: 'BAM.TO',
+  // Internal holdings-list normalizations (foreign-suffix form → existing DB key)
   'SHOP.TO': 'SHOP',
   'BN.TO': 'BN',
-  BAM: 'BAM.TO',
   'TOU.TO': 'TOU',
   'WCP.TO': 'WCP',
   'ARX.TO': 'ARX',
-  // International alts that map to an existing US ADR / HK numeric
   'AZN.L': 'AZN',
   'NESN.SW': 'NSRGY',
   'SHEL.L': 'SHEL',
@@ -50,15 +55,45 @@ export const TICKER_ALIASES = {
   '6857.T': '6857',
 };
 
-// Yahoo Finance uses a different suffix than our ETF database for some tickers.
-// Map resolved-ticker → the symbol that /api/price should actually request.
-export const PRICE_TICKER_OVERRIDES = {
+// Maps input ticker → Yahoo Finance symbol.
+// Used only by fetchPrices when querying /api/price. Does NOT affect decompose.
+export const PRICE_ALIASES = {
+  // ETFs whose holdings collapse via HOLDINGS_ALIASES but whose own listing
+  // has a distinct live price on Yahoo.
+  XEQT: 'XEQT.TO',
+  XSP: 'XSP.TO',
+  XSU: 'XSU.TO',
+  VSP: 'VSP.TO',
+  ZSP: 'ZSP.TO',
+  ZNQ: 'ZNQ.TO',
+  VFV: 'VFV.TO',
+  // Single-stock bare-input → Canadian-listing Yahoo symbol
+  T: 'T.TO',
+  AQN: 'AQN.TO',
+  MX: 'MX.TO',
+  // FINN/FEQT trade on Cboe Canada — Yahoo wants the .NE suffix
+  FINN: 'FINN.NE',
   'FINN.TO': 'FINN.NE',
+  FEQT: 'FEQT.NE',
+  'FEQT.TO': 'FEQT.NE',
+  // Crypto
+  SOL: 'SOL-USD',
+  SOLANA: 'SOL-USD',
+  // Commodity-name conveniences (user types "GOLD", proxy ETF gets priced)
+  GOLD: 'GLD',
+  SILVER: 'SLV',
+  SVR: 'SLV',
+  COPPER: 'CPER',
+  PLATINUM: 'PPLT',
+  PALLADIUM: 'PALL',
+  OIL: 'USO',
+  NATURALGAS: 'UNG',
+  'NATURAL GAS': 'UNG',
 };
 
 export function resolveTicker(ticker) {
   const t = ticker.toUpperCase();
-  if (TICKER_ALIASES[t]) return TICKER_ALIASES[t];
+  if (HOLDINGS_ALIASES[t]) return HOLDINGS_ALIASES[t];
   if (!ETF_DATA[t] && !STOCK_DATA[t]) {
     const candidate = t + '.TO';
     if (ETF_DATA[candidate] || STOCK_DATA[candidate]) return candidate;
