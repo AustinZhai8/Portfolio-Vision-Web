@@ -56,7 +56,7 @@ function CurrencyToggle({ value, onChange }) {
   );
 }
 
-function InputTypeToggle({ value, onChange, sharesDisabled = false }) {
+function InputTypeToggle({ value, onChange }) {
   return (
     <div
       style={{
@@ -70,35 +70,31 @@ function InputTypeToggle({ value, onChange, sharesDisabled = false }) {
         flexShrink: 0,
       }}
     >
-      {[{ key: 'amount', label: '$' }, { key: 'shares', label: '#' }].map(({ key, label }) => {
-        const disabled = key === 'shares' && sharesDisabled;
-        return (
-          <button
-            key={key}
-            type="button"
-            className="input-type-toggle-btn"
-            onClick={() => !disabled && onChange(key)}
-            title={key === 'amount' ? 'Dollar amount' : disabled ? 'Shares not available for TSX tickers' : 'Share count'}
-            style={{
-              padding: '3px 6px',
-              background: value === key ? ACCENT : 'transparent',
-              border: 'none',
-              borderRadius: 2,
-              cursor: disabled ? 'not-allowed' : 'pointer',
-              fontFamily: 'var(--mono)',
-              fontWeight: 700,
-              fontSize: 10,
-              color: disabled ? 'var(--text3)' : value === key ? '#07090e' : 'var(--text3)',
-              letterSpacing: '0.04em',
-              transition: 'all 0.12s',
-              lineHeight: 1,
-              opacity: disabled ? 0.35 : 1,
-            }}
-          >
-            {label}
-          </button>
-        );
-      })}
+      {[{ key: 'amount', label: '$' }, { key: 'shares', label: '#' }].map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          className="input-type-toggle-btn"
+          onClick={() => onChange(key)}
+          title={key === 'amount' ? 'Dollar amount' : 'Share count'}
+          style={{
+            padding: '3px 6px',
+            background: value === key ? ACCENT : 'transparent',
+            border: 'none',
+            borderRadius: 2,
+            cursor: 'pointer',
+            fontFamily: 'var(--mono)',
+            fontWeight: 700,
+            fontSize: 10,
+            color: value === key ? '#07090e' : 'var(--text3)',
+            letterSpacing: '0.04em',
+            transition: 'all 0.12s',
+            lineHeight: 1,
+          }}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   );
 }
@@ -433,12 +429,6 @@ export default function PortfolioPanel({
     setRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
   }
 
-  function isCanadian(ticker) {
-    if (!ticker) return false;
-    const resolved = resolveTicker(ticker.trim().toUpperCase());
-    return resolved.endsWith('.TO') || resolved.endsWith('.V');
-  }
-
   function updateRow(id, field, value) {
     setRows((prev) => prev.map((r) => {
       if (r.id !== id) return r;
@@ -447,11 +437,6 @@ export default function PortfolioPanel({
         const ticker = value.trim().toUpperCase();
         if (r.inputType === 'amount' && isKnownTicker(ticker)) {
           updated.currency = inferCurrency(ticker);
-        }
-        // Auto-switch to $ if a Canadian ticker is typed into a # row
-        if (updated.inputType === 'shares' && isCanadian(ticker)) {
-          updated.inputType = 'amount';
-          updated.shares = '';
         }
       }
       return updated;
@@ -462,16 +447,6 @@ export default function PortfolioPanel({
   }
 
   function updateRowInputType(id, newType) {
-    if (newType === 'shares') {
-      const row = rows.find((r) => r.id === id);
-      if (row && row.ticker.trim() && isCanadian(row.ticker)) {
-        setRowErrors((prev) => ({
-          ...prev,
-          [id]: 'Shares mode not available for TSX stocks — use $ amount',
-        }));
-        return;
-      }
-    }
     setRows((prev) => prev.map((r) => r.id === id ? { ...r, inputType: newType } : r));
     if (rowErrors[id]) {
       setRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
@@ -486,12 +461,8 @@ export default function PortfolioPanel({
       if (!ticker) {
         errors[row.id] = 'Ticker required';
       } else if (row.inputType === 'shares') {
-        if (isCanadian(ticker)) {
-          errors[row.id] = 'Shares mode not available for TSX stocks — use $ amount';
-        } else {
-          const shares = parseFloat(row.shares);
-          if (!shares || shares <= 0) errors[row.id] = 'Enter a positive number of shares';
-        }
+        const shares = parseFloat(row.shares);
+        if (!shares || shares <= 0) errors[row.id] = 'Enter a positive number of shares';
       } else {
         const amount = parseFloat(row.amount);
         if (!amount || amount <= 0) errors[row.id] = 'Enter a positive amount';
@@ -677,12 +648,6 @@ export default function PortfolioPanel({
             const isUnknown = type === 'Unknown' && !!row.ticker;
             const showTypeBadge = !!row.ticker && type !== 'Unknown';
             const isShares = row.inputType === 'shares';
-            const rawTicker = row.ticker.trim().toUpperCase();
-            const resolvedForPrice = rawTicker ? resolveTicker(rawTicker) : null;
-            const isCanadianRow = resolvedForPrice
-              ? (resolvedForPrice.endsWith('.TO') || resolvedForPrice.endsWith('.V'))
-              : false;
-            const showResolvedHint = isShares && resolvedForPrice && resolvedForPrice !== rawTicker;
 
             return (
               <div
@@ -715,11 +680,6 @@ export default function PortfolioPanel({
                         color: isUnknown ? '#f4b942' : 'var(--text)',
                       }}
                     />
-                    {showResolvedHint && (
-                      <span style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)', letterSpacing: '0.04em', marginTop: 2, paddingLeft: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        → {resolvedForPrice}
-                      </span>
-                    )}
                   </div>
 
                   {/* Amount or Shares */}
@@ -760,7 +720,6 @@ export default function PortfolioPanel({
                     <InputTypeToggle
                       value={row.inputType}
                       onChange={(t) => updateRowInputType(row.id, t)}
-                      sharesDisabled={isCanadianRow}
                     />
                   </div>
 
@@ -915,32 +874,11 @@ export default function PortfolioPanel({
                   if (shareRows.length === 0) return;
                   const tickers = [...new Set(shareRows.map((r) => resolveTicker(r.ticker.trim().toUpperCase())))];
 
-                  // If all tickers have valid cached prices, skip the network fetch entirely
-                  const allCached = tickers.every((t) => getCachedPrice(t) != null);
-                  if (allCached) {
-                    const prices = {};
-                    for (const t of tickers) prices[t] = getCachedPrice(t);
-                    const mergedRows = rows.map((row) => {
-                      const ticker = row.ticker.trim().toUpperCase();
-                      if (row.inputType === 'shares') {
-                        const priceCAD = prices[resolveTicker(ticker)];
-                        return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
-                      }
-                      return { id: row.id, ticker, amount: row.amount, currency: row.currency };
-                    });
-                    setRowErrors({});
-                    onDecomposeComputed(mergedRows);
-                    setPriceStatusMsg('Prices are up to date');
-                    setTimeout(() => setPriceStatusMsg(''), 3000);
-                    return;
-                  }
-
-                  // Some tickers are stale or missing — fetch only those (fetchPrices skips valid cache entries)
                   setPriceFetching(true);
                   setPriceError('');
                   setPriceStatusMsg('');
                   try {
-                    const prices = await fetchPrices(tickers);
+                    const prices = await fetchPrices(tickers, undefined, true);
                     const priceErrors = {};
                     const mergedRows = rows.map((row) => {
                       const ticker = row.ticker.trim().toUpperCase();

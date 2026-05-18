@@ -1,7 +1,6 @@
-const CACHE_TTL = 24 * 60 * 60 * 1000;
 const STORAGE_KEY = 'pv_price_cache';
 
-function loadFromStorage() {
+export function loadCacheFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return {};
@@ -9,27 +8,23 @@ function loadFromStorage() {
   } catch { return {}; }
 }
 
-function saveToStorage(cache) {
+export function saveCache(cache) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
   } catch {}
 }
 
-const priceCache = loadFromStorage();
+const priceCache = loadCacheFromStorage();
 
-function isCad(ticker) {
-  return ticker.endsWith('.TO') || ticker.endsWith('.V');
+export function getCacheEntry(ticker) {
+  return priceCache[ticker] || null;
 }
 
 export function getCachedPrice(ticker) {
-  const entry = priceCache[ticker];
-  if (!entry) return null;
-  if (Date.now() - entry.fetchedAt > CACHE_TTL) return null;
-  return entry.priceCAD;
+  const entry = getCacheEntry(ticker);
+  return entry ? entry.priceCAD : null;
 }
 
-// Returns the oldest fetchedAt (Unix ms) among the given tickers that are in cache,
-// or null if none are cached. Used to show an honest "Prices as of" timestamp.
 export function getOldestFetchedAt(tickers) {
   let oldest = null;
   for (const ticker of tickers) {
@@ -40,70 +35,52 @@ export function getOldestFetchedAt(tickers) {
   return oldest;
 }
 
-export async function fetchPrices(tickers, { force = false } = {}) {
+async function fetchOnePrice(ticker) {
+  try {
+    const res = await fetch('/api/price?ticker=' + encodeURIComponent(ticker));
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (data?.price == null) return null;
+    return { price: parseFloat(data.price), currency: data.currency };
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchPrices(tickers, usdCadRate, _force = false) {
   const now = Date.now();
   const result = {};
-  const toFetch = [];
-
-  for (const ticker of tickers) {
-    if (!force) {
-      const cached = priceCache[ticker];
-      if (cached && now - cached.fetchedAt < CACHE_TTL) {
-        result[ticker] = cached.priceCAD;
-        continue;
-      }
-    } else {
-      delete priceCache[ticker];
-    }
-    toFetch.push(ticker);
-  }
+  const toFetch = [...new Set(tickers)];
 
   if (toFetch.length === 0) return result;
 
-  const apiKey = import.meta.env.VITE_TWELVE_DATA_KEY;
-  const symbols = toFetch.join(',');
-
-  let rawData;
-  try {
-    const res = await fetch(
-      `https://api.twelvedata.com/price?symbol=${encodeURIComponent(symbols)}&apikey=${apiKey}`
-    );
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    rawData = await res.json();
-  } catch {
-    // If force-deleted entries before the failed fetch, persist the deletion
-    if (force) saveToStorage(priceCache);
-    for (const ticker of toFetch) result[ticker] = null;
-    return result;
-  }
-
-  // Normalize: single-ticker response is { price: "..." }, multi-ticker is { TICKER: { price: "..." } }
-  const normalized = toFetch.length === 1
-    ? { [toFetch[0]]: rawData }
-    : rawData;
-
-  const usdTickers = toFetch.filter((t) => !isCad(t) && normalized[t]?.price != null);
-  let usdCadRate = 1.385;
-  if (usdTickers.length > 0) {
+  let rate = usdCadRate;
+  if (rate == null) {
     try {
-      const res = await fetch('https://api.frankfurter.app/latest?from=USD&to=CAD');
+      const res = await fetch('/api/fxrate');
       const data = await res.json();
-      usdCadRate = data.rates.CAD;
-    } catch { /* use built-in fallback */ }
+      rate = typeof data?.rate === 'number' ? data.rate : 1.385;
+    } catch {
+      rate = 1.385;
+    }
   }
 
-  for (const ticker of toFetch) {
-    const entry = normalized[ticker];
-    const price = entry?.price != null ? parseFloat(entry.price) : null;
-    if (price == null || isNaN(price)) {
+  const fetched = await Promise.all(toFetch.map(fetchOnePrice));
+
+  for (let i = 0; i < toFetch.length; i++) {
+    const ticker = toFetch[i];
+    const entry = fetched[i];
+    if (!entry || isNaN(entry.price)) {
       result[ticker] = null;
       continue;
     }
-    const priceCAD = isCad(ticker) ? price : price * usdCadRate;
-    priceCache[ticker] = { priceCAD, fetchedAt: now };
+    const { price, currency } = entry;
+    const priceCAD = currency === 'CAD' ? price : price * rate;
+    const priceUSD = currency === 'USD' ? price : price / rate;
+    priceCache[ticker] = { priceCAD, priceUSD, fetchedAt: now };
     result[ticker] = priceCAD;
   }
 
-  saveToStorage(priceCache);
+  saveCache(priceCache);
   return result;
 }
