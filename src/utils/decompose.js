@@ -26,6 +26,12 @@ export const TICKER_ALIASES = {
   YINN: 'FXI',
   SVR: 'SLV',
   FINN: 'FINN.TO',
+  ZNQ: 'QQQ.TO',
+  T: 'T.TO',
+  AQN: 'AQN.TO',
+  MX: 'MX.TO',
+  SOL: 'SOL-USD',
+  SOLANA: 'SOL-USD',
 };
 
 // Yahoo Finance uses a different suffix than our ETF database for some tickers.
