@@ -53,6 +53,12 @@ export const HOLDINGS_ALIASES = {
   '0700.HK': '700',
   '9988.HK': '9988',
   '6857.T': '6857',
+  // Bare → .TO form for ETFs that have a .TO DB entry
+  ZEB: 'ZEB.TO',
+  FCCM: 'FCCM.TO',
+  FEQT: 'FEQT.TO',
+  FBAL: 'FBAL.TO',
+  FGRO: 'FGRO.TO',
 };
 
 // Maps input ticker → Yahoo Finance symbol.
@@ -89,6 +95,21 @@ export const PRICE_ALIASES = {
   OIL: 'USO',
   NATURALGAS: 'UNG',
   'NATURAL GAS': 'UNG',
+  // ZEB (BMO Equal Weight Banks) — TSX listing
+  ZEB: 'ZEB.TO',
+  // Fidelity Canada ETFs listed on Cboe Canada (formerly NEO Exchange).
+  // The DB stores them under .TO keys but Yahoo only serves them at .NE,
+  // so map both the bare and .TO forms to the .NE symbol.
+  FCCM: 'FCCM.NE',
+  'FCCM.TO': 'FCCM.NE',
+  FBAL: 'FBAL.NE',
+  'FBAL.TO': 'FBAL.NE',
+  FCNS: 'FCNS.NE',
+  'FCNS.TO': 'FCNS.NE',
+  FGRO: 'FGRO.NE',
+  'FGRO.TO': 'FGRO.NE',
+  FCIQ: 'FCIQ.NE',
+  'FCIQ.TO': 'FCIQ.NE',
 };
 
 export function resolveTicker(ticker) {
