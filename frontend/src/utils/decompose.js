@@ -30,18 +30,9 @@ export const HOLDINGS_ALIASES = {
   OIL: 'USO',
   NATURALGAS: 'UNG',
   'NATURAL GAS': 'UNG',
-  // Crypto convenience aliases
-  BTC: 'BTC-USD', BITCOIN: 'BTC-USD',
-  ETH: 'ETH-USD', ETHEREUM: 'ETH-USD',
-  BNB: 'BNB-USD',
-  XRP: 'XRP-USD',
-  ADA: 'ADA-USD', CARDANO: 'ADA-USD',
-  DOGE: 'DOGE-USD', DOGECOIN: 'DOGE-USD',
-  AVAX: 'AVAX-USD',
-  DOT: 'DOT-USD',
-  LINK: 'LINK-USD',
-  LTC: 'LTC-USD', LITECOIN: 'LTC-USD',
-  SOL: 'SOL-USD', SOLANA: 'SOL-USD',
+  // Crypto convenience aliases (full-name → canonical ticker for decompose/display)
+  BITCOIN: 'BTC', ETHEREUM: 'ETH', CARDANO: 'ADA',
+  DOGECOIN: 'DOGE', LITECOIN: 'LTC', SOLANA: 'SOL',
   // Single-stock input convenience (bare → DB key form)
   FINN: 'FINN.TO',
   T: 'T.TO',
