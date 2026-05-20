@@ -168,7 +168,6 @@ git push
 ## Known Limitations
 
 - ETF holdings data is static and manually maintained in `etf_data.json`. Data coverage is as of May 2026.
-- Some ETFs with bad weight data (e.g. SMH) may show sector breakdowns slightly over 100% — this is a data quality issue, not a code bug.
 - Yahoo Finance's unofficial API is used for live prices. It is not a guaranteed service and could change without notice.
 - FX conversion for non-USD/CAD currencies treats the raw price as-is and derives the other side via the USD/CAD rate.
 
