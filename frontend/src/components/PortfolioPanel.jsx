@@ -271,7 +271,7 @@ export default function PortfolioPanel({
     freezeTimerRef.current = setTimeout(() => {
       setSortFrozen(false);
       freezeTimerRef.current = null;
-    }, 150);
+    }, 250);
   }
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveMode, setSaveMode] = useState('new');
@@ -681,6 +681,10 @@ export default function PortfolioPanel({
             return (
               <div
                 key={row.id}
+                onFocus={() => freezeSort()}
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) scheduleUnfreeze();
+                }}
                 style={{
                   borderBottom: '1px solid ' + (isUnknown ? 'rgba(244,185,66,0.2)' : 'var(--border-sub)'),
                   background: isUnknown ? 'rgba(244,185,66,0.04)' : 'transparent',
@@ -698,8 +702,8 @@ export default function PortfolioPanel({
                       maxLength={8}
                       placeholder="TICKER"
                       onChange={(e) => updateRow(row.id, 'ticker', e.target.value.toUpperCase())}
-                      onFocus={() => { setFocusedId(`${row.id}-t`); freezeSort(); }}
-                      onBlur={() => { handleTickerBlur(row.id); scheduleUnfreeze(); }}
+                      onFocus={() => setFocusedId(`${row.id}-t`)}
+                      onBlur={() => handleTickerBlur(row.id)}
                       style={{
                         ...inputBase,
                         fontSize: 13,
@@ -726,8 +730,8 @@ export default function PortfolioPanel({
                       min="0"
                       step="any"
                       onChange={(e) => updateRow(row.id, isShares ? 'shares' : 'amount', e.target.value)}
-                      onFocus={() => { setFocusedId(`${row.id}-v`); freezeSort(); }}
-                      onBlur={() => { setFocusedId(null); scheduleUnfreeze(); }}
+                      onFocus={() => setFocusedId(`${row.id}-v`)}
+                      onBlur={() => setFocusedId(null)}
                       style={{
                         ...inputBase,
                         fontSize: 13,
@@ -748,14 +752,14 @@ export default function PortfolioPanel({
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <InputTypeToggle
                       value={row.inputType}
-                      onChange={(t) => { freezeSort(); scheduleUnfreeze(); updateRowInputType(row.id, t); }}
+                      onChange={(t) => { freezeSort(); updateRowInputType(row.id, t); }}
                     />
                   </div>
 
                   {/* Currency toggle (hidden for # rows) */}
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     {!isShares && (
-                      <CurrencyToggle value={row.currency} onChange={(cur) => { freezeSort(); scheduleUnfreeze(); updateRow(row.id, 'currency', cur); }} />
+                      <CurrencyToggle value={row.currency} onChange={(cur) => { freezeSort(); updateRow(row.id, 'currency', cur); }} />
                     )}
                   </div>
 
