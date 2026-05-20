@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
-import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../utils/fetchPrices';
+import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../services/fetchPrices';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';

@@ -1,4 +1,4 @@
-import { PRICE_ALIASES } from './decompose';
+import { PRICE_ALIASES } from '../utils/decompose';
 
 const STORAGE_KEY = 'pv_price_cache';
 

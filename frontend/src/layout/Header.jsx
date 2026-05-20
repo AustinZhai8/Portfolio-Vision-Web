@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import InfoModal from './InfoModal';
+import InfoModal from '../components/InfoModal';
 
 const ACCENT = '#a78bfa';
 

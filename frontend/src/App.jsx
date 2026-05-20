@@ -9,7 +9,7 @@ import {
   resolveTicker,
 } from './utils/decompose';
 import { supabase } from './lib/supabase';
-import Header from './components/Header';
+import Header from './layout/Header';
 import PortfolioPanel from './components/PortfolioPanel';
 import ResultsPanel from './components/ResultsPanel';
 import AuthModal from './components/AuthModal';

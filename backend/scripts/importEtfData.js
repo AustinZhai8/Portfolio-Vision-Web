@@ -1,5 +1,5 @@
-// One-time importer that mirrors src/data/etf_data.json into Supabase.
-// Run with: node scripts/importEtfData.js
+// One-time importer that mirrors frontend/src/data/etf_data.json into Supabase.
+// Run with: npm run import-etf  (or: node backend/scripts/importEtfData.js)
 //
 // The JSON file remains the source of truth for decomposition. This script
 // just keeps the Supabase tables in sync for admin/audit access.
@@ -10,7 +10,7 @@ import { dirname, resolve } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const projectRoot = resolve(__dirname, '..');
+const projectRoot = resolve(__dirname, '..', '..');
 
 function loadEnv() {
   const envPath = resolve(projectRoot, '.env');
@@ -38,15 +38,15 @@ function loadEnv() {
 
 const env = loadEnv();
 const SUPABASE_URL = env.VITE_SUPABASE_URL;
-const SUPABASE_ANON_KEY = env.VITE_SUPABASE_ANON_KEY;
-if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in .env');
+const SUPABASE_SERVICE_ROLE_KEY = env.SUPABASE_SERVICE_ROLE_KEY;
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('Missing VITE_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env');
   process.exit(1);
 }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-const dataPath = resolve(projectRoot, 'src/data/etf_data.json');
+const dataPath = resolve(projectRoot, 'frontend/src/data/etf_data.json');
 const raw = JSON.parse(readFileSync(dataPath, 'utf8'));
 const etfs = raw.etfs || {};
 const stocks = raw.stocks || {};

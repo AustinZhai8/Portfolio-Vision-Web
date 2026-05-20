@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "dev": "vite frontend",
+    "build": "vite build frontend",
+    "lint": "eslint frontend",
+    "preview": "vite preview frontend",
+    "import-etf": "node backend/scripts/importEtfData.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.3",
