@@ -20,7 +20,7 @@ Portfolio Vision takes your portfolio of ETFs and stocks, decomposes each ETF in
 - Per-row currency toggle (USD/CAD) and global USD/CAD display toggle
 - Live price fetching via Yahoo Finance proxy (TSX, TSX-V, NEO/Cboe Canada, CSE, US exchanges, FX, crypto)
 - Price cache persisted to localStorage
-- Holdings filtered to >= 0.3% weight, remainder collapsed into a summary row
+- Holdings filtered to >= 0.25% weight, remainder collapsed into a summary row
 - Sort by value, ticker, or default order
 - Save and load portfolios (requires account)
 - Google OAuth and email/password auth with OTP verification

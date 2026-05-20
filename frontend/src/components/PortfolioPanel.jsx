@@ -364,23 +364,26 @@ export default function PortfolioPanel({
     setSortMode('default');
   }
 
+  function rowDisplayValue(row) {
+    if (row.inputType === 'amount') {
+      return convertAmount(parseFloat(row.amount) || 0, row.currency, displayCurrency);
+    }
+    const shares = parseFloat(row.shares) || 0;
+    if (!shares || !row.ticker.trim()) return 0;
+    const priceCAD = getCachedPrice(row.ticker.trim().toUpperCase());
+    if (priceCAD == null) return 0;
+    return convertAmount(shares * priceCAD, 'CAD', displayCurrency);
+  }
+
   function getSortedRows() {
     if (sortMode === 'default') return rows;
     const sorted = [...rows];
     switch (sortMode) {
       case 'value-high':
-        sorted.sort((a, b) => {
-          const aVal = a.inputType === 'amount' ? convertAmount(parseFloat(a.amount) || 0, a.currency, displayCurrency) : 0;
-          const bVal = b.inputType === 'amount' ? convertAmount(parseFloat(b.amount) || 0, b.currency, displayCurrency) : 0;
-          return bVal - aVal;
-        });
+        sorted.sort((a, b) => rowDisplayValue(b) - rowDisplayValue(a));
         break;
       case 'value-low':
-        sorted.sort((a, b) => {
-          const aVal = a.inputType === 'amount' ? convertAmount(parseFloat(a.amount) || 0, a.currency, displayCurrency) : 0;
-          const bVal = b.inputType === 'amount' ? convertAmount(parseFloat(b.amount) || 0, b.currency, displayCurrency) : 0;
-          return aVal - bVal;
-        });
+        sorted.sort((a, b) => rowDisplayValue(a) - rowDisplayValue(b));
         break;
       case 'ticker-az':
         sorted.sort((a, b) => a.ticker.localeCompare(b.ticker));
