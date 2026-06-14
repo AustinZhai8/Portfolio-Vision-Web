@@ -27,3 +27,18 @@ create table if not exists stock_info (
   sector   text,
   country  text
 );
+
+-- Enable RLS on all tables (blocks all access by default)
+alter table etf_metadata  enable row level security;
+alter table etf_holdings  enable row level security;
+alter table stock_info    enable row level security;
+
+-- Allow anyone to read (this is public reference data)
+create policy "public read etf_metadata"
+  on etf_metadata for select using (true);
+
+create policy "public read etf_holdings"
+  on etf_holdings for select using (true);
+
+create policy "public read stock_info"
+  on stock_info for select using (true);
