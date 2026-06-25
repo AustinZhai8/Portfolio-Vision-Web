@@ -139,11 +139,15 @@ function OverrideModal({ portfolios, onOverride, onClose, loading }) {
   const [confirmName, setConfirmName] = useState('');
   const [error, setError] = useState('');
   const selectedPortfolio = portfolios.find((p) => p.id === selectedId);
+  // Case-insensitive: the confirm label is rendered uppercase via CSS, so a
+  // name like "Main" shows as "MAIN" — don't punish the user for matching it.
+  const nameMatches = !!selectedPortfolio
+    && confirmName.trim().toLowerCase() === selectedPortfolio.name.trim().toLowerCase();
 
   async function handleSubmit(e) {
     e.preventDefault();
     if (!selectedId) { setError('Select a portfolio.'); return; }
-    if (confirmName !== selectedPortfolio.name) { setError(`Type "${selectedPortfolio.name}" exactly to confirm.`); return; }
+    if (!nameMatches) { setError(`Type "${selectedPortfolio.name}" to confirm.`); return; }
     setError('');
     const err = await onOverride(selectedId);
     if (err) { setError(err); }
@@ -177,8 +181,8 @@ function OverrideModal({ portfolios, onOverride, onClose, loading }) {
           )}
           {error && <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#f05a7e' }}>{error}</div>}
           <div style={{ display: 'flex', gap: 8 }}>
-            <button type="submit" disabled={loading || !selectedId || confirmName !== selectedPortfolio?.name}
-              style={{ flex: 1, padding: '9px 0', background: selectedId && confirmName === selectedPortfolio?.name && !loading ? ACCENT : '#3d2f6e', border: 'none', borderRadius: 3, color: selectedId && confirmName === selectedPortfolio?.name && !loading ? '#07090e' : '#9b8ec4', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: selectedId && confirmName === selectedPortfolio?.name && !loading ? 'pointer' : 'not-allowed' }}>
+            <button type="submit" disabled={loading || !nameMatches}
+              style={{ flex: 1, padding: '9px 0', background: nameMatches && !loading ? ACCENT : '#3d2f6e', border: 'none', borderRadius: 3, color: nameMatches && !loading ? '#07090e' : '#9b8ec4', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: nameMatches && !loading ? 'pointer' : 'not-allowed' }}>
               {loading ? '...' : 'OVERRIDE'}
             </button>
             <button type="button" onClick={onClose}
@@ -689,15 +693,15 @@ export default function PortfolioPanel({
 
         {/* Loaded portfolio banner */}
         {loadedPortfolioId && currentPortfolio && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '5px 16px', background: 'rgba(167,139,250,0.08)', borderBottom: '1px solid rgba(167,139,250,0.18)', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: ACCENT, letterSpacing: '0.08em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={currentPortfolio.name}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'rgba(167,139,250,0.12)', borderBottom: '1px solid rgba(167,139,250,0.3)', gap: 8 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 13, fontWeight: 600, color: ACCENT, letterSpacing: '0.06em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }} title={currentPortfolio.name}>
               EDITING: {currentPortfolio.name}
             </span>
             <button type="button" title="Stop editing this portfolio" onClick={() => setLoadedPortfolioId(null)}
-              style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 14, lineHeight: 1, padding: '0 0 0 4px', flexShrink: 0, transition: 'color 0.12s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#f05a7e')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}>
-              ×
+              style={{ background: 'rgba(240,90,126,0.1)', border: '1px solid rgba(240,90,126,0.4)', borderRadius: 3, color: '#f05a7e', cursor: 'pointer', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', lineHeight: 1, padding: '5px 9px', flexShrink: 0, transition: 'background 0.12s' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.22)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.1)')}>
+              ✕ EXIT
             </button>
           </div>
         )}
