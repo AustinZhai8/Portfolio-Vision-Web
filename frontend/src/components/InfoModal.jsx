@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 const ACCENT = '#a78bfa';
 
 export default function InfoModal({ open, onClose }) {
@@ -97,6 +99,30 @@ export default function InfoModal({ open, onClose }) {
             data is available for that fund. Your total invested amount is still accurate — untracked
             just refers to holdings we cannot break down further.
           </p>
+          <div
+            style={{
+              display: 'flex',
+              gap: 14,
+              paddingTop: 8,
+              borderTop: '1px solid var(--border)',
+              marginTop: 4,
+            }}
+          >
+            <Link
+              to="/privacy"
+              onClick={onClose}
+              style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', textDecoration: 'underline', textDecorationColor: 'var(--border2)' }}
+            >
+              Privacy Policy
+            </Link>
+            <Link
+              to="/terms"
+              onClick={onClose}
+              style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', textDecoration: 'underline', textDecorationColor: 'var(--border2)' }}
+            >
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </div>

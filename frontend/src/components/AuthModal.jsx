@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const ACCENT = '#a78bfa';
@@ -643,6 +644,27 @@ export default function AuthModal({ onClose }) {
                 >
                   {loading ? '...' : tab === 'login' ? 'LOG IN' : 'CREATE ACCOUNT'}
                 </button>
+
+                <span
+                  style={{
+                    fontFamily: 'var(--mono)',
+                    fontSize: 9,
+                    color: 'var(--text3)',
+                    letterSpacing: '0.02em',
+                    textAlign: 'center',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  By continuing you agree to our{' '}
+                  <Link to="/terms" onClick={onClose} style={{ color: 'var(--text2)', textDecoration: 'underline' }}>
+                    Terms
+                  </Link>{' '}
+                  and{' '}
+                  <Link to="/privacy" onClick={onClose} style={{ color: 'var(--text2)', textDecoration: 'underline' }}>
+                    Privacy Policy
+                  </Link>
+                  .
+                </span>
               </div>
             </form>
           </>

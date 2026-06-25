@@ -3,6 +3,7 @@ import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/dec
 import { fmtMoney } from '../utils/format';
 import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../services/fetchPrices';
 import { supabase } from '../lib/supabase';
+import ImportCsvModal from './ImportCsvModal';
 
 const ACCENT = '#a78bfa';
 
@@ -276,6 +277,7 @@ export default function PortfolioPanel({
   const [saveOpen, setSaveOpen] = useState(false);
   const [saveMode, setSaveMode] = useState('new');
   const [overrideOpen, setOverrideOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [portfolios, setPortfolios] = useState([]);
   const [pfLoading, setPfLoading] = useState(false);
   const [pfError, setPfError] = useState('');
@@ -482,10 +484,17 @@ export default function PortfolioPanel({
     }
   }
 
-  async function handleDecomposeClick() {
+  // Validates rows, fetches live prices for share rows, converts them to
+  // amount+CAD, and commits via onDecomposeComputed.
+  //   targetRows: operate on this array directly (lets the import path decompose
+  //     freshly-built rows without waiting on async setRows state).
+  //   lenient: when a share row can't be priced, drop it from the result and
+  //     flag it instead of aborting the whole decompose (used for CSV import,
+  //     where an export may contain tickers our proxy can't price).
+  async function runDecompose(targetRows = rows, { lenient = false } = {}) {
     // 1. Validate all rows
     const errors = {};
-    for (const row of rows) {
+    for (const row of targetRows) {
       const ticker = row.ticker.trim();
       if (!ticker) {
         errors[row.id] = 'Ticker required';
@@ -500,7 +509,7 @@ export default function PortfolioPanel({
     if (Object.keys(errors).length > 0) { setRowErrors(errors); return; }
 
     // 2. Fetch prices for # rows
-    const shareRows = rows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
+    const shareRows = targetRows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
     let prices = {};
     if (shareRows.length > 0) {
       setPriceFetching(true);
@@ -523,25 +532,57 @@ export default function PortfolioPanel({
       const t = row.ticker.trim().toUpperCase();
       if (prices[t] == null) priceErrors[row.id] = 'Price unavailable';
     }
-    if (Object.keys(priceErrors).length > 0) { setRowErrors(priceErrors); return; }
+    // Strict path: any missing price aborts so the user can fix the ticker.
+    // Lenient path: keep going, excluding the unpriceable rows below.
+    if (Object.keys(priceErrors).length > 0 && !lenient) { setRowErrors(priceErrors); return; }
 
-    // 4. Build merged rows: $ rows pass through, # rows become amount+CAD
-    const mergedRows = rows.map((row) => {
-      const ticker = row.ticker.trim().toUpperCase();
-      if (row.inputType === 'shares') {
-        const priceCAD = prices[ticker];
-        return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
-      }
-      return { id: row.id, ticker, amount: row.amount, currency: row.currency };
-    });
+    // 4. Build merged rows: $ rows pass through, # rows become amount+CAD.
+    //    In lenient mode, drop share rows that couldn't be priced.
+    const mergedRows = targetRows
+      .filter((row) => !(lenient && row.inputType === 'shares' && prices[row.ticker.trim().toUpperCase()] == null))
+      .map((row) => {
+        const ticker = row.ticker.trim().toUpperCase();
+        if (row.inputType === 'shares') {
+          const priceCAD = prices[ticker];
+          return { id: row.id, ticker, amount: String(parseFloat(row.shares) * priceCAD), currency: 'CAD' };
+        }
+        return { id: row.id, ticker, amount: row.amount, currency: row.currency };
+      });
 
     if (shareRows.length > 0) {
       const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
       const oldest = getOldestFetchedAt(tickers);
       setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
     }
-    setRowErrors({});
+    // Lenient: surface the unpriceable rows as row errors but still render the rest.
+    setRowErrors(lenient ? priceErrors : {});
     onDecomposeComputed(mergedRows);
+  }
+
+  // Replace all rows with parsed CSV holdings, then auto-decompose (lenient).
+  async function handleImport(holdings, summary) {
+    const newRows = holdings.map((h) => ({
+      id: nextId(),
+      ticker: h.ticker ?? '',
+      inputType: h.inputType ?? 'shares',
+      amount: h.amount ?? '',
+      currency: h.currency ?? 'USD',
+      shares: h.shares ?? '',
+    }));
+    setRows(newRows);
+    setRowErrors({});
+    setSortMode('default');
+    setLoadedPortfolioId(null);
+    setPricesFetchedAt(null);
+    setPriceError('');
+    setImportOpen(false);
+
+    const parts = [`Imported ${summary.imported} holding${summary.imported === 1 ? '' : 's'}`];
+    if (summary.cadHedged) parts.push(`${summary.cadHedged} CAD-hedged as $ value`);
+    if (summary.skippedOptions) parts.push(`${summary.skippedOptions} option${summary.skippedOptions === 1 ? '' : 's'} skipped`);
+    setPriceStatusMsg(parts.join(' · ') + '.');
+
+    await runDecompose(newRows, { lenient: true });
   }
 
   const hasSharesRows = rows.some((r) => r.inputType === 'shares');
@@ -606,6 +647,12 @@ export default function PortfolioPanel({
           loading={false}
         />
       )}
+      {importOpen && (
+        <ImportCsvModal
+          onClose={() => setImportOpen(false)}
+          onImport={handleImport}
+        />
+      )}
       <div
         className="portfolio-panel"
         style={{
@@ -619,11 +666,23 @@ export default function PortfolioPanel({
         }}
       >
         {/* Panel header */}
-        <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Portfolio
-          </span>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>
+        <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Portfolio
+            </span>
+            <button
+              type="button"
+              onClick={() => setImportOpen(true)}
+              title="Import holdings from a broker CSV"
+              style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', cursor: 'pointer', padding: '3px 7px', transition: 'border-color 0.15s, color 0.15s', flexShrink: 0 }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--text3)'; }}
+            >
+              ⬆ IMPORT CSV
+            </button>
+          </div>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', flexShrink: 0 }}>
             {rows.length} POSITION{rows.length !== 1 ? 'S' : ''}
           </span>
         </div>
@@ -887,7 +946,7 @@ export default function PortfolioPanel({
             </div>
           )}
 
-          <button type="button" disabled={priceFetching} onClick={handleDecomposeClick}
+          <button type="button" disabled={priceFetching} onClick={() => runDecompose(rows)}
             style={{ width: '100%', padding: '11px 0', background: priceFetching ? '#3d2f6e' : ACCENT, border: 'none', borderRadius: 3, color: priceFetching ? '#9b8ec4' : '#07090e', fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', cursor: priceFetching ? 'not-allowed' : 'pointer', transition: 'opacity 0.15s, background 0.15s' }}
             onMouseEnter={(e) => { if (!priceFetching) e.currentTarget.style.opacity = '0.88'; }}
             onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}>

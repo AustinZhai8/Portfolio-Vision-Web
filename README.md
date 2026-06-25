@@ -17,6 +17,7 @@ Portfolio Vision takes your portfolio of ETFs and stocks, decomposes each ETF in
 - ETF decomposition with recursive depth (ETFs holding ETFs handled automatically)
 - Sector and geographic breakdown with animated horizontal bar charts
 - Input by dollar amount or number of shares
+- Import holdings from a broker CSV (Wealthsimple format) — auto-populates rows as shares, with CAD-hedged CDRs imported at their CAD value and options skipped
 - Per-row currency toggle (USD/CAD) and global USD/CAD display toggle
 - Live price fetching via Yahoo Finance proxy (TSX, TSX-V, NEO/Cboe Canada, CSE, US exchanges, FX, crypto)
 - Price cache persisted to localStorage
@@ -77,16 +78,17 @@ portfolio-vision-web/
 │   │   │   ├── CompanyLogo.jsx
 │   │   │   ├── HoldingRow.jsx
 │   │   │   ├── HorizBar.jsx
+│   │   │   ├── ImportCsvModal.jsx
 │   │   │   ├── InfoModal.jsx
 │   │   │   ├── PortfolioPanel.jsx
 │   │   │   └── ResultsPanel.jsx
 │   │   ├── layout/               # App shell / global chrome (Header, etc.)
-│   │   ├── pages/                # Route-level views (Settings, etc.)
+│   │   ├── pages/                # Route-level views (Settings, Privacy, Terms)
 │   │   ├── hooks/                # Custom React hooks (reserved)
 │   │   ├── context/              # React context providers (reserved)
 │   │   ├── services/             # API clients (fetchPrices.js)
 │   │   ├── lib/                  # SDK clients (supabase.js)
-│   │   ├── utils/                # Pure helpers (decompose, colors, format)
+│   │   ├── utils/                # Pure helpers (decompose, parseHoldingsCsv, colors, format)
 │   │   ├── data/                 # Reference data (etf_data.json — source of truth)
 │   │   ├── App.jsx
 │   │   ├── main.jsx
@@ -105,7 +107,8 @@ portfolio-vision-web/
 │       └── importEtfData.js      # JSON → Supabase importer
 │
 ├── database/                     # DATABASE (Supabase / Postgres schema)
-│   └── 001_etf_data.sql          # Tables: etf_metadata, etf_holdings, stock_info
+│   ├── 001_etf_data.sql          # Tables: etf_metadata, etf_holdings, stock_info
+│   └── 002_security_fixes.sql    # portfolios RLS + hardened delete_user()
 │
 ├── .env                          # Local env vars (gitignored)
 ├── .gitignore
@@ -151,6 +154,8 @@ Schema lives in [database/](database/). The Supabase tables (`etf_metadata`, `et
 npm run import-etf
 ```
 
+User-saved portfolios live in the `portfolios` table. `database/002_security_fixes.sql` enables Row-Level Security on it (owner-only access) and hardens the `delete_user()` account-deletion function. There is no migration tooling — run the `.sql` files directly in the Supabase SQL editor, in order.
+
 ---
 
 ## Deployment
@@ -175,4 +180,4 @@ git push
 
 ## About
 
-Built by Austin Zhai, first-year Computer Engineering student at UBC. Personal project built to get hands-on experience with full-stack development, API design, and real-world data problems.
+Built by Austin Zhai, second-year Computer Engineering student at UBC. Personal project built to get hands-on experience with full-stack development, API design, and real-world data problems.
