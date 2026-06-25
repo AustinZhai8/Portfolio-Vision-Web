@@ -1,16 +1,6 @@
-/*
- * Run this in the Supabase SQL editor to enable account deletion:
- *
- * create or replace function delete_user()
- * returns void
- * language plpgsql
- * security definer
- * as $$
- * begin
- *   delete from auth.users where id = auth.uid();
- * end;
- * $$;
- */
+// `delete_user()` (the RPC called below) is defined in
+// database/002_security_fixes.sql — run that file in the Supabase SQL
+// editor before relying on this button.
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';

@@ -14,10 +14,12 @@ import PortfolioPanel from './components/PortfolioPanel';
 import ResultsPanel from './components/ResultsPanel';
 import AuthModal from './components/AuthModal';
 import Settings from './pages/Settings';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
 
 const INITIAL_ROWS = [
   { id: 1, ticker: 'VFV', inputType: 'amount', amount: '5000', currency: 'CAD', shares: '' },
-  { id: 2, ticker: 'QQQ', inputType: 'amount', amount: '3000', currency: 'USD', shares: '' },
+  { id: 2, ticker: 'QQQ', inputType: 'shares', amount: '', currency: 'USD', shares: '5' },
 ];
 
 let _uid = 3;
@@ -166,6 +168,8 @@ export default function App() {
           />
         }
       />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
     </Routes>
   );
 }
