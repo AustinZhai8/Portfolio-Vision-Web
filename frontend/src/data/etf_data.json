@@ -1382,7 +1382,7 @@
         {
           "ticker": "TSM",
           "name": "Taiwan Semiconductor Manufacturing ADR",
-          "weight": 9.70
+          "weight": 9.7
         },
         {
           "ticker": "INTC",
@@ -3834,204 +3834,996 @@
       "currency": "CAD",
       "description": "100% global equity ETF. Top ~190 holdings shown. Includes US, Canadian, and international stocks. Source: BlackRock XEQT holdings (XEQT/VEQT/ZEQT share same underlying exposure).",
       "holdings": [
-        { "ticker": "NVDA", "name": "NVIDIA Corp", "weight": 3.47 },
-        { "ticker": "AAPL", "name": "Apple Inc", "weight": 2.80 },
-        { "ticker": "MSFT", "name": "Microsoft Corp", "weight": 1.99 },
-        { "ticker": "RY.TO", "name": "Royal Bank of Canada", "weight": 1.84 },
-        { "ticker": "AMZN", "name": "Amazon.com Inc", "weight": 1.64 },
-        { "ticker": "GOOGL", "name": "Alphabet Inc Class A", "weight": 1.46 },
-        { "ticker": "TD.TO", "name": "Toronto-Dominion Bank", "weight": 1.30 },
-        { "ticker": "AVGO", "name": "Broadcom Inc", "weight": 1.28 },
-        { "ticker": "GOOG", "name": "Alphabet Inc Class C", "weight": 1.17 },
-        { "ticker": "SHOP.TO", "name": "Shopify Inc", "weight": 0.88 },
-        { "ticker": "ENB.TO", "name": "Enbridge Inc", "weight": 0.87 },
-        { "ticker": "META", "name": "Meta Platforms Inc Class A", "weight": 0.85 },
-        { "ticker": "BMO.TO", "name": "Bank of Montreal", "weight": 0.77 },
-        { "ticker": "TSLA", "name": "Tesla Inc", "weight": 0.75 },
-        { "ticker": "CM.TO", "name": "Canadian Imperial Bank of Commerce", "weight": 0.74 },
-        { "ticker": "BN.TO", "name": "Brookfield Corp Class A", "weight": 0.72 },
-        { "ticker": "CNQ.TO", "name": "Canadian Natural Resources Ltd", "weight": 0.72 },
-        { "ticker": "BNS.TO", "name": "Bank of Nova Scotia", "weight": 0.68 },
-        { "ticker": "AEM.TO", "name": "Agnico Eagle Mines Ltd", "weight": 0.65 },
-        { "ticker": "2330.TW", "name": "Taiwan Semiconductor Manufacturing", "weight": 0.62 },
-        { "ticker": "SU.TO", "name": "Suncor Energy Inc", "weight": 0.58 },
-        { "ticker": "ASML", "name": "ASML Holding NV", "weight": 0.57 },
-        { "ticker": "BRK.B", "name": "Berkshire Hathaway Inc Class B", "weight": 0.56 },
-        { "ticker": "CP.TO", "name": "Canadian Pacific Kansas City Ltd", "weight": 0.55 },
-        { "ticker": "MU", "name": "Micron Technology Inc", "weight": 0.52 },
-        { "ticker": "TRP.TO", "name": "TC Energy Corp", "weight": 0.51 },
-        { "ticker": "JPM", "name": "JPMorgan Chase & Co", "weight": 0.51 },
-        { "ticker": "LLY", "name": "Eli Lilly", "weight": 0.50 },
-        { "ticker": "ABX.TO", "name": "Barrick Mining Corp", "weight": 0.49 },
-        { "ticker": "MFC.TO", "name": "Manulife Financial Corp", "weight": 0.45 },
-        { "ticker": "AMD", "name": "Advanced Micro Devices Inc", "weight": 0.44 },
-        { "ticker": "CNR.TO", "name": "Canadian National Railway", "weight": 0.44 },
-        { "ticker": "WPM.TO", "name": "Wheaton Precious Metals Corp", "weight": 0.42 },
-        { "ticker": "XOM", "name": "Exxon Mobil Corp", "weight": 0.42 },
-        { "ticker": "NA.TO", "name": "National Bank of Canada", "weight": 0.41 },
-        { "ticker": "WMT", "name": "Walmart Inc", "weight": 0.36 },
-        { "ticker": "V", "name": "Visa Inc Class A", "weight": 0.35 },
-        { "ticker": "JNJ", "name": "Johnson & Johnson", "weight": 0.35 },
-        { "ticker": "CCO.TO", "name": "Cameco Corp", "weight": 0.34 },
-        { "ticker": "INTC", "name": "Intel Corp", "weight": 0.32 },
-        { "ticker": "FNV.TO", "name": "Franco-Nevada Corp", "weight": 0.31 },
-        { "ticker": "ATD.TO", "name": "Alimentation Couche-Tard Inc", "weight": 0.30 },
-        { "ticker": "CVE.TO", "name": "Cenovus Energy", "weight": 0.30 },
-        { "ticker": "005930.KS", "name": "Samsung Electronics Ltd", "weight": 0.30 },
-        { "ticker": "CLS.TO", "name": "Celestica Inc", "weight": 0.30 },
-        { "ticker": "CSCO", "name": "Cisco Systems Inc", "weight": 0.30 },
-        { "ticker": "COST", "name": "Costco Wholesale Corp", "weight": 0.29 },
-        { "ticker": "HSBA.L", "name": "HSBC Holdings PLC", "weight": 0.29 },
-        { "ticker": "WCN.TO", "name": "Waste Connections Inc", "weight": 0.29 },
-        { "ticker": "SLF.TO", "name": "Sun Life Financial Inc", "weight": 0.29 },
-        { "ticker": "ROG.SW", "name": "Roche Holding AG", "weight": 0.28 },
-        { "ticker": "AZN.L", "name": "AstraZeneca PLC", "weight": 0.27 },
-        { "ticker": "NOVN.SW", "name": "Novartis AG", "weight": 0.27 },
-        { "ticker": "CSU.TO", "name": "Constellation Software Inc", "weight": 0.27 },
-        { "ticker": "CAT", "name": "Caterpillar Inc", "weight": 0.26 },
-        { "ticker": "MA", "name": "Mastercard Inc Class A", "weight": 0.26 },
-        { "ticker": "NTR.TO", "name": "Nutrien Ltd", "weight": 0.25 },
-        { "ticker": "NESN.SW", "name": "Nestle SA", "weight": 0.25 },
-        { "ticker": "K.TO", "name": "Kinross Gold Corp", "weight": 0.24 },
-        { "ticker": "IFC.TO", "name": "Intact Financial Corp", "weight": 0.24 },
-        { "ticker": "DOL.TO", "name": "Dollarama Inc", "weight": 0.24 },
-        { "ticker": "ABBV", "name": "AbbVie Inc", "weight": 0.24 },
-        { "ticker": "SHEL.L", "name": "Shell PLC", "weight": 0.23 },
-        { "ticker": "NFLX", "name": "Netflix Inc", "weight": 0.23 },
-        { "ticker": "FFH.TO", "name": "Fairfax Financial Holdings", "weight": 0.23 },
-        { "ticker": "000660.KS", "name": "SK Hynix Inc", "weight": 0.23 },
-        { "ticker": "CVX", "name": "Chevron Corp", "weight": 0.23 },
-        { "ticker": "UNH", "name": "UnitedHealth Group Inc", "weight": 0.23 },
-        { "ticker": "LRCX", "name": "Lam Research Corp", "weight": 0.23 },
-        { "ticker": "POW.TO", "name": "Power Corporation of Canada", "weight": 0.22 },
-        { "ticker": "SIE.DE", "name": "Siemens AG", "weight": 0.22 },
-        { "ticker": "AMAT", "name": "Applied Materials Inc", "weight": 0.22 },
-        { "ticker": "BHP", "name": "BHP Group Ltd", "weight": 0.21 },
-        { "ticker": "BAC", "name": "Bank of America Corp", "weight": 0.21 },
-        { "ticker": "PG", "name": "Procter & Gamble", "weight": 0.21 },
-        { "ticker": "ORCL", "name": "Oracle Corp", "weight": 0.21 },
-        { "ticker": "PPL.TO", "name": "Pembina Pipeline Corp", "weight": 0.20 },
-        { "ticker": "8306.T", "name": "Mitsubishi UFJ Financial Group Inc", "weight": 0.20 },
-        { "ticker": "FTS.TO", "name": "Fortis Inc", "weight": 0.20 },
-        { "ticker": "KO", "name": "Coca-Cola", "weight": 0.20 },
-        { "ticker": "TECK.B.TO", "name": "Teck Resources Class B", "weight": 0.20 },
-        { "ticker": "PLTR", "name": "Palantir Technologies Inc Class A", "weight": 0.19 },
-        { "ticker": "QSR.TO", "name": "Restaurant Brands International Inc", "weight": 0.19 },
-        { "ticker": "HD", "name": "Home Depot Inc", "weight": 0.19 },
-        { "ticker": "PM", "name": "Philip Morris International Inc", "weight": 0.19 },
-        { "ticker": "GE", "name": "GE Aerospace", "weight": 0.19 },
-        { "ticker": "CBA.AX", "name": "Commonwealth Bank of Australia", "weight": 0.18 },
-        { "ticker": "GS", "name": "Goldman Sachs Group Inc", "weight": 0.18 },
-        { "ticker": "GEV", "name": "GE Vernova Inc", "weight": 0.18 },
-        { "ticker": "7203.T", "name": "Toyota Motor Corp", "weight": 0.18 },
-        { "ticker": "L.TO", "name": "Loblaw Companies Ltd", "weight": 0.18 },
-        { "ticker": "TTE", "name": "TotalEnergies", "weight": 0.18 },
-        { "ticker": "MRK", "name": "Merck & Co Inc", "weight": 0.18 },
-        { "ticker": "TXN", "name": "Texas Instruments Inc", "weight": 0.17 },
-        { "ticker": "PAAS.TO", "name": "Pan American Silver Corp", "weight": 0.17 },
-        { "ticker": "SAP", "name": "SAP SE", "weight": 0.17 },
-        { "ticker": "SAN.MC", "name": "Banco Santander", "weight": 0.17 },
-        { "ticker": "SU.PA", "name": "Schneider Electric", "weight": 0.16 },
-        { "ticker": "ALV.DE", "name": "Allianz", "weight": 0.16 },
-        { "ticker": "BCE.TO", "name": "BCE Inc", "weight": 0.16 },
-        { "ticker": "ABBN.SW", "name": "ABB Ltd", "weight": 0.16 },
-        { "ticker": "KLAC", "name": "KLA Corp", "weight": 0.15 },
-        { "ticker": "LIN", "name": "Linde PLC", "weight": 0.15 },
-        { "ticker": "ENR.DE", "name": "Siemens Energy AG", "weight": 0.15 },
-        { "ticker": "MS", "name": "Morgan Stanley", "weight": 0.15 },
-        { "ticker": "RTX", "name": "RTX Corp", "weight": 0.15 },
-        { "ticker": "IMO.TO", "name": "Imperial Oil Ltd", "weight": 0.14 },
-        { "ticker": "NOVO-B.CO", "name": "Novo Nordisk Class B", "weight": 0.14 },
-        { "ticker": "WFC", "name": "Wells Fargo", "weight": 0.14 },
-        { "ticker": "UBSG.SW", "name": "UBS Group AG", "weight": 0.14 },
-        { "ticker": "IBE.MC", "name": "Iberdrola SA", "weight": 0.14 },
-        { "ticker": "8035.T", "name": "Tokyo Electron Ltd", "weight": 0.14 },
-        { "ticker": "C", "name": "Citigroup Inc", "weight": 0.14 },
-        { "ticker": "BATS.L", "name": "British American Tobacco", "weight": 0.14 },
-        { "ticker": "QCOM", "name": "Qualcomm Inc", "weight": 0.14 },
-        { "ticker": "LUN.TO", "name": "Lundin Mining Corp", "weight": 0.14 },
-        { "ticker": "WSP.TO", "name": "WSP Global Inc", "weight": 0.14 },
-        { "ticker": "RBA.TO", "name": "RB Global Inc", "weight": 0.14 },
-        { "ticker": "T.TO", "name": "Telus", "weight": 0.14 },
-        { "ticker": "6501.T", "name": "Hitachi Ltd", "weight": 0.13 },
-        { "ticker": "6758.T", "name": "Sony Group Corp", "weight": 0.13 },
-        { "ticker": "SNDK", "name": "SanDisk Corp", "weight": 0.13 },
-        { "ticker": "IBM", "name": "International Business Machines Corp", "weight": 0.13 },
-        { "ticker": "9984.T", "name": "Softbank Group Corp", "weight": 0.13 },
-        { "ticker": "0700.HK", "name": "Tencent Holdings Ltd", "weight": 0.13 },
-        { "ticker": "BAM", "name": "Brookfield Asset Management", "weight": 0.13 },
-        { "ticker": "TOU.TO", "name": "Tourmaline Oil Corp", "weight": 0.13 },
-        { "ticker": "ADI", "name": "Analog Devices Inc", "weight": 0.13 },
-        { "ticker": "PEP", "name": "PepsiCo Inc", "weight": 0.13 },
-        { "ticker": "MC.PA", "name": "LVMH", "weight": 0.13 },
-        { "ticker": "8316.T", "name": "Sumitomo Mitsui Financial Group", "weight": 0.13 },
-        { "ticker": "BIP.UN.TO", "name": "Brookfield Infrastructure Partners", "weight": 0.13 },
-        { "ticker": "MCD", "name": "McDonalds Corp", "weight": 0.12 },
-        { "ticker": "PANW", "name": "Palo Alto Networks Inc", "weight": 0.12 },
-        { "ticker": "VZ", "name": "Verizon Communications Inc", "weight": 0.12 },
-        { "ticker": "NEE", "name": "NextEra Energy Inc", "weight": 0.12 },
-        { "ticker": "RR.L", "name": "Rolls-Royce Holdings PLC", "weight": 0.12 },
-        { "ticker": "6857.T", "name": "Advantest Corp", "weight": 0.12 },
-        { "ticker": "FM.TO", "name": "First Quantum Minerals Ltd", "weight": 0.12 },
-        { "ticker": "AGI.TO", "name": "Alamos Gold Inc", "weight": 0.12 },
-        { "ticker": "BBVA", "name": "Banco Bilbao Vizcaya Argentaria SA", "weight": 0.12 },
-        { "ticker": "BBD.B.TO", "name": "Bombardier Inc Class B", "weight": 0.12 },
-        { "ticker": "ULVR.L", "name": "Unilever PLC", "weight": 0.12 },
-        { "ticker": "DIS", "name": "Walt Disney", "weight": 0.12 },
-        { "ticker": "8058.T", "name": "Mitsubishi Corp", "weight": 0.11 },
-        { "ticker": "AI.PA", "name": "Air Liquide", "weight": 0.11 },
-        { "ticker": "DTE.DE", "name": "Deutsche Telekom AG", "weight": 0.11 },
-        { "ticker": "MG.TO", "name": "Magna International Inc", "weight": 0.11 },
-        { "ticker": "1299.HK", "name": "AIA Group Ltd", "weight": 0.11 },
-        { "ticker": "RIO", "name": "Rio Tinto PLC", "weight": 0.11 },
-        { "ticker": "UCG.MI", "name": "UniCredit", "weight": 0.11 },
-        { "ticker": "EMA.TO", "name": "Emera Inc", "weight": 0.11 },
-        { "ticker": "BP.L", "name": "BP PLC", "weight": 0.11 },
-        { "ticker": "AIR.PA", "name": "Airbus Group", "weight": 0.11 },
-        { "ticker": "AMGN", "name": "Amgen Inc", "weight": 0.11 },
-        { "ticker": "STX", "name": "Seagate Technology Holdings PLC", "weight": 0.11 },
-        { "ticker": "BA", "name": "Boeing", "weight": 0.11 },
-        { "ticker": "SAF.PA", "name": "Safran SA", "weight": 0.11 },
-        { "ticker": "AXP", "name": "American Express", "weight": 0.11 },
-        { "ticker": "GWO.TO", "name": "Great-West Lifeco Inc", "weight": 0.11 },
-        { "ticker": "WCP.TO", "name": "Whitecap Resources Inc", "weight": 0.11 },
-        { "ticker": "8411.T", "name": "Mizuho Financial Group Inc", "weight": 0.10 },
-        { "ticker": "TMO", "name": "Thermo Fisher Scientific Inc", "weight": 0.10 },
-        { "ticker": "TJX", "name": "TJX Inc", "weight": 0.10 },
-        { "ticker": "WDC", "name": "Western Digital Corp", "weight": 0.10 },
-        { "ticker": "CRM", "name": "Salesforce Inc", "weight": 0.10 },
-        { "ticker": "CFR.SW", "name": "Compagnie Financiere Richemont SA", "weight": 0.10 },
-        { "ticker": "GILD", "name": "Gilead Sciences Inc", "weight": 0.10 },
-        { "ticker": "UNP", "name": "Union Pacific Corp", "weight": 0.10 },
-        { "ticker": "ZURN.SW", "name": "Zurich Insurance Group AG", "weight": 0.10 },
-        { "ticker": "9988.HK", "name": "Alibaba Group Holding Ltd", "weight": 0.10 },
-        { "ticker": "BNP.PA", "name": "BNP Paribas SA", "weight": 0.10 },
-        { "ticker": "BLK", "name": "Blackrock Inc", "weight": 0.10 },
-        { "ticker": "ETN", "name": "Eaton PLC", "weight": 0.10 },
-        { "ticker": "UBER", "name": "Uber Technologies Inc", "weight": 0.10 },
-        { "ticker": "RCI.B.TO", "name": "Rogers Communications", "weight": 0.10 },
-        { "ticker": "MRVL", "name": "Marvell Technology Inc", "weight": 0.10 },
-        { "ticker": "GSK.L", "name": "GlaxoSmithKline", "weight": 0.10 },
-        { "ticker": "APH", "name": "Amphenol Corp Class A", "weight": 0.10 },
-        { "ticker": "SCHW", "name": "Charles Schwab Corp", "weight": 0.10 },
-        { "ticker": "OR.PA", "name": "L'Oreal SA", "weight": 0.10 },
-        { "ticker": "D05.SI", "name": "DBS Group Holdings Ltd", "weight": 0.10 },
-        { "ticker": "H.TO", "name": "Hydro One Ltd", "weight": 0.10 },
-        { "ticker": "IFX.DE", "name": "Infineon Technologies AG", "weight": 0.10 },
-        { "ticker": "TIH.TO", "name": "Toromont Industries Ltd", "weight": 0.10 },
-        { "ticker": "CRWD", "name": "Crowdstrike Holdings Inc", "weight": 0.09 },
-        { "ticker": "COP", "name": "ConocoPhillips", "weight": 0.09 },
-        { "ticker": "GLW", "name": "Corning Inc", "weight": 0.09 },
-        { "ticker": "ISRG", "name": "Intuitive Surgical Inc", "weight": 0.09 },
-        { "ticker": "WELL", "name": "Welltower Inc", "weight": 0.09 },
-        { "ticker": "ABT", "name": "Abbott Laboratories", "weight": 0.09 },
-        { "ticker": "ANET", "name": "Arista Networks Inc", "weight": 0.09 },
-        { "ticker": "ARX.TO", "name": "ARC Resources Ltd", "weight": 0.09 },
-        { "ticker": "8031.T", "name": "Mitsui & Co Ltd", "weight": 0.09 },
-        { "ticker": "6861.T", "name": "Keyence Corp", "weight": 0.09 },
-        { "ticker": "PFE", "name": "Pfizer Inc", "weight": 0.09 },
-        { "ticker": "SAN.PA", "name": "Sanofi SA", "weight": 0.09 },
-        { "ticker": "VRT", "name": "Vertiv Holdings Class A", "weight": 0.09 }
+        {
+          "ticker": "NVDA",
+          "name": "NVIDIA Corp",
+          "weight": 3.47
+        },
+        {
+          "ticker": "AAPL",
+          "name": "Apple Inc",
+          "weight": 2.8
+        },
+        {
+          "ticker": "MSFT",
+          "name": "Microsoft Corp",
+          "weight": 1.99
+        },
+        {
+          "ticker": "RY.TO",
+          "name": "Royal Bank of Canada",
+          "weight": 1.84
+        },
+        {
+          "ticker": "AMZN",
+          "name": "Amazon.com Inc",
+          "weight": 1.64
+        },
+        {
+          "ticker": "GOOGL",
+          "name": "Alphabet Inc Class A",
+          "weight": 1.46
+        },
+        {
+          "ticker": "TD.TO",
+          "name": "Toronto-Dominion Bank",
+          "weight": 1.3
+        },
+        {
+          "ticker": "AVGO",
+          "name": "Broadcom Inc",
+          "weight": 1.28
+        },
+        {
+          "ticker": "GOOG",
+          "name": "Alphabet Inc Class C",
+          "weight": 1.17
+        },
+        {
+          "ticker": "SHOP.TO",
+          "name": "Shopify Inc",
+          "weight": 0.88
+        },
+        {
+          "ticker": "ENB.TO",
+          "name": "Enbridge Inc",
+          "weight": 0.87
+        },
+        {
+          "ticker": "META",
+          "name": "Meta Platforms Inc Class A",
+          "weight": 0.85
+        },
+        {
+          "ticker": "BMO.TO",
+          "name": "Bank of Montreal",
+          "weight": 0.77
+        },
+        {
+          "ticker": "TSLA",
+          "name": "Tesla Inc",
+          "weight": 0.75
+        },
+        {
+          "ticker": "CM.TO",
+          "name": "Canadian Imperial Bank of Commerce",
+          "weight": 0.74
+        },
+        {
+          "ticker": "BN.TO",
+          "name": "Brookfield Corp Class A",
+          "weight": 0.72
+        },
+        {
+          "ticker": "CNQ.TO",
+          "name": "Canadian Natural Resources Ltd",
+          "weight": 0.72
+        },
+        {
+          "ticker": "BNS.TO",
+          "name": "Bank of Nova Scotia",
+          "weight": 0.68
+        },
+        {
+          "ticker": "AEM.TO",
+          "name": "Agnico Eagle Mines Ltd",
+          "weight": 0.65
+        },
+        {
+          "ticker": "2330.TW",
+          "name": "Taiwan Semiconductor Manufacturing",
+          "weight": 0.62
+        },
+        {
+          "ticker": "SU.TO",
+          "name": "Suncor Energy Inc",
+          "weight": 0.58
+        },
+        {
+          "ticker": "ASML",
+          "name": "ASML Holding NV",
+          "weight": 0.57
+        },
+        {
+          "ticker": "BRK.B",
+          "name": "Berkshire Hathaway Inc Class B",
+          "weight": 0.56
+        },
+        {
+          "ticker": "CP.TO",
+          "name": "Canadian Pacific Kansas City Ltd",
+          "weight": 0.55
+        },
+        {
+          "ticker": "MU",
+          "name": "Micron Technology Inc",
+          "weight": 0.52
+        },
+        {
+          "ticker": "TRP.TO",
+          "name": "TC Energy Corp",
+          "weight": 0.51
+        },
+        {
+          "ticker": "JPM",
+          "name": "JPMorgan Chase & Co",
+          "weight": 0.51
+        },
+        {
+          "ticker": "LLY",
+          "name": "Eli Lilly",
+          "weight": 0.5
+        },
+        {
+          "ticker": "ABX.TO",
+          "name": "Barrick Mining Corp",
+          "weight": 0.49
+        },
+        {
+          "ticker": "MFC.TO",
+          "name": "Manulife Financial Corp",
+          "weight": 0.45
+        },
+        {
+          "ticker": "AMD",
+          "name": "Advanced Micro Devices Inc",
+          "weight": 0.44
+        },
+        {
+          "ticker": "CNR.TO",
+          "name": "Canadian National Railway",
+          "weight": 0.44
+        },
+        {
+          "ticker": "WPM.TO",
+          "name": "Wheaton Precious Metals Corp",
+          "weight": 0.42
+        },
+        {
+          "ticker": "XOM",
+          "name": "Exxon Mobil Corp",
+          "weight": 0.42
+        },
+        {
+          "ticker": "NA.TO",
+          "name": "National Bank of Canada",
+          "weight": 0.41
+        },
+        {
+          "ticker": "WMT",
+          "name": "Walmart Inc",
+          "weight": 0.36
+        },
+        {
+          "ticker": "V",
+          "name": "Visa Inc Class A",
+          "weight": 0.35
+        },
+        {
+          "ticker": "JNJ",
+          "name": "Johnson & Johnson",
+          "weight": 0.35
+        },
+        {
+          "ticker": "CCO.TO",
+          "name": "Cameco Corp",
+          "weight": 0.34
+        },
+        {
+          "ticker": "INTC",
+          "name": "Intel Corp",
+          "weight": 0.32
+        },
+        {
+          "ticker": "FNV.TO",
+          "name": "Franco-Nevada Corp",
+          "weight": 0.31
+        },
+        {
+          "ticker": "ATD.TO",
+          "name": "Alimentation Couche-Tard Inc",
+          "weight": 0.3
+        },
+        {
+          "ticker": "CVE.TO",
+          "name": "Cenovus Energy",
+          "weight": 0.3
+        },
+        {
+          "ticker": "005930.KS",
+          "name": "Samsung Electronics Ltd",
+          "weight": 0.3
+        },
+        {
+          "ticker": "CLS.TO",
+          "name": "Celestica Inc",
+          "weight": 0.3
+        },
+        {
+          "ticker": "CSCO",
+          "name": "Cisco Systems Inc",
+          "weight": 0.3
+        },
+        {
+          "ticker": "COST",
+          "name": "Costco Wholesale Corp",
+          "weight": 0.29
+        },
+        {
+          "ticker": "HSBA.L",
+          "name": "HSBC Holdings PLC",
+          "weight": 0.29
+        },
+        {
+          "ticker": "WCN.TO",
+          "name": "Waste Connections Inc",
+          "weight": 0.29
+        },
+        {
+          "ticker": "SLF.TO",
+          "name": "Sun Life Financial Inc",
+          "weight": 0.29
+        },
+        {
+          "ticker": "ROG.SW",
+          "name": "Roche Holding AG",
+          "weight": 0.28
+        },
+        {
+          "ticker": "AZN.L",
+          "name": "AstraZeneca PLC",
+          "weight": 0.27
+        },
+        {
+          "ticker": "NOVN.SW",
+          "name": "Novartis AG",
+          "weight": 0.27
+        },
+        {
+          "ticker": "CSU.TO",
+          "name": "Constellation Software Inc",
+          "weight": 0.27
+        },
+        {
+          "ticker": "CAT",
+          "name": "Caterpillar Inc",
+          "weight": 0.26
+        },
+        {
+          "ticker": "MA",
+          "name": "Mastercard Inc Class A",
+          "weight": 0.26
+        },
+        {
+          "ticker": "NTR.TO",
+          "name": "Nutrien Ltd",
+          "weight": 0.25
+        },
+        {
+          "ticker": "NESN.SW",
+          "name": "Nestle SA",
+          "weight": 0.25
+        },
+        {
+          "ticker": "K.TO",
+          "name": "Kinross Gold Corp",
+          "weight": 0.24
+        },
+        {
+          "ticker": "IFC.TO",
+          "name": "Intact Financial Corp",
+          "weight": 0.24
+        },
+        {
+          "ticker": "DOL.TO",
+          "name": "Dollarama Inc",
+          "weight": 0.24
+        },
+        {
+          "ticker": "ABBV",
+          "name": "AbbVie Inc",
+          "weight": 0.24
+        },
+        {
+          "ticker": "SHEL.L",
+          "name": "Shell PLC",
+          "weight": 0.23
+        },
+        {
+          "ticker": "NFLX",
+          "name": "Netflix Inc",
+          "weight": 0.23
+        },
+        {
+          "ticker": "FFH.TO",
+          "name": "Fairfax Financial Holdings",
+          "weight": 0.23
+        },
+        {
+          "ticker": "000660.KS",
+          "name": "SK Hynix Inc",
+          "weight": 0.23
+        },
+        {
+          "ticker": "CVX",
+          "name": "Chevron Corp",
+          "weight": 0.23
+        },
+        {
+          "ticker": "UNH",
+          "name": "UnitedHealth Group Inc",
+          "weight": 0.23
+        },
+        {
+          "ticker": "LRCX",
+          "name": "Lam Research Corp",
+          "weight": 0.23
+        },
+        {
+          "ticker": "POW.TO",
+          "name": "Power Corporation of Canada",
+          "weight": 0.22
+        },
+        {
+          "ticker": "SIE.DE",
+          "name": "Siemens AG",
+          "weight": 0.22
+        },
+        {
+          "ticker": "AMAT",
+          "name": "Applied Materials Inc",
+          "weight": 0.22
+        },
+        {
+          "ticker": "BHP",
+          "name": "BHP Group Ltd",
+          "weight": 0.21
+        },
+        {
+          "ticker": "BAC",
+          "name": "Bank of America Corp",
+          "weight": 0.21
+        },
+        {
+          "ticker": "PG",
+          "name": "Procter & Gamble",
+          "weight": 0.21
+        },
+        {
+          "ticker": "ORCL",
+          "name": "Oracle Corp",
+          "weight": 0.21
+        },
+        {
+          "ticker": "PPL.TO",
+          "name": "Pembina Pipeline Corp",
+          "weight": 0.2
+        },
+        {
+          "ticker": "8306.T",
+          "name": "Mitsubishi UFJ Financial Group Inc",
+          "weight": 0.2
+        },
+        {
+          "ticker": "FTS.TO",
+          "name": "Fortis Inc",
+          "weight": 0.2
+        },
+        {
+          "ticker": "KO",
+          "name": "Coca-Cola",
+          "weight": 0.2
+        },
+        {
+          "ticker": "TECK.B.TO",
+          "name": "Teck Resources Class B",
+          "weight": 0.2
+        },
+        {
+          "ticker": "PLTR",
+          "name": "Palantir Technologies Inc Class A",
+          "weight": 0.19
+        },
+        {
+          "ticker": "QSR.TO",
+          "name": "Restaurant Brands International Inc",
+          "weight": 0.19
+        },
+        {
+          "ticker": "HD",
+          "name": "Home Depot Inc",
+          "weight": 0.19
+        },
+        {
+          "ticker": "PM",
+          "name": "Philip Morris International Inc",
+          "weight": 0.19
+        },
+        {
+          "ticker": "GE",
+          "name": "GE Aerospace",
+          "weight": 0.19
+        },
+        {
+          "ticker": "CBA.AX",
+          "name": "Commonwealth Bank of Australia",
+          "weight": 0.18
+        },
+        {
+          "ticker": "GS",
+          "name": "Goldman Sachs Group Inc",
+          "weight": 0.18
+        },
+        {
+          "ticker": "GEV",
+          "name": "GE Vernova Inc",
+          "weight": 0.18
+        },
+        {
+          "ticker": "7203.T",
+          "name": "Toyota Motor Corp",
+          "weight": 0.18
+        },
+        {
+          "ticker": "L.TO",
+          "name": "Loblaw Companies Ltd",
+          "weight": 0.18
+        },
+        {
+          "ticker": "TTE",
+          "name": "TotalEnergies",
+          "weight": 0.18
+        },
+        {
+          "ticker": "MRK",
+          "name": "Merck & Co Inc",
+          "weight": 0.18
+        },
+        {
+          "ticker": "TXN",
+          "name": "Texas Instruments Inc",
+          "weight": 0.17
+        },
+        {
+          "ticker": "PAAS.TO",
+          "name": "Pan American Silver Corp",
+          "weight": 0.17
+        },
+        {
+          "ticker": "SAP",
+          "name": "SAP SE",
+          "weight": 0.17
+        },
+        {
+          "ticker": "SAN.MC",
+          "name": "Banco Santander",
+          "weight": 0.17
+        },
+        {
+          "ticker": "SU.PA",
+          "name": "Schneider Electric",
+          "weight": 0.16
+        },
+        {
+          "ticker": "ALV.DE",
+          "name": "Allianz",
+          "weight": 0.16
+        },
+        {
+          "ticker": "BCE.TO",
+          "name": "BCE Inc",
+          "weight": 0.16
+        },
+        {
+          "ticker": "ABBN.SW",
+          "name": "ABB Ltd",
+          "weight": 0.16
+        },
+        {
+          "ticker": "KLAC",
+          "name": "KLA Corp",
+          "weight": 0.15
+        },
+        {
+          "ticker": "LIN",
+          "name": "Linde PLC",
+          "weight": 0.15
+        },
+        {
+          "ticker": "ENR.DE",
+          "name": "Siemens Energy AG",
+          "weight": 0.15
+        },
+        {
+          "ticker": "MS",
+          "name": "Morgan Stanley",
+          "weight": 0.15
+        },
+        {
+          "ticker": "RTX",
+          "name": "RTX Corp",
+          "weight": 0.15
+        },
+        {
+          "ticker": "IMO.TO",
+          "name": "Imperial Oil Ltd",
+          "weight": 0.14
+        },
+        {
+          "ticker": "NOVO-B.CO",
+          "name": "Novo Nordisk Class B",
+          "weight": 0.14
+        },
+        {
+          "ticker": "WFC",
+          "name": "Wells Fargo",
+          "weight": 0.14
+        },
+        {
+          "ticker": "UBSG.SW",
+          "name": "UBS Group AG",
+          "weight": 0.14
+        },
+        {
+          "ticker": "IBE.MC",
+          "name": "Iberdrola SA",
+          "weight": 0.14
+        },
+        {
+          "ticker": "8035.T",
+          "name": "Tokyo Electron Ltd",
+          "weight": 0.14
+        },
+        {
+          "ticker": "C",
+          "name": "Citigroup Inc",
+          "weight": 0.14
+        },
+        {
+          "ticker": "BATS.L",
+          "name": "British American Tobacco",
+          "weight": 0.14
+        },
+        {
+          "ticker": "QCOM",
+          "name": "Qualcomm Inc",
+          "weight": 0.14
+        },
+        {
+          "ticker": "LUN.TO",
+          "name": "Lundin Mining Corp",
+          "weight": 0.14
+        },
+        {
+          "ticker": "WSP.TO",
+          "name": "WSP Global Inc",
+          "weight": 0.14
+        },
+        {
+          "ticker": "RBA.TO",
+          "name": "RB Global Inc",
+          "weight": 0.14
+        },
+        {
+          "ticker": "T.TO",
+          "name": "Telus",
+          "weight": 0.14
+        },
+        {
+          "ticker": "6501.T",
+          "name": "Hitachi Ltd",
+          "weight": 0.13
+        },
+        {
+          "ticker": "6758.T",
+          "name": "Sony Group Corp",
+          "weight": 0.13
+        },
+        {
+          "ticker": "SNDK",
+          "name": "SanDisk Corp",
+          "weight": 0.13
+        },
+        {
+          "ticker": "IBM",
+          "name": "International Business Machines Corp",
+          "weight": 0.13
+        },
+        {
+          "ticker": "9984.T",
+          "name": "Softbank Group Corp",
+          "weight": 0.13
+        },
+        {
+          "ticker": "0700.HK",
+          "name": "Tencent Holdings Ltd",
+          "weight": 0.13
+        },
+        {
+          "ticker": "BAM",
+          "name": "Brookfield Asset Management",
+          "weight": 0.13
+        },
+        {
+          "ticker": "TOU.TO",
+          "name": "Tourmaline Oil Corp",
+          "weight": 0.13
+        },
+        {
+          "ticker": "ADI",
+          "name": "Analog Devices Inc",
+          "weight": 0.13
+        },
+        {
+          "ticker": "PEP",
+          "name": "PepsiCo Inc",
+          "weight": 0.13
+        },
+        {
+          "ticker": "MC.PA",
+          "name": "LVMH",
+          "weight": 0.13
+        },
+        {
+          "ticker": "8316.T",
+          "name": "Sumitomo Mitsui Financial Group",
+          "weight": 0.13
+        },
+        {
+          "ticker": "BIP.UN.TO",
+          "name": "Brookfield Infrastructure Partners",
+          "weight": 0.13
+        },
+        {
+          "ticker": "MCD",
+          "name": "McDonalds Corp",
+          "weight": 0.12
+        },
+        {
+          "ticker": "PANW",
+          "name": "Palo Alto Networks Inc",
+          "weight": 0.12
+        },
+        {
+          "ticker": "VZ",
+          "name": "Verizon Communications Inc",
+          "weight": 0.12
+        },
+        {
+          "ticker": "NEE",
+          "name": "NextEra Energy Inc",
+          "weight": 0.12
+        },
+        {
+          "ticker": "RR.L",
+          "name": "Rolls-Royce Holdings PLC",
+          "weight": 0.12
+        },
+        {
+          "ticker": "6857.T",
+          "name": "Advantest Corp",
+          "weight": 0.12
+        },
+        {
+          "ticker": "FM.TO",
+          "name": "First Quantum Minerals Ltd",
+          "weight": 0.12
+        },
+        {
+          "ticker": "AGI.TO",
+          "name": "Alamos Gold Inc",
+          "weight": 0.12
+        },
+        {
+          "ticker": "BBVA",
+          "name": "Banco Bilbao Vizcaya Argentaria SA",
+          "weight": 0.12
+        },
+        {
+          "ticker": "BBD.B.TO",
+          "name": "Bombardier Inc Class B",
+          "weight": 0.12
+        },
+        {
+          "ticker": "ULVR.L",
+          "name": "Unilever PLC",
+          "weight": 0.12
+        },
+        {
+          "ticker": "DIS",
+          "name": "Walt Disney",
+          "weight": 0.12
+        },
+        {
+          "ticker": "8058.T",
+          "name": "Mitsubishi Corp",
+          "weight": 0.11
+        },
+        {
+          "ticker": "AI.PA",
+          "name": "Air Liquide",
+          "weight": 0.11
+        },
+        {
+          "ticker": "DTE.DE",
+          "name": "Deutsche Telekom AG",
+          "weight": 0.11
+        },
+        {
+          "ticker": "MG.TO",
+          "name": "Magna International Inc",
+          "weight": 0.11
+        },
+        {
+          "ticker": "1299.HK",
+          "name": "AIA Group Ltd",
+          "weight": 0.11
+        },
+        {
+          "ticker": "RIO",
+          "name": "Rio Tinto PLC",
+          "weight": 0.11
+        },
+        {
+          "ticker": "UCG.MI",
+          "name": "UniCredit",
+          "weight": 0.11
+        },
+        {
+          "ticker": "EMA.TO",
+          "name": "Emera Inc",
+          "weight": 0.11
+        },
+        {
+          "ticker": "BP.L",
+          "name": "BP PLC",
+          "weight": 0.11
+        },
+        {
+          "ticker": "AIR.PA",
+          "name": "Airbus Group",
+          "weight": 0.11
+        },
+        {
+          "ticker": "AMGN",
+          "name": "Amgen Inc",
+          "weight": 0.11
+        },
+        {
+          "ticker": "STX",
+          "name": "Seagate Technology Holdings PLC",
+          "weight": 0.11
+        },
+        {
+          "ticker": "BA",
+          "name": "Boeing",
+          "weight": 0.11
+        },
+        {
+          "ticker": "SAF.PA",
+          "name": "Safran SA",
+          "weight": 0.11
+        },
+        {
+          "ticker": "AXP",
+          "name": "American Express",
+          "weight": 0.11
+        },
+        {
+          "ticker": "GWO.TO",
+          "name": "Great-West Lifeco Inc",
+          "weight": 0.11
+        },
+        {
+          "ticker": "WCP.TO",
+          "name": "Whitecap Resources Inc",
+          "weight": 0.11
+        },
+        {
+          "ticker": "8411.T",
+          "name": "Mizuho Financial Group Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "TMO",
+          "name": "Thermo Fisher Scientific Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "TJX",
+          "name": "TJX Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "WDC",
+          "name": "Western Digital Corp",
+          "weight": 0.1
+        },
+        {
+          "ticker": "CRM",
+          "name": "Salesforce Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "CFR.SW",
+          "name": "Compagnie Financiere Richemont SA",
+          "weight": 0.1
+        },
+        {
+          "ticker": "GILD",
+          "name": "Gilead Sciences Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "UNP",
+          "name": "Union Pacific Corp",
+          "weight": 0.1
+        },
+        {
+          "ticker": "ZURN.SW",
+          "name": "Zurich Insurance Group AG",
+          "weight": 0.1
+        },
+        {
+          "ticker": "9988.HK",
+          "name": "Alibaba Group Holding Ltd",
+          "weight": 0.1
+        },
+        {
+          "ticker": "BNP.PA",
+          "name": "BNP Paribas SA",
+          "weight": 0.1
+        },
+        {
+          "ticker": "BLK",
+          "name": "Blackrock Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "ETN",
+          "name": "Eaton PLC",
+          "weight": 0.1
+        },
+        {
+          "ticker": "UBER",
+          "name": "Uber Technologies Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "RCI.B.TO",
+          "name": "Rogers Communications",
+          "weight": 0.1
+        },
+        {
+          "ticker": "MRVL",
+          "name": "Marvell Technology Inc",
+          "weight": 0.1
+        },
+        {
+          "ticker": "GSK.L",
+          "name": "GlaxoSmithKline",
+          "weight": 0.1
+        },
+        {
+          "ticker": "APH",
+          "name": "Amphenol Corp Class A",
+          "weight": 0.1
+        },
+        {
+          "ticker": "SCHW",
+          "name": "Charles Schwab Corp",
+          "weight": 0.1
+        },
+        {
+          "ticker": "OR.PA",
+          "name": "L'Oreal SA",
+          "weight": 0.1
+        },
+        {
+          "ticker": "D05.SI",
+          "name": "DBS Group Holdings Ltd",
+          "weight": 0.1
+        },
+        {
+          "ticker": "H.TO",
+          "name": "Hydro One Ltd",
+          "weight": 0.1
+        },
+        {
+          "ticker": "IFX.DE",
+          "name": "Infineon Technologies AG",
+          "weight": 0.1
+        },
+        {
+          "ticker": "TIH.TO",
+          "name": "Toromont Industries Ltd",
+          "weight": 0.1
+        },
+        {
+          "ticker": "CRWD",
+          "name": "Crowdstrike Holdings Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "COP",
+          "name": "ConocoPhillips",
+          "weight": 0.09
+        },
+        {
+          "ticker": "GLW",
+          "name": "Corning Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "ISRG",
+          "name": "Intuitive Surgical Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "WELL",
+          "name": "Welltower Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "ABT",
+          "name": "Abbott Laboratories",
+          "weight": 0.09
+        },
+        {
+          "ticker": "ANET",
+          "name": "Arista Networks Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "ARX.TO",
+          "name": "ARC Resources Ltd",
+          "weight": 0.09
+        },
+        {
+          "ticker": "8031.T",
+          "name": "Mitsui & Co Ltd",
+          "weight": 0.09
+        },
+        {
+          "ticker": "6861.T",
+          "name": "Keyence Corp",
+          "weight": 0.09
+        },
+        {
+          "ticker": "PFE",
+          "name": "Pfizer Inc",
+          "weight": 0.09
+        },
+        {
+          "ticker": "SAN.PA",
+          "name": "Sanofi SA",
+          "weight": 0.09
+        },
+        {
+          "ticker": "VRT",
+          "name": "Vertiv Holdings Class A",
+          "weight": 0.09
+        }
       ]
     },
     "VGRO.TO": {
@@ -7220,12 +8012,12 @@
         {
           "ticker": "CRDO",
           "name": "Credo Technology Group Holding Ltd",
-          "weight": 1.30
+          "weight": 1.3
         },
         {
           "ticker": "3711",
           "name": "ASE Technology Holding Ltd",
-          "weight": 1.20
+          "weight": 1.2
         }
       ]
     },
@@ -7235,45 +8027,201 @@
       "currency": "USD",
       "description": "Actively managed ETF focused on next-generation internet companies (cloud, blockchain, e-commerce, AI). Holdings as of 2026-05-18 from ARK Invest. Cash/private/unticketed positions (Bitcoin holdco, Goldman Treasury, OpenAI, Brera) excluded.",
       "holdings": [
-        { "ticker": "TSLA", "name": "Tesla Inc", "weight": 8.86 },
-        { "ticker": "AMD", "name": "Advanced Micro Devices", "weight": 8.27 },
-        { "ticker": "CRCL", "name": "Circle Internet Group Inc", "weight": 4.63 },
-        { "ticker": "HOOD", "name": "Robinhood Markets Inc Class A", "weight": 4.57 },
-        { "ticker": "ROKU", "name": "Roku Inc", "weight": 4.06 },
-        { "ticker": "AMZN", "name": "Amazon.com Inc", "weight": 3.89 },
-        { "ticker": "SHOP", "name": "Shopify Inc Class A", "weight": 3.81 },
-        { "ticker": "GOOG", "name": "Alphabet Inc Class C", "weight": 3.77 },
-        { "ticker": "COIN", "name": "Coinbase Global Inc Class A", "weight": 3.61 },
-        { "ticker": "CRWV", "name": "CoreWeave Inc Class A", "weight": 3.57 },
-        { "ticker": "XYZ", "name": "Block Inc", "weight": 2.63 },
-        { "ticker": "PLTR", "name": "Palantir Technologies Inc Class A", "weight": 2.53 },
-        { "ticker": "RBLX", "name": "Roblox Corp Class A", "weight": 2.33 },
-        { "ticker": "CRWD", "name": "CrowdStrike Holdings Inc Class A", "weight": 2.23 },
-        { "ticker": "AVGO", "name": "Broadcom Inc", "weight": 2.21 },
-        { "ticker": "DDOG", "name": "Datadog Inc Class A", "weight": 2.15 },
-        { "ticker": "TSM", "name": "Taiwan Semiconductor Manufacturing ADR", "weight": 2.13 },
-        { "ticker": "META", "name": "Meta Platforms Inc Class A", "weight": 2.02 },
-        { "ticker": "NET", "name": "Cloudflare Inc Class A", "weight": 1.77 },
-        { "ticker": "BLSH", "name": "Bullish", "weight": 1.75 },
-        { "ticker": "BMNR", "name": "BitMine Immersion Technologies", "weight": 1.73 },
-        { "ticker": "PSTG", "name": "Pure Storage Inc Class A", "weight": 1.54 },
-        { "ticker": "FIG", "name": "Figma Inc Class A", "weight": 1.33 },
-        { "ticker": "RBRK", "name": "Rubrik Inc Class A", "weight": 1.22 },
-        { "ticker": "NFLX", "name": "Netflix Inc", "weight": 1.15 },
-        { "ticker": "NVDA", "name": "NVIDIA Corp", "weight": 1.13 },
-        { "ticker": "CBRS", "name": "Cerebras Systems Inc Class A", "weight": 1.05 },
-        { "ticker": "BIDU", "name": "Baidu Inc ADR", "weight": 1.01 },
-        { "ticker": "BABA", "name": "Alibaba Group Holding ADR", "weight": 0.99 },
-        { "ticker": "DKNG", "name": "DraftKings Inc Class A", "weight": 0.95 },
-        { "ticker": "SPOT", "name": "Spotify Technology SA", "weight": 0.95 },
-        { "ticker": "TOST", "name": "Toast Inc Class A", "weight": 0.95 },
-        { "ticker": "DASH", "name": "DoorDash Inc Class A", "weight": 0.86 },
-        { "ticker": "GTLB", "name": "GitLab Inc Class A", "weight": 0.86 },
-        { "ticker": "MELI", "name": "MercadoLibre Inc", "weight": 0.77 },
-        { "ticker": "GENI", "name": "Genius Sports Ltd", "weight": 0.76 },
-        { "ticker": "ABNB", "name": "Airbnb Inc Class A", "weight": 0.49 },
-        { "ticker": "ETHQ-U.TO", "name": "3iQ Ether Staking ETF (USD)", "weight": 0.40 },
-        { "ticker": "SOLQ-U.TO", "name": "3iQ Solana Staking ETF (USD)", "weight": 0.18 }
+        {
+          "ticker": "TSLA",
+          "name": "Tesla Inc",
+          "weight": 8.86
+        },
+        {
+          "ticker": "AMD",
+          "name": "Advanced Micro Devices",
+          "weight": 8.27
+        },
+        {
+          "ticker": "CRCL",
+          "name": "Circle Internet Group Inc",
+          "weight": 4.63
+        },
+        {
+          "ticker": "HOOD",
+          "name": "Robinhood Markets Inc Class A",
+          "weight": 4.57
+        },
+        {
+          "ticker": "ROKU",
+          "name": "Roku Inc",
+          "weight": 4.06
+        },
+        {
+          "ticker": "AMZN",
+          "name": "Amazon.com Inc",
+          "weight": 3.89
+        },
+        {
+          "ticker": "SHOP",
+          "name": "Shopify Inc Class A",
+          "weight": 3.81
+        },
+        {
+          "ticker": "GOOG",
+          "name": "Alphabet Inc Class C",
+          "weight": 3.77
+        },
+        {
+          "ticker": "COIN",
+          "name": "Coinbase Global Inc Class A",
+          "weight": 3.61
+        },
+        {
+          "ticker": "CRWV",
+          "name": "CoreWeave Inc Class A",
+          "weight": 3.57
+        },
+        {
+          "ticker": "XYZ",
+          "name": "Block Inc",
+          "weight": 2.63
+        },
+        {
+          "ticker": "PLTR",
+          "name": "Palantir Technologies Inc Class A",
+          "weight": 2.53
+        },
+        {
+          "ticker": "RBLX",
+          "name": "Roblox Corp Class A",
+          "weight": 2.33
+        },
+        {
+          "ticker": "CRWD",
+          "name": "CrowdStrike Holdings Inc Class A",
+          "weight": 2.23
+        },
+        {
+          "ticker": "AVGO",
+          "name": "Broadcom Inc",
+          "weight": 2.21
+        },
+        {
+          "ticker": "DDOG",
+          "name": "Datadog Inc Class A",
+          "weight": 2.15
+        },
+        {
+          "ticker": "TSM",
+          "name": "Taiwan Semiconductor Manufacturing ADR",
+          "weight": 2.13
+        },
+        {
+          "ticker": "META",
+          "name": "Meta Platforms Inc Class A",
+          "weight": 2.02
+        },
+        {
+          "ticker": "NET",
+          "name": "Cloudflare Inc Class A",
+          "weight": 1.77
+        },
+        {
+          "ticker": "BLSH",
+          "name": "Bullish",
+          "weight": 1.75
+        },
+        {
+          "ticker": "BMNR",
+          "name": "BitMine Immersion Technologies",
+          "weight": 1.73
+        },
+        {
+          "ticker": "PSTG",
+          "name": "Pure Storage Inc Class A",
+          "weight": 1.54
+        },
+        {
+          "ticker": "FIG",
+          "name": "Figma Inc Class A",
+          "weight": 1.33
+        },
+        {
+          "ticker": "RBRK",
+          "name": "Rubrik Inc Class A",
+          "weight": 1.22
+        },
+        {
+          "ticker": "NFLX",
+          "name": "Netflix Inc",
+          "weight": 1.15
+        },
+        {
+          "ticker": "NVDA",
+          "name": "NVIDIA Corp",
+          "weight": 1.13
+        },
+        {
+          "ticker": "CBRS",
+          "name": "Cerebras Systems Inc Class A",
+          "weight": 1.05
+        },
+        {
+          "ticker": "BIDU",
+          "name": "Baidu Inc ADR",
+          "weight": 1.01
+        },
+        {
+          "ticker": "BABA",
+          "name": "Alibaba Group Holding ADR",
+          "weight": 0.99
+        },
+        {
+          "ticker": "DKNG",
+          "name": "DraftKings Inc Class A",
+          "weight": 0.95
+        },
+        {
+          "ticker": "SPOT",
+          "name": "Spotify Technology SA",
+          "weight": 0.95
+        },
+        {
+          "ticker": "TOST",
+          "name": "Toast Inc Class A",
+          "weight": 0.95
+        },
+        {
+          "ticker": "DASH",
+          "name": "DoorDash Inc Class A",
+          "weight": 0.86
+        },
+        {
+          "ticker": "GTLB",
+          "name": "GitLab Inc Class A",
+          "weight": 0.86
+        },
+        {
+          "ticker": "MELI",
+          "name": "MercadoLibre Inc",
+          "weight": 0.77
+        },
+        {
+          "ticker": "GENI",
+          "name": "Genius Sports Ltd",
+          "weight": 0.76
+        },
+        {
+          "ticker": "ABNB",
+          "name": "Airbnb Inc Class A",
+          "weight": 0.49
+        },
+        {
+          "ticker": "ETHQ-U.TO",
+          "name": "3iQ Ether Staking ETF (USD)",
+          "weight": 0.4
+        },
+        {
+          "ticker": "SOLQ-U.TO",
+          "name": "3iQ Solana Staking ETF (USD)",
+          "weight": 0.18
+        }
       ]
     },
     "NASA": {
@@ -7282,41 +8230,181 @@
       "currency": "USD",
       "description": "Space economy ETF — satellite, launch, and space-services companies. Holdings as of 2026-05-19 from issuer disclosure. Cash and private SpaceX SPV exposure excluded.",
       "holdings": [
-        { "ticker": "RKLB", "name": "Rocket Lab Corp", "weight": 10.78 },
-        { "ticker": "FTC.L", "name": "Filtronic PLC", "weight": 6.32 },
-        { "ticker": "PL", "name": "Planet Labs PBC", "weight": 6.09 },
-        { "ticker": "LUNR", "name": "Intuitive Machines Inc", "weight": 5.43 },
-        { "ticker": "FLY", "name": "Firefly Aerospace Inc", "weight": 5.08 },
-        { "ticker": "OHB.DE", "name": "OHB SE", "weight": 4.60 },
-        { "ticker": "ASTS", "name": "AST SpaceMobile Inc", "weight": 4.36 },
-        { "ticker": "BKSY", "name": "BlackSky Technology Inc", "weight": 4.13 },
-        { "ticker": "VNP.TO", "name": "5N Plus Inc", "weight": 4.09 },
-        { "ticker": "VSAT", "name": "Viasat Inc", "weight": 3.65 },
-        { "ticker": "MDA.TO", "name": "MDA Space Ltd", "weight": 3.23 },
-        { "ticker": "3491.TW", "name": "Universal Microwave Technology Inc", "weight": 2.87 },
-        { "ticker": "186A.T", "name": "Astroscale Holdings Inc", "weight": 2.62 },
-        { "ticker": "IRDM", "name": "Iridium Communications Inc", "weight": 2.49 },
-        { "ticker": "YSS", "name": "York Space Systems Inc", "weight": 2.31 },
-        { "ticker": "LASR", "name": "nLight Inc", "weight": 2.27 },
-        { "ticker": "464A.T", "name": "QPS Holdings Inc", "weight": 2.13 },
-        { "ticker": "VOYG", "name": "Voyager Technologies Inc", "weight": 2.11 },
-        { "ticker": "SATS", "name": "EchoStar Corp", "weight": 1.72 },
-        { "ticker": "9412.T", "name": "Sky Perfect JSAT Corp", "weight": 1.57 },
-        { "ticker": "VPG", "name": "Vishay Precision Group Inc", "weight": 1.56 },
-        { "ticker": "LPTH", "name": "LightPath Technologies Inc", "weight": 1.49 },
-        { "ticker": "NN", "name": "NextNav Inc", "weight": 0.87 },
-        { "ticker": "GOMX.ST", "name": "GomSpace Group AB", "weight": 0.83 },
-        { "ticker": "347700.KS", "name": "Sphere Corp", "weight": 0.82 },
-        { "ticker": "KVHI", "name": "KVH Industries Inc", "weight": 0.80 },
-        { "ticker": "290A.T", "name": "Synspective Inc", "weight": 0.74 },
-        { "ticker": "CPSH", "name": "CPS Technologies Corp", "weight": 0.70 },
-        { "ticker": "VELO", "name": "Velo3D Inc", "weight": 0.69 },
-        { "ticker": "3105.TW", "name": "Win Semiconductors Corp", "weight": 0.68 },
-        { "ticker": "189300.KS", "name": "Intellian Technologies Inc", "weight": 0.54 },
-        { "ticker": "RDW", "name": "Redwire Corp", "weight": 0.49 },
-        { "ticker": "AVIO.MI", "name": "Avio SpA", "weight": 0.44 },
-        { "ticker": "GILT", "name": "Gilat Satellite Networks Ltd", "weight": 0.36 },
-        { "ticker": "SCW.WA", "name": "Scanway SA", "weight": 0.04 }
+        {
+          "ticker": "RKLB",
+          "name": "Rocket Lab Corp",
+          "weight": 10.78
+        },
+        {
+          "ticker": "FTC.L",
+          "name": "Filtronic PLC",
+          "weight": 6.32
+        },
+        {
+          "ticker": "PL",
+          "name": "Planet Labs PBC",
+          "weight": 6.09
+        },
+        {
+          "ticker": "LUNR",
+          "name": "Intuitive Machines Inc",
+          "weight": 5.43
+        },
+        {
+          "ticker": "FLY",
+          "name": "Firefly Aerospace Inc",
+          "weight": 5.08
+        },
+        {
+          "ticker": "OHB.DE",
+          "name": "OHB SE",
+          "weight": 4.6
+        },
+        {
+          "ticker": "ASTS",
+          "name": "AST SpaceMobile Inc",
+          "weight": 4.36
+        },
+        {
+          "ticker": "BKSY",
+          "name": "BlackSky Technology Inc",
+          "weight": 4.13
+        },
+        {
+          "ticker": "VNP.TO",
+          "name": "5N Plus Inc",
+          "weight": 4.09
+        },
+        {
+          "ticker": "VSAT",
+          "name": "Viasat Inc",
+          "weight": 3.65
+        },
+        {
+          "ticker": "MDA.TO",
+          "name": "MDA Space Ltd",
+          "weight": 3.23
+        },
+        {
+          "ticker": "3491.TW",
+          "name": "Universal Microwave Technology Inc",
+          "weight": 2.87
+        },
+        {
+          "ticker": "186A.T",
+          "name": "Astroscale Holdings Inc",
+          "weight": 2.62
+        },
+        {
+          "ticker": "IRDM",
+          "name": "Iridium Communications Inc",
+          "weight": 2.49
+        },
+        {
+          "ticker": "YSS",
+          "name": "York Space Systems Inc",
+          "weight": 2.31
+        },
+        {
+          "ticker": "LASR",
+          "name": "nLight Inc",
+          "weight": 2.27
+        },
+        {
+          "ticker": "464A.T",
+          "name": "QPS Holdings Inc",
+          "weight": 2.13
+        },
+        {
+          "ticker": "VOYG",
+          "name": "Voyager Technologies Inc",
+          "weight": 2.11
+        },
+        {
+          "ticker": "SATS",
+          "name": "EchoStar Corp",
+          "weight": 1.72
+        },
+        {
+          "ticker": "9412.T",
+          "name": "Sky Perfect JSAT Corp",
+          "weight": 1.57
+        },
+        {
+          "ticker": "VPG",
+          "name": "Vishay Precision Group Inc",
+          "weight": 1.56
+        },
+        {
+          "ticker": "LPTH",
+          "name": "LightPath Technologies Inc",
+          "weight": 1.49
+        },
+        {
+          "ticker": "NN",
+          "name": "NextNav Inc",
+          "weight": 0.87
+        },
+        {
+          "ticker": "GOMX.ST",
+          "name": "GomSpace Group AB",
+          "weight": 0.83
+        },
+        {
+          "ticker": "347700.KS",
+          "name": "Sphere Corp",
+          "weight": 0.82
+        },
+        {
+          "ticker": "KVHI",
+          "name": "KVH Industries Inc",
+          "weight": 0.8
+        },
+        {
+          "ticker": "290A.T",
+          "name": "Synspective Inc",
+          "weight": 0.74
+        },
+        {
+          "ticker": "CPSH",
+          "name": "CPS Technologies Corp",
+          "weight": 0.7
+        },
+        {
+          "ticker": "VELO",
+          "name": "Velo3D Inc",
+          "weight": 0.69
+        },
+        {
+          "ticker": "3105.TW",
+          "name": "Win Semiconductors Corp",
+          "weight": 0.68
+        },
+        {
+          "ticker": "189300.KS",
+          "name": "Intellian Technologies Inc",
+          "weight": 0.54
+        },
+        {
+          "ticker": "RDW",
+          "name": "Redwire Corp",
+          "weight": 0.49
+        },
+        {
+          "ticker": "AVIO.MI",
+          "name": "Avio SpA",
+          "weight": 0.44
+        },
+        {
+          "ticker": "GILT",
+          "name": "Gilat Satellite Networks Ltd",
+          "weight": 0.36
+        },
+        {
+          "ticker": "SCW.WA",
+          "name": "Scanway SA",
+          "weight": 0.04
+        }
       ]
     }
   },
@@ -7328,7 +8416,7 @@
     },
     "300": {
       "name": "Midea Group Co., Ltd.",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "386": {
@@ -7378,7 +8466,7 @@
     },
     "1211": {
       "name": "BYD Company Limited",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "1288": {
@@ -7408,8 +8496,13 @@
     },
     "2020": {
       "name": "Anta Sports Products Limited",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
+    },
+    "2308": {
+      "name": "Delta Electronics Inc",
+      "sector": "Technology",
+      "country": "Taiwan"
     },
     "2318": {
       "name": "Ping An Insurance Group Company of China Limited",
@@ -7431,6 +8524,11 @@
       "sector": "Healthcare",
       "country": "China"
     },
+    "2383": {
+      "name": "Elite Material Ltd",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
     "2601": {
       "name": "China Pacific Insurance (Group) Company Limited",
       "sector": "Financial Services",
@@ -7446,15 +8544,30 @@
       "sector": "Basic Materials",
       "country": "China"
     },
+    "3017": {
+      "name": "Asia Vital Components Ltd",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
     "3328": {
       "name": "Bank of Communications Co., Ltd.",
       "sector": "Financial Services",
       "country": "China"
     },
+    "3661": {
+      "name": "Alchip Technologies Ltd",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
     "3690": {
       "name": "Meituan Dianping",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
+    },
+    "3711": {
+      "name": "ASE Technology Holding Ltd",
+      "sector": "Technology",
+      "country": "Taiwan"
     },
     "3750": {
       "name": "Contemporary Amperex Technology Co., Limited",
@@ -7483,17 +8596,22 @@
     },
     "6690": {
       "name": "Haier Smart Home Co., Ltd.",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
+    },
+    "6857": {
+      "name": "Advantest Corp",
+      "sector": "Technology",
+      "country": "Japan"
     },
     "9618": {
       "name": "JD.com Inc.",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "9633": {
       "name": "Nongfu Spring Co., Ltd.",
-      "sector": "Consumer Staples",
+      "sector": "Consumer Defensive",
       "country": "China"
     },
     "9888": {
@@ -7503,17 +8621,17 @@
     },
     "9961": {
       "name": "Trip.com Group Limited",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "9988": {
       "name": "Alibaba Group Holding Limited",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "9992": {
       "name": "Pop Mart International Company Limited",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "China"
     },
     "9999": {
@@ -7573,7 +8691,7 @@
     },
     "SOL-USD": {
       "name": "Solana",
-      "sector": "Cryptocurrency",
+      "sector": "Crypto",
       "country": "N/A"
     },
     "WMT": {
@@ -9972,7 +11090,7 @@
     },
     "UUUU": {
       "name": "Energy Fuels Inc",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "United States"
     },
     "OKLO": {
@@ -9982,17 +11100,17 @@
     },
     "UEC": {
       "name": "Uranium Energy Corp",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "United States"
     },
     "NXE": {
       "name": "NexGen Energy Ltd",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Canada"
     },
     "DNN": {
       "name": "Denison Mines Corp",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Canada"
     },
     "SMR": {
@@ -10012,7 +11130,7 @@
     },
     "EU": {
       "name": "enCore Energy Corp",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "United States"
     },
     "FORTUM": {
@@ -10022,12 +11140,12 @@
     },
     "KAP": {
       "name": "NAC Kazatomprom JSC",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Kazakhstan"
     },
     "PDN": {
       "name": "Paladin Energy Ltd",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Australia"
     },
     "1816HK": {
@@ -10047,12 +11165,12 @@
     },
     "YCA": {
       "name": "Yellow Cake Plc",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "United Kingdom"
     },
     "1164HK": {
       "name": "CGN Mining Co Ltd",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "China"
     },
     "SLX": {
@@ -10062,12 +11180,12 @@
     },
     "DYL": {
       "name": "Deep Yellow Ltd",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Australia"
     },
     "ISO": {
       "name": "IsoEnergy Ltd",
-      "sector": "Materials",
+      "sector": "Basic Materials",
       "country": "Canada"
     },
     "SU": {
@@ -10172,7 +11290,7 @@
     },
     "LULU": {
       "name": "Lululemon Athletica Inc",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "United States"
     },
     "AC": {
@@ -10182,12 +11300,12 @@
     },
     "GRAB": {
       "name": "Grab Holdings Ltd",
-      "sector": "Consumer Discretionary",
+      "sector": "Consumer Cyclical",
       "country": "Singapore"
     },
     "IVDA": {
       "name": "Identiv Inc",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "United States"
     },
     "XRP": {
@@ -10197,175 +11315,553 @@
     },
     "000660": {
       "name": "SK Hynix Inc",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "South Korea"
     },
     "TSEM": {
       "name": "Tower Semiconductor Ltd",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "Israel"
-    },
-    "2383": {
-      "name": "Elite Material Ltd",
-      "sector": "Information Technology",
-      "country": "Taiwan"
-    },
-    "3661": {
-      "name": "Alchip Technologies Ltd",
-      "sector": "Information Technology",
-      "country": "Taiwan"
     },
     "MTSI": {
       "name": "MACOM Technology Solutions Inc",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "United States"
     },
     "AAOI": {
       "name": "Applied Optoelectronics Inc",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "United States"
-    },
-    "2308": {
-      "name": "Delta Electronics Inc",
-      "sector": "Information Technology",
-      "country": "Taiwan"
-    },
-    "3017": {
-      "name": "Asia Vital Components Ltd",
-      "sector": "Information Technology",
-      "country": "Taiwan"
     },
     "ENR": {
       "name": "Siemens Energy AG",
       "sector": "Industrials",
       "country": "Germany"
     },
-    "6857": {
-      "name": "Advantest Corp",
-      "sector": "Information Technology",
-      "country": "Japan"
-    },
     "CLS": {
       "name": "Celestica Inc",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "Canada"
     },
     "LSCC": {
       "name": "Lattice Semiconductor Corp",
-      "sector": "Information Technology",
+      "sector": "Technology",
       "country": "United States"
-    },
-    "3711": {
-      "name": "ASE Technology Holding Ltd",
-      "sector": "Information Technology",
-      "country": "Taiwan"
     },
     "XTSLA": {
       "name": "BLK CSH FND Treasury SL Agency",
       "sector": "Cash & Equivalents",
       "country": "United States"
     },
-    "2330.TW": { "name": "Taiwan Semiconductor Manufacturing Co Ltd", "sector": "Information Technology", "country": "Taiwan" },
-    "HSBA.L": { "name": "HSBC Holdings PLC", "sector": "Financial Services", "country": "United Kingdom" },
-    "ROG.SW": { "name": "Roche Holding AG", "sector": "Healthcare", "country": "Switzerland" },
-    "NOVN.SW": { "name": "Novartis AG", "sector": "Healthcare", "country": "Switzerland" },
-    "SIE.DE": { "name": "Siemens AG", "sector": "Industrials", "country": "Germany" },
-    "BHP": { "name": "BHP Group Ltd", "sector": "Basic Materials", "country": "Australia" },
-    "8306.T": { "name": "Mitsubishi UFJ Financial Group Inc", "sector": "Financial Services", "country": "Japan" },
-    "CBA.AX": { "name": "Commonwealth Bank of Australia", "sector": "Financial Services", "country": "Australia" },
-    "TTE": { "name": "TotalEnergies SE", "sector": "Energy", "country": "France" },
-    "SAN.MC": { "name": "Banco Santander SA", "sector": "Financial Services", "country": "Spain" },
-    "SU.PA": { "name": "Schneider Electric SE", "sector": "Industrials", "country": "France" },
-    "ALV.DE": { "name": "Allianz SE", "sector": "Financial Services", "country": "Germany" },
-    "ABBN.SW": { "name": "ABB Ltd", "sector": "Industrials", "country": "Switzerland" },
-    "ENR.DE": { "name": "Siemens Energy AG", "sector": "Industrials", "country": "Germany" },
-    "UBSG.SW": { "name": "UBS Group AG", "sector": "Financial Services", "country": "Switzerland" },
-    "IBE.MC": { "name": "Iberdrola SA", "sector": "Utilities", "country": "Spain" },
-    "8035.T": { "name": "Tokyo Electron Ltd", "sector": "Information Technology", "country": "Japan" },
-    "BATS.L": { "name": "British American Tobacco PLC", "sector": "Consumer Defensive", "country": "United Kingdom" },
-    "6501.T": { "name": "Hitachi Ltd", "sector": "Industrials", "country": "Japan" },
-    "6758.T": { "name": "Sony Group Corp", "sector": "Consumer Cyclical", "country": "Japan" },
-    "9984.T": { "name": "SoftBank Group Corp", "sector": "Communication Services", "country": "Japan" },
-    "MC.PA": { "name": "LVMH Moet Hennessy Louis Vuitton SE", "sector": "Consumer Cyclical", "country": "France" },
-    "8316.T": { "name": "Sumitomo Mitsui Financial Group Inc", "sector": "Financial Services", "country": "Japan" },
-    "RR.L": { "name": "Rolls-Royce Holdings PLC", "sector": "Industrials", "country": "United Kingdom" },
-    "BBVA": { "name": "Banco Bilbao Vizcaya Argentaria SA", "sector": "Financial Services", "country": "Spain" },
-    "ULVR.L": { "name": "Unilever PLC", "sector": "Consumer Defensive", "country": "United Kingdom" },
-    "8058.T": { "name": "Mitsubishi Corp", "sector": "Industrials", "country": "Japan" },
-    "AI.PA": { "name": "Air Liquide SA", "sector": "Basic Materials", "country": "France" },
-    "DTE.DE": { "name": "Deutsche Telekom AG", "sector": "Communication Services", "country": "Germany" },
-    "1299.HK": { "name": "AIA Group Ltd", "sector": "Financial Services", "country": "Hong Kong" },
-    "RIO": { "name": "Rio Tinto PLC", "sector": "Basic Materials", "country": "United Kingdom" },
-    "UCG.MI": { "name": "UniCredit SpA", "sector": "Financial Services", "country": "Italy" },
-    "BP.L": { "name": "BP PLC", "sector": "Energy", "country": "United Kingdom" },
-    "AIR.PA": { "name": "Airbus SE", "sector": "Industrials", "country": "France" },
-    "SAF.PA": { "name": "Safran SA", "sector": "Industrials", "country": "France" },
-    "8411.T": { "name": "Mizuho Financial Group Inc", "sector": "Financial Services", "country": "Japan" },
-    "CFR.SW": { "name": "Compagnie Financiere Richemont SA", "sector": "Consumer Cyclical", "country": "Switzerland" },
-    "ZURN.SW": { "name": "Zurich Insurance Group AG", "sector": "Financial Services", "country": "Switzerland" },
-    "BNP.PA": { "name": "BNP Paribas SA", "sector": "Financial Services", "country": "France" },
-    "GSK.L": { "name": "GlaxoSmithKline PLC", "sector": "Healthcare", "country": "United Kingdom" },
-    "OR.PA": { "name": "L'Oreal SA", "sector": "Consumer Defensive", "country": "France" },
-    "D05.SI": { "name": "DBS Group Holdings Ltd", "sector": "Financial Services", "country": "Singapore" },
-    "IFX.DE": { "name": "Infineon Technologies AG", "sector": "Information Technology", "country": "Germany" },
-    "8031.T": { "name": "Mitsui & Co Ltd", "sector": "Industrials", "country": "Japan" },
-    "6861.T": { "name": "Keyence Corp", "sector": "Information Technology", "country": "Japan" },
-    "SAN.PA": { "name": "Sanofi SA", "sector": "Healthcare", "country": "France" },
-    "PAAS.TO": { "name": "Pan American Silver Corp", "sector": "Basic Materials", "country": "Canada" },
-    "LUN.TO": { "name": "Lundin Mining Corp", "sector": "Basic Materials", "country": "Canada" },
-    "RBA.TO": { "name": "RB Global Inc", "sector": "Industrials", "country": "Canada" },
-    "BIP.UN.TO": { "name": "Brookfield Infrastructure Partners LP", "sector": "Utilities", "country": "Canada" },
-    "FM.TO": { "name": "First Quantum Minerals Ltd", "sector": "Basic Materials", "country": "Canada" },
-    "TIH.TO": { "name": "Toromont Industries Ltd", "sector": "Industrials", "country": "Canada" },
-    "CRWV": { "name": "CoreWeave Inc", "sector": "Information Technology", "country": "United States" },
-    "XYZ": { "name": "Block Inc", "sector": "Financial Services", "country": "United States" },
-    "NET": { "name": "Cloudflare Inc", "sector": "Information Technology", "country": "United States" },
-    "BLSH": { "name": "Bullish", "sector": "Financial Services", "country": "Cayman Islands" },
-    "BMNR": { "name": "BitMine Immersion Technologies Inc", "sector": "Information Technology", "country": "United States" },
-    "PSTG": { "name": "Pure Storage Inc", "sector": "Information Technology", "country": "United States" },
-    "FIG": { "name": "Figma Inc", "sector": "Information Technology", "country": "United States" },
-    "RBRK": { "name": "Rubrik Inc", "sector": "Information Technology", "country": "United States" },
-    "CBRS": { "name": "Cerebras Systems Inc", "sector": "Information Technology", "country": "United States" },
-    "BIDU": { "name": "Baidu Inc", "sector": "Communication Services", "country": "China" },
-    "DKNG": { "name": "DraftKings Inc", "sector": "Consumer Cyclical", "country": "United States" },
-    "SPOT": { "name": "Spotify Technology SA", "sector": "Communication Services", "country": "Luxembourg" },
-    "TOST": { "name": "Toast Inc", "sector": "Information Technology", "country": "United States" },
-    "GTLB": { "name": "GitLab Inc", "sector": "Information Technology", "country": "United States" },
-    "GENI": { "name": "Genius Sports Ltd", "sector": "Communication Services", "country": "United Kingdom" },
-    "ETHQ-U.TO": { "name": "3iQ Ether Staking ETF (USD)", "sector": "Cryptocurrency", "country": "Canada" },
-    "SOLQ-U.TO": { "name": "3iQ Solana Staking ETF (USD)", "sector": "Cryptocurrency", "country": "Canada" },
-    "TRT": { "name": "Trio-Tech International", "sector": "Information Technology", "country": "United States" },
-    "PL": { "name": "Planet Labs PBC", "sector": "Industrials", "country": "United States" },
-    "LUNR": { "name": "Intuitive Machines Inc", "sector": "Industrials", "country": "United States" },
-    "FLY": { "name": "Firefly Aerospace Inc", "sector": "Industrials", "country": "United States" },
-    "BKSY": { "name": "BlackSky Technology Inc", "sector": "Industrials", "country": "United States" },
-    "VSAT": { "name": "Viasat Inc", "sector": "Information Technology", "country": "United States" },
-    "IRDM": { "name": "Iridium Communications Inc", "sector": "Communication Services", "country": "United States" },
-    "YSS": { "name": "York Space Systems Inc", "sector": "Industrials", "country": "United States" },
-    "LASR": { "name": "nLight Inc", "sector": "Information Technology", "country": "United States" },
-    "VOYG": { "name": "Voyager Technologies Inc", "sector": "Industrials", "country": "United States" },
-    "SATS": { "name": "EchoStar Corp", "sector": "Communication Services", "country": "United States" },
-    "VPG": { "name": "Vishay Precision Group Inc", "sector": "Information Technology", "country": "United States" },
-    "LPTH": { "name": "LightPath Technologies Inc", "sector": "Information Technology", "country": "United States" },
-    "NN": { "name": "NextNav Inc", "sector": "Information Technology", "country": "United States" },
-    "KVHI": { "name": "KVH Industries Inc", "sector": "Information Technology", "country": "United States" },
-    "CPSH": { "name": "CPS Technologies Corp", "sector": "Information Technology", "country": "United States" },
-    "VELO": { "name": "Velo3D Inc", "sector": "Industrials", "country": "United States" },
-    "RDW": { "name": "Redwire Corp", "sector": "Industrials", "country": "United States" },
-    "GILT": { "name": "Gilat Satellite Networks Ltd", "sector": "Information Technology", "country": "Israel" },
-    "FTC.L": { "name": "Filtronic PLC", "sector": "Information Technology", "country": "United Kingdom" },
-    "OHB.DE": { "name": "OHB SE", "sector": "Industrials", "country": "Germany" },
-    "VNP.TO": { "name": "5N Plus Inc", "sector": "Basic Materials", "country": "Canada" },
-    "3491.TW": { "name": "Universal Microwave Technology Inc", "sector": "Information Technology", "country": "Taiwan" },
-    "186A.T": { "name": "Astroscale Holdings Inc", "sector": "Industrials", "country": "Japan" },
-    "464A.T": { "name": "QPS Holdings Inc", "sector": "Industrials", "country": "Japan" },
-    "9412.T": { "name": "Sky Perfect JSAT Corp", "sector": "Communication Services", "country": "Japan" },
-    "GOMX.ST": { "name": "GomSpace Group AB", "sector": "Industrials", "country": "Sweden" },
-    "347700.KS": { "name": "Sphere Corp", "sector": "Healthcare", "country": "South Korea" },
-    "290A.T": { "name": "Synspective Inc", "sector": "Industrials", "country": "Japan" },
-    "3105.TW": { "name": "Win Semiconductors Corp", "sector": "Information Technology", "country": "Taiwan" },
-    "189300.KS": { "name": "Intellian Technologies Inc", "sector": "Information Technology", "country": "South Korea" },
-    "AVIO.MI": { "name": "Avio SpA", "sector": "Industrials", "country": "Italy" },
-    "SCW.WA": { "name": "Scanway SA", "sector": "Information Technology", "country": "Poland" }
+    "2330.TW": {
+      "name": "Taiwan Semiconductor Manufacturing Co Ltd",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
+    "HSBA.L": {
+      "name": "HSBC Holdings PLC",
+      "sector": "Financial Services",
+      "country": "United Kingdom"
+    },
+    "ROG.SW": {
+      "name": "Roche Holding AG",
+      "sector": "Healthcare",
+      "country": "Switzerland"
+    },
+    "NOVN.SW": {
+      "name": "Novartis AG",
+      "sector": "Healthcare",
+      "country": "Switzerland"
+    },
+    "SIE.DE": {
+      "name": "Siemens AG",
+      "sector": "Industrials",
+      "country": "Germany"
+    },
+    "BHP": {
+      "name": "BHP Group Ltd",
+      "sector": "Basic Materials",
+      "country": "Australia"
+    },
+    "8306.T": {
+      "name": "Mitsubishi UFJ Financial Group Inc",
+      "sector": "Financial Services",
+      "country": "Japan"
+    },
+    "CBA.AX": {
+      "name": "Commonwealth Bank of Australia",
+      "sector": "Financial Services",
+      "country": "Australia"
+    },
+    "TTE": {
+      "name": "TotalEnergies SE",
+      "sector": "Energy",
+      "country": "France"
+    },
+    "SAN.MC": {
+      "name": "Banco Santander SA",
+      "sector": "Financial Services",
+      "country": "Spain"
+    },
+    "SU.PA": {
+      "name": "Schneider Electric SE",
+      "sector": "Industrials",
+      "country": "France"
+    },
+    "ALV.DE": {
+      "name": "Allianz SE",
+      "sector": "Financial Services",
+      "country": "Germany"
+    },
+    "ABBN.SW": {
+      "name": "ABB Ltd",
+      "sector": "Industrials",
+      "country": "Switzerland"
+    },
+    "ENR.DE": {
+      "name": "Siemens Energy AG",
+      "sector": "Industrials",
+      "country": "Germany"
+    },
+    "UBSG.SW": {
+      "name": "UBS Group AG",
+      "sector": "Financial Services",
+      "country": "Switzerland"
+    },
+    "IBE.MC": {
+      "name": "Iberdrola SA",
+      "sector": "Utilities",
+      "country": "Spain"
+    },
+    "8035.T": {
+      "name": "Tokyo Electron Ltd",
+      "sector": "Technology",
+      "country": "Japan"
+    },
+    "BATS.L": {
+      "name": "British American Tobacco PLC",
+      "sector": "Consumer Defensive",
+      "country": "United Kingdom"
+    },
+    "6501.T": {
+      "name": "Hitachi Ltd",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "6758.T": {
+      "name": "Sony Group Corp",
+      "sector": "Consumer Cyclical",
+      "country": "Japan"
+    },
+    "9984.T": {
+      "name": "SoftBank Group Corp",
+      "sector": "Communication Services",
+      "country": "Japan"
+    },
+    "MC.PA": {
+      "name": "LVMH Moet Hennessy Louis Vuitton SE",
+      "sector": "Consumer Cyclical",
+      "country": "France"
+    },
+    "8316.T": {
+      "name": "Sumitomo Mitsui Financial Group Inc",
+      "sector": "Financial Services",
+      "country": "Japan"
+    },
+    "RR.L": {
+      "name": "Rolls-Royce Holdings PLC",
+      "sector": "Industrials",
+      "country": "United Kingdom"
+    },
+    "BBVA": {
+      "name": "Banco Bilbao Vizcaya Argentaria SA",
+      "sector": "Financial Services",
+      "country": "Spain"
+    },
+    "ULVR.L": {
+      "name": "Unilever PLC",
+      "sector": "Consumer Defensive",
+      "country": "United Kingdom"
+    },
+    "8058.T": {
+      "name": "Mitsubishi Corp",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "AI.PA": {
+      "name": "Air Liquide SA",
+      "sector": "Basic Materials",
+      "country": "France"
+    },
+    "DTE.DE": {
+      "name": "Deutsche Telekom AG",
+      "sector": "Communication Services",
+      "country": "Germany"
+    },
+    "1299.HK": {
+      "name": "AIA Group Ltd",
+      "sector": "Financial Services",
+      "country": "Hong Kong"
+    },
+    "RIO": {
+      "name": "Rio Tinto PLC",
+      "sector": "Basic Materials",
+      "country": "United Kingdom"
+    },
+    "UCG.MI": {
+      "name": "UniCredit SpA",
+      "sector": "Financial Services",
+      "country": "Italy"
+    },
+    "BP.L": {
+      "name": "BP PLC",
+      "sector": "Energy",
+      "country": "United Kingdom"
+    },
+    "AIR.PA": {
+      "name": "Airbus SE",
+      "sector": "Industrials",
+      "country": "France"
+    },
+    "SAF.PA": {
+      "name": "Safran SA",
+      "sector": "Industrials",
+      "country": "France"
+    },
+    "8411.T": {
+      "name": "Mizuho Financial Group Inc",
+      "sector": "Financial Services",
+      "country": "Japan"
+    },
+    "CFR.SW": {
+      "name": "Compagnie Financiere Richemont SA",
+      "sector": "Consumer Cyclical",
+      "country": "Switzerland"
+    },
+    "ZURN.SW": {
+      "name": "Zurich Insurance Group AG",
+      "sector": "Financial Services",
+      "country": "Switzerland"
+    },
+    "BNP.PA": {
+      "name": "BNP Paribas SA",
+      "sector": "Financial Services",
+      "country": "France"
+    },
+    "GSK.L": {
+      "name": "GlaxoSmithKline PLC",
+      "sector": "Healthcare",
+      "country": "United Kingdom"
+    },
+    "OR.PA": {
+      "name": "L'Oreal SA",
+      "sector": "Consumer Defensive",
+      "country": "France"
+    },
+    "D05.SI": {
+      "name": "DBS Group Holdings Ltd",
+      "sector": "Financial Services",
+      "country": "Singapore"
+    },
+    "IFX.DE": {
+      "name": "Infineon Technologies AG",
+      "sector": "Technology",
+      "country": "Germany"
+    },
+    "8031.T": {
+      "name": "Mitsui & Co Ltd",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "6861.T": {
+      "name": "Keyence Corp",
+      "sector": "Technology",
+      "country": "Japan"
+    },
+    "SAN.PA": {
+      "name": "Sanofi SA",
+      "sector": "Healthcare",
+      "country": "France"
+    },
+    "PAAS.TO": {
+      "name": "Pan American Silver Corp",
+      "sector": "Basic Materials",
+      "country": "Canada"
+    },
+    "LUN.TO": {
+      "name": "Lundin Mining Corp",
+      "sector": "Basic Materials",
+      "country": "Canada"
+    },
+    "RBA.TO": {
+      "name": "RB Global Inc",
+      "sector": "Industrials",
+      "country": "Canada"
+    },
+    "BIP.UN.TO": {
+      "name": "Brookfield Infrastructure Partners LP",
+      "sector": "Utilities",
+      "country": "Canada"
+    },
+    "FM.TO": {
+      "name": "First Quantum Minerals Ltd",
+      "sector": "Basic Materials",
+      "country": "Canada"
+    },
+    "TIH.TO": {
+      "name": "Toromont Industries Ltd",
+      "sector": "Industrials",
+      "country": "Canada"
+    },
+    "CRWV": {
+      "name": "CoreWeave Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "XYZ": {
+      "name": "Block Inc",
+      "sector": "Financial Services",
+      "country": "United States"
+    },
+    "NET": {
+      "name": "Cloudflare Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "BLSH": {
+      "name": "Bullish",
+      "sector": "Financial Services",
+      "country": "Cayman Islands"
+    },
+    "BMNR": {
+      "name": "BitMine Immersion Technologies Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "PSTG": {
+      "name": "Pure Storage Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "FIG": {
+      "name": "Figma Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "RBRK": {
+      "name": "Rubrik Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "CBRS": {
+      "name": "Cerebras Systems Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "BIDU": {
+      "name": "Baidu Inc",
+      "sector": "Communication Services",
+      "country": "China"
+    },
+    "DKNG": {
+      "name": "DraftKings Inc",
+      "sector": "Consumer Cyclical",
+      "country": "United States"
+    },
+    "SPOT": {
+      "name": "Spotify Technology SA",
+      "sector": "Communication Services",
+      "country": "Luxembourg"
+    },
+    "TOST": {
+      "name": "Toast Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "GTLB": {
+      "name": "GitLab Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "GENI": {
+      "name": "Genius Sports Ltd",
+      "sector": "Communication Services",
+      "country": "United Kingdom"
+    },
+    "ETHQ-U.TO": {
+      "name": "3iQ Ether Staking ETF (USD)",
+      "sector": "Crypto",
+      "country": "Canada"
+    },
+    "SOLQ-U.TO": {
+      "name": "3iQ Solana Staking ETF (USD)",
+      "sector": "Crypto",
+      "country": "Canada"
+    },
+    "TRT": {
+      "name": "Trio-Tech International",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "PL": {
+      "name": "Planet Labs PBC",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "LUNR": {
+      "name": "Intuitive Machines Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "FLY": {
+      "name": "Firefly Aerospace Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "BKSY": {
+      "name": "BlackSky Technology Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "VSAT": {
+      "name": "Viasat Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "IRDM": {
+      "name": "Iridium Communications Inc",
+      "sector": "Communication Services",
+      "country": "United States"
+    },
+    "YSS": {
+      "name": "York Space Systems Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "LASR": {
+      "name": "nLight Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "VOYG": {
+      "name": "Voyager Technologies Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "SATS": {
+      "name": "EchoStar Corp",
+      "sector": "Communication Services",
+      "country": "United States"
+    },
+    "VPG": {
+      "name": "Vishay Precision Group Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "LPTH": {
+      "name": "LightPath Technologies Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "NN": {
+      "name": "NextNav Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "KVHI": {
+      "name": "KVH Industries Inc",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "CPSH": {
+      "name": "CPS Technologies Corp",
+      "sector": "Technology",
+      "country": "United States"
+    },
+    "VELO": {
+      "name": "Velo3D Inc",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "RDW": {
+      "name": "Redwire Corp",
+      "sector": "Industrials",
+      "country": "United States"
+    },
+    "GILT": {
+      "name": "Gilat Satellite Networks Ltd",
+      "sector": "Technology",
+      "country": "Israel"
+    },
+    "FTC.L": {
+      "name": "Filtronic PLC",
+      "sector": "Technology",
+      "country": "United Kingdom"
+    },
+    "OHB.DE": {
+      "name": "OHB SE",
+      "sector": "Industrials",
+      "country": "Germany"
+    },
+    "VNP.TO": {
+      "name": "5N Plus Inc",
+      "sector": "Basic Materials",
+      "country": "Canada"
+    },
+    "3491.TW": {
+      "name": "Universal Microwave Technology Inc",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
+    "186A.T": {
+      "name": "Astroscale Holdings Inc",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "464A.T": {
+      "name": "QPS Holdings Inc",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "9412.T": {
+      "name": "Sky Perfect JSAT Corp",
+      "sector": "Communication Services",
+      "country": "Japan"
+    },
+    "GOMX.ST": {
+      "name": "GomSpace Group AB",
+      "sector": "Industrials",
+      "country": "Sweden"
+    },
+    "347700.KS": {
+      "name": "SoluM Co Ltd",
+      "sector": "Technology",
+      "country": "South Korea"
+    },
+    "290A.T": {
+      "name": "Synspective Inc",
+      "sector": "Industrials",
+      "country": "Japan"
+    },
+    "3105.TW": {
+      "name": "Win Semiconductors Corp",
+      "sector": "Technology",
+      "country": "Taiwan"
+    },
+    "189300.KS": {
+      "name": "Intellian Technologies Inc",
+      "sector": "Technology",
+      "country": "South Korea"
+    },
+    "AVIO.MI": {
+      "name": "Avio SpA",
+      "sector": "Industrials",
+      "country": "Italy"
+    },
+    "SCW.WA": {
+      "name": "Scanway SA",
+      "sector": "Technology",
+      "country": "Poland"
+    }
   }
 }
