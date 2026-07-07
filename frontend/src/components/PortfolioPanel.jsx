@@ -59,6 +59,39 @@ function SaveNameModal({ onSave, onClose }) {
   );
 }
 
+// ── Overwrite-existing-portfolio confirmation ──────────────────────────────
+function OverrideConfirmModal({ name, onConfirm, onClose }) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleConfirm() {
+    setLoading(true);
+    await onConfirm();
+    setLoading(false);
+  }
+
+  return (
+    <Modal title="Overwrite portfolio?" onClose={onClose} width={380}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <p style={{ fontSize: 13.5, color: 'var(--text2)', lineHeight: 1.5 }}>
+          This replaces the saved version of <strong style={{ color: 'var(--text)' }}>&quot;{name || 'Untitled portfolio'}&quot;</strong> with your current changes. This can&apos;t be undone.
+        </p>
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <button type="button" onClick={onClose} className="pv-btn-ghost">Cancel</button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            disabled={loading}
+            className="pv-btn-primary"
+            style={{ padding: '9px 22px', fontSize: 14, opacity: loading ? 0.7 : 1 }}
+          >
+            {loading ? 'Saving…' : 'Overwrite'}
+          </button>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 // ── Position row (build screen) ────────────────────────────────────────────
 function PositionRow({ row, onChange, onRemove, onTickerBlur, isUnknown }) {
   const set = (field, val) => onChange(row.id, field, val);
@@ -138,6 +171,7 @@ export default function PortfolioPanel({
   const freezeTimerRef = useRef(null);
 
   const [saveOpen, setSaveOpen] = useState(false);
+  const [overrideConfirmOpen, setOverrideConfirmOpen] = useState(false);
   const [importOpen, setImportOpen] = useState(false);
   const [showHow, setShowHow] = useState(false);
   const [portfolios, setPortfolios] = useState([]);
@@ -215,7 +249,7 @@ export default function PortfolioPanel({
   }
 
   function handleSwitcherSave() {
-    if (loadedPortfolioId) saveUpdate();
+    if (loadedPortfolioId) setOverrideConfirmOpen(true);
     else setSaveOpen(true);
   }
 
@@ -424,8 +458,6 @@ export default function PortfolioPanel({
     if (summary.cadHedged) parts.push(`${summary.cadHedged} CAD-hedged as $ value`);
     if (summary.skippedOptions) parts.push(`${summary.skippedOptions} option${summary.skippedOptions === 1 ? '' : 's'} skipped`);
     setPriceStatusMsg(parts.join(' · ') + '.');
-
-    await runDecompose(newRows, { lenient: true });
   }
 
   const hasSharesRows = rows.some((r) => r.inputType === 'shares');
@@ -458,6 +490,13 @@ export default function PortfolioPanel({
   return (
     <div className="pv-screen" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px 64px' }}>
       {saveOpen && <SaveNameModal onSave={saveNew} onClose={() => setSaveOpen(false)} />}
+      {overrideConfirmOpen && (
+        <OverrideConfirmModal
+          name={currentPortfolio?.name}
+          onConfirm={async () => { await saveUpdate(); setOverrideConfirmOpen(false); }}
+          onClose={() => setOverrideConfirmOpen(false)}
+        />
+      )}
       {importOpen && <ImportCsvModal onClose={() => setImportOpen(false)} onImport={handleImport} />}
       {showHow && <HowItWorksModal onClose={() => setShowHow(false)} />}
 

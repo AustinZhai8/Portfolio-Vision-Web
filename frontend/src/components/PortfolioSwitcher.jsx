@@ -124,6 +124,16 @@ export default function PortfolioSwitcher({
             </div>
           ))}
           <div style={{ height: 1, background: 'var(--border2)', margin: '6px' }} />
+          {activeId && (
+            <button
+              type="button"
+              className="pv-menu-item"
+              onClick={() => { onSave(); setOpen(false); }}
+              style={{ display: 'block', width: '100%', background: 'none', border: 'none', borderRadius: 10, padding: '9px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text2)', cursor: 'pointer', textAlign: 'left' }}
+            >
+              Overwrite &quot;{label}&quot;
+            </button>
+          )}
           <button
             type="button"
             className="pv-menu-item"
