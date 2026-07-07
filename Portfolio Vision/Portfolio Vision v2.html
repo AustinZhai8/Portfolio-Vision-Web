@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Vision</title>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0d0d0f;
+      --card: #17171b;
+      --card2: #1e1e23;
+      --border: #232329;
+      --border2: #33333b;
+      --track: #26262d;
+      --seg-bg: #232329;
+      --seg-active: #3a3a44;
+      --text: #f4f4f6;
+      --text2: #b9b9c2;
+      --text3: #7e7e89;
+      --accent: #a78bfa;
+      --accent-soft: rgba(167, 139, 250, 0.12);
+      --green: #2fd08c;
+      --sans: 'Hanken Grotesk', system-ui, sans-serif;
+    }
+    html, body { height: 100%; background: var(--bg); }
+    body { color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+    #root { min-height: 100%; display: flex; flex-direction: column; }
+    input, select, button { font-family: inherit; font-size: inherit; color: inherit; outline: none; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { color: #c4b0fb; }
+    .pv-input {
+      background: var(--card2); border: 1.5px solid transparent; border-radius: 12px;
+      color: var(--text); padding: 9px 13px; font-size: 14px; width: 100%;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .pv-input:focus { border-color: var(--accent); background: var(--bg); }
+    .pv-input::placeholder { color: var(--text3); font-weight: 400; }
+    .pv-btn-primary {
+      background: var(--accent); color: #131316; border: none; border-radius: 999px;
+      padding: 14px 28px; font-size: 15px; font-weight: 700; cursor: pointer;
+      transition: filter 0.15s, transform 0.1s; letter-spacing: 0.01em;
+    }
+    .pv-btn-primary:hover { filter: brightness(1.08); }
+    .pv-btn-primary:active { transform: scale(0.985); }
+    .pv-btn-ghost {
+      background: transparent; color: var(--text2); border: 1.5px solid var(--border2);
+      border-radius: 999px; padding: 9px 18px; font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: border-color 0.15s, color 0.15s;
+    }
+    .pv-btn-ghost:hover { border-color: var(--text3); color: var(--text); }
+    .pv-link-btn {
+      background: none; border: none; color: var(--text3); font-size: 13px;
+      font-weight: 600; cursor: pointer; transition: color 0.12s; padding: 4px 6px;
+    }
+    .pv-link-btn:hover { color: var(--text); }
+    select.pv-select {
+      background: transparent; border: none; color: var(--text3); font-size: 13px;
+      font-weight: 600; cursor: pointer; appearance: none; padding-right: 4px;
+    }
+    select.pv-select:hover { color: var(--text); }
+    .pv-menu-item:hover { background: var(--seg-active) !important; }
+    @media (prefers-reduced-motion: no-preference) {
+      .pv-screen { animation: pv-fade 0.35s cubic-bezier(0.16,1,0.3,1); }
+      @keyframes pv-fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="pv2-components.jsx"></script>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+
+// ── DATA (mock — mirrors live app) ─────────────────────────────────────────────
+const INITIAL_ROWS = [
+  { id: 1, ticker: 'VFV', inputType: 'amount', amount: '5000', currency: 'CAD', shares: '' },
+  { id: 2, ticker: 'QQQ', inputType: 'shares', amount: '', currency: 'USD', shares: '5' },
+];
+let _uid = 3;
+const nextId = () => _uid++;
+
+const HOLDINGS = [
+  { t: 'NVDA',  n: 'NVIDIA Corporation',    sec: 'Technology',             w: 7.24, v: 362.00, c: '#5c8a3f', via: [['VFV', 236.00], ['QQQ', 126.00]] },
+  { t: 'AAPL',  n: 'Apple Inc',             sec: 'Technology',             w: 6.33, v: 316.50, c: '#4a4a52', via: [['VFV', 206.50], ['QQQ', 110.00]] },
+  { t: 'MSFT',  n: 'Microsoft Corporation', sec: 'Technology',             w: 4.63, v: 231.50, c: '#3f6fa8', via: [['VFV', 151.00], ['QQQ', 80.50]] },
+  { t: 'AMZN',  n: 'Amazon.com Inc',        sec: 'Consumer Cyclical',      w: 4.46, v: 223.00, c: '#b8742a', via: [['VFV', 145.50], ['QQQ', 77.50]] },
+  { t: 'GOOGL', n: 'Alphabet Inc Class A',  sec: 'Communication Services', w: 3.69, v: 184.50, c: '#4285a8', via: [['VFV', 120.50], ['QQQ', 64.00]] },
+  { t: 'GOOG',  n: 'Alphabet Inc Class C',  sec: 'Communication Services', w: 3.42, v: 171.00, c: '#4285a8', via: [['VFV', 111.50], ['QQQ', 59.50]] },
+  { t: 'AVGO',  n: 'Broadcom Inc',          sec: 'Technology',             w: 3.07, v: 153.50, c: '#a83f52', via: [['VFV', 100.00], ['QQQ', 53.50]] },
+  { t: 'META',  n: 'Meta Platforms Inc',    sec: 'Communication Services', w: 2.33, v: 116.50, c: '#3f5ba8', via: [['VFV', 76.00], ['QQQ', 40.50]] },
+  { t: 'TSLA',  n: 'Tesla Inc',             sec: 'Consumer Cyclical',      w: 2.22, v: 111.00, c: '#a83f3f', via: [['QQQ', 111.00]] },
+  { t: 'WMT',   n: 'Walmart Inc',           sec: 'Consumer Defensive',     w: 1.58, v: 79.00,  c: '#3f7fa8', via: [['VFV', 79.00]] },
+  { t: 'BRK.B', n: 'Berkshire Hathaway Inc', sec: 'Financial Services',    w: 1.52, v: 76.00,  c: '#8a6f3f', via: [['VFV', 76.00]] },
+  { t: 'LLY',   n: 'Eli Lilly and Co',      sec: 'Healthcare',             w: 1.37, v: 68.50,  c: '#7a3fa8', via: [['VFV', 68.50]] },
+  { t: 'JPM',   n: 'JPMorgan Chase & Co',   sec: 'Financial Services',     w: 1.29, v: 64.50,  c: '#3f4da8', via: [['VFV', 64.50]] },
+  { t: 'V',     n: 'Visa Inc',              sec: 'Financial Services',     w: 1.12, v: 56.00,  c: '#2f4d8a', via: [['VFV', 56.00]] },
+  { t: 'UNH',   n: 'UnitedHealth Group Inc', sec: 'Healthcare',            w: 1.05, v: 52.50,  c: '#3f8aa8', via: [['VFV', 52.50]] },
+];
+
+const SECTORS = [
+  { name: 'Technology',             w: 32.91 },
+  { name: 'Communication Services', w: 11.30 },
+  { name: 'Financial Services',     w: 9.49 },
+  { name: 'Consumer Cyclical',      w: 8.69 },
+  { name: 'Healthcare',             w: 6.66 },
+  { name: 'Industrials',            w: 4.75 },
+  { name: 'Consumer Defensive',     w: 4.30 },
+  { name: 'Energy',                 w: 2.39 },
+  { name: 'Utilities',              w: 1.24 },
+];
+
+const GEO = [
+  { name: 'United States',  w: 81.31 },
+  { name: 'Ireland',        w: 1.11 },
+  { name: 'United Kingdom', w: 0.35 },
+  { name: 'Canada',         w: 0.27 },
+  { name: 'Switzerland',    w: 0.19 },
+  { name: 'Untracked (data cutoff)', w: 16.77, untracked: true },
+];
+
+const FX = 1.37; // USD→CAD
+function fmt(n, cur) {
+  const v = cur === 'CAD' ? n * FX : n;
+  return '$' + v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+// ── TOUR STEPS ──────────────────────────────────────────────────────────────
+const TOUR_STEPS = [
+  { target: 'switcher', screen: 'build', title: 'Your portfolios', body: 'This shows which portfolio you’re editing. Click it to switch, create a new one, or save a copy. A purple dot means unsaved changes — a Save button appears beside it.' },
+  { target: 'rows', screen: 'build', title: 'Add what you own', body: 'One row per position — ticker plus how much you hold. Enter by dollar amount ($) or share count (#), in USD or CAD, per row. ETFs, stocks, and Canadian tickers all work.' },
+  { target: 'toolbar', screen: 'build', title: 'Sort & import', body: 'Reorder rows, or skip typing entirely — import your Wealthsimple CSV in one click. The import dialog shows exactly where to download it.' },
+  { target: 'display-currency', screen: 'build', title: 'Display currency', body: 'Flip the entire app between USD and CAD. Every value converts automatically.' },
+  { target: 'decompose', screen: 'build', title: 'Decompose', body: 'The main event. We unpack every ETF into its underlying companies — including ETFs inside ETFs — and combine it all into one true picture.' },
+  { target: 'holdings', screen: 'results', title: 'What you really own', body: 'Every company across all your funds, weighted by what you actually hold. Bars show relative position size, and the ⓘ on each row reveals exactly which funds the money comes from.' },
+  { target: 'breakdowns', screen: 'results', title: 'Sectors & geography', body: 'Your real exposure by sector and country. “Untracked” marks the slice beyond our data coverage. Use “Edit portfolio” up top to tweak and re-run — that’s the whole flow.' },
+];
+
+// ── HEADER ─────────────────────────────────────────────────────────────────────
+function Header({ displayCurrency, setDisplayCurrency }) {
+  return (
+    <header style={{ height: 68, display: 'flex', alignItems: 'center', padding: '0 28px', gap: 14, flexShrink: 0 }}>
+      <img src="logo.png" alt="Portfolio Vision" style={{ width: 52, height: 52, objectFit: 'contain' }} />
+      <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Portfolio Vision</span>
+      <div style={{ flex: 1 }} />
+      <div data-tour="display-currency">
+        <Seg value={displayCurrency} onChange={setDisplayCurrency}
+          options={[{ value: 'USD', label: 'USD' }, { value: 'CAD', label: 'CAD' }]} />
+      </div>
+      <div style={{ width: 36, height: 36, borderRadius: 999, background: 'var(--accent-soft)', border: '1px solid var(--border2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 700, color: 'var(--accent)' }}>AU</div>
+    </header>
+  );
+}
+
+// ── BUILD SCREEN ───────────────────────────────────────────────────────────────
+function BuildScreen({ rows, setRows, defaultInputType, setDefaultInputType, total, displayCurrency, onDecompose, loading, onStartTour, onShowLegal }) {
+  const [showHow, setShowHow] = useState(false);
+  const [showImport, setShowImport] = useState(false);
+  const [sortBy, setSortBy] = useState('default');
+  const [portfolios, setPortfolios] = useState(['Main', 'TFSA']);
+  const [activePortfolio, setActivePortfolio] = useState('Main');
+  const [dirty, setDirty] = useState(false);
+
+  const addRow = () => { setDirty(true); setRows((r) => [...r, { id: nextId(), ticker: '', inputType: defaultInputType, amount: '', currency: 'USD', shares: '' }]); };
+  const removeRow = (id) => { setDirty(true); setRows((r) => r.filter((x) => x.id !== id)); };
+  const updateRow = (id, field, val) => { setDirty(true); setRows((r) => r.map((x) => x.id === id ? { ...x, [field]: val } : x)); };
+  const clearAll = () => { setDirty(true); setRows([]); };
+
+  const handleSave = () => setDirty(false);
+  const handleSaveAsNew = () => {
+    const name = `Portfolio ${portfolios.length + 1}`;
+    setPortfolios((p) => [...p, name]);
+    setActivePortfolio(name);
+    setDirty(false);
+  };
+  const handleNew = () => {
+    const name = `Portfolio ${portfolios.length + 1}`;
+    setPortfolios((p) => [...p, name]);
+    setActivePortfolio(name);
+    setRows([]);
+    setDirty(false);
+  };
+  const handleSelect = (name) => { setActivePortfolio(name); setDirty(false); };
+
+  const sortedRows = useMemo(() => {
+    const copy = [...rows];
+    if (sortBy === 'ticker') copy.sort((a, b) => a.ticker.localeCompare(b.ticker));
+    if (sortBy === 'value') copy.sort((a, b) => (parseFloat(b.amount) || 0) - (parseFloat(a.amount) || 0));
+    return copy;
+  }, [rows, sortBy]);
+
+  return (
+    <div className="pv-screen" data-screen-label="Build portfolio" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px 64px' }}>
+      {/* Hero */}
+      <div style={{ textAlign: 'center', marginBottom: 36, maxWidth: 520 }}>
+        <h1 style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 10 }}>
+          See everything.<br />Invest better.
+        </h1>
+        <p style={{ fontSize: 15, color: 'var(--text2)', marginBottom: 10 }}>
+          Add your positions and we'll show you what you really own.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+          <button className="pv-link-btn" style={{ color: 'var(--accent)' }} onClick={() => setShowHow(true)}>How does this work?</button>
+          <span style={{ color: 'var(--border2)' }}>·</span>
+          <button className="pv-btn-ghost" style={{ padding: '7px 16px' }} onClick={onStartTour}>Take the tour</button>
+        </div>
+      </div>
+
+      {/* Portfolio card */}
+      <div style={{ width: '100%', maxWidth: 620, background: 'var(--card)', borderRadius: 24, border: '1px solid var(--border)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px 14px', gap: 12, flexWrap: 'wrap' }}>
+          <div data-tour="switcher" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <PortfolioSwitcher
+              portfolios={portfolios} active={activePortfolio} onSelect={handleSelect}
+              dirty={dirty} onSave={handleSave} onSaveAsNew={handleSaveAsNew} onNew={handleNew}
+            />
+            <span style={{ fontSize: 13, color: 'var(--text3)' }}>{rows.length} {rows.length === 1 ? 'position' : 'positions'}</span>
+          </div>
+          <div data-tour="toolbar" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <select className="pv-select" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+              <option value="default">Order entered</option>
+              <option value="ticker">By ticker</option>
+              <option value="value">By value</option>
+            </select>
+            <span style={{ color: 'var(--border2)' }}>·</span>
+            <button className="pv-link-btn" onClick={() => setShowImport(true)}>Import CSV</button>
+          </div>
+        </div>
+
+        <div style={{ padding: '0 24px' }} data-tour="rows">
+          {sortedRows.map((row, i) => (
+            <div key={row.id} style={{ borderTop: '1px solid var(--border)' }} data-tour={i === 0 ? 'row' : undefined}>
+              <PositionRow row={row} onChange={updateRow} onRemove={removeRow} />
+            </div>
+          ))}
+          <div style={{ borderTop: '1px solid var(--border)', padding: '12px 0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button className="pv-link-btn" data-tour="add" style={{ color: 'var(--accent)', paddingLeft: 0 }} onClick={addRow}>+ Add position</button>
+            {rows.length > 0 && <button className="pv-link-btn" onClick={clearAll}>Clear all</button>}
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{ background: 'var(--card2)', padding: '18px 24px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>Total (est.)</span>
+            <span style={{ fontSize: 24, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>
+              {fmt(total, displayCurrency)} <span style={{ fontSize: 13, color: 'var(--text3)', fontWeight: 600 }}>{displayCurrency}</span>
+            </span>
+          </div>
+          <button className="pv-btn-primary" data-tour="decompose" onClick={onDecompose} disabled={loading} style={{ width: '100%', opacity: loading ? 0.7 : 1 }}>
+            {loading ? 'Decomposing…' : 'Decompose portfolio'}
+          </button>
+        </div>
+      </div>
+
+      {/* Default input type */}
+      <div style={{ width: '100%', maxWidth: 620, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 18, padding: '0 4px' }}>
+        <div data-tour="default-input" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 12.5, color: 'var(--text3)', fontWeight: 600 }}>Default input</span>
+          <Seg small value={defaultInputType} onChange={setDefaultInputType}
+            options={[{ value: 'amount', label: '$ Amount' }, { value: 'shares', label: '# Shares' }]} />
+        </div>
+      </div>
+
+      <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 28 }}>
+        Data coverage: ETF holdings · May 2026 · <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('privacy'); }}>Privacy</a> · <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('terms'); }}>Terms</a>
+      </p>
+
+      {showHow && <HowItWorksModal onClose={() => setShowHow(false)} />}
+      {showImport && <ImportCsvModal onClose={() => setShowImport(false)} />}
+    </div>
+  );
+}
+
+// ── RESULTS SCREEN ─────────────────────────────────────────────────────────────
+function ResultsScreen({ total, displayCurrency, onBack, animKey, onShowLegal }) {
+  const fmtValue = (v) => fmt(v, displayCurrency);
+  return (
+    <div className="pv-screen" data-screen-label="Results" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 24px 64px' }}>
+      <div style={{ width: '100%', maxWidth: 880 }}>
+        <button className="pv-btn-ghost" data-tour="back" onClick={onBack} style={{ marginBottom: 28 }}>← Edit portfolio</button>
+
+        {/* Total */}
+        <div data-tour="total" style={{ marginBottom: 32, display: 'inline-block' }}>
+          <div style={{ fontSize: 14, color: 'var(--text2)', fontWeight: 600, marginBottom: 6 }}>Total portfolio (est.)</div>
+          <div style={{ fontSize: 46, fontWeight: 800, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+            {fmt(total, displayCurrency)} <span style={{ fontSize: 18, color: 'var(--text3)', fontWeight: 600 }}>{displayCurrency}</span>
+          </div>
+        </div>
+
+        {/* Holdings */}
+        <div data-tour="holdings" style={{ background: 'var(--card)', borderRadius: 20, border: '1px solid var(--border)', overflow: 'hidden', marginBottom: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px 12px' }}>
+            <h3 style={{ fontSize: 15, fontWeight: 700 }}>Top holdings</h3>
+            <span style={{ fontSize: 12.5, color: 'var(--text3)' }}>Tap ⓘ to see which funds hold it</span>
+          </div>
+          <div>
+            {HOLDINGS.map((h, i) => <HoldingItem key={h.t} h={h} fmtValue={fmtValue} maxW={HOLDINGS[0].w} tour={i === 0} />)}
+          </div>
+          <div style={{ padding: '12px 24px 16px', borderTop: '1px solid var(--border)' }}>
+            <span style={{ fontSize: 12.5, color: 'var(--text3)' }}>Showing 68 of 157 holdings — positions below 0.25% of portfolio total hidden</span>
+          </div>
+        </div>
+
+        {/* Breakdowns */}
+        <div data-tour="breakdowns" style={{ display: 'flex', gap: 20, flexWrap: 'wrap' }}>
+          <BreakdownCard title="Sectors" data={SECTORS} animKey={animKey} />
+          <BreakdownCard title="Geography" data={GEO} animKey={animKey} />
+        </div>
+
+        <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 24, textAlign: 'center' }}>
+          Data coverage: ETF holdings · May 2026 · <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('privacy'); }}>Privacy</a> · <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('terms'); }}>Terms</a>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ── APP ────────────────────────────────────────────────────────────────────────
+function App() {
+  const [screen, setScreen] = useState('build');
+  const [rows, setRows] = useState(INITIAL_ROWS);
+  const [displayCurrency, setDisplayCurrency] = useState('CAD');
+  const [defaultInputType, setDefaultInputType] = useState('amount');
+  const [loading, setLoading] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+  const [tourIndex, setTourIndex] = useState(null);
+  const [legal, setLegal] = useState(null);
+
+  const totalUSD = 9908.99 / FX; // mock base total in USD
+
+  // Keep the visible screen in sync with the current tour step
+  useEffect(() => {
+    if (tourIndex == null) return;
+    const st = TOUR_STEPS[tourIndex];
+    if (st && st.screen !== screen) {
+      setScreen(st.screen);
+      window.scrollTo(0, 0);
+    }
+  }, [tourIndex]);
+
+  const startTour = () => { setScreen('build'); window.scrollTo(0, 0); setTourIndex(0); };
+  const endTour = () => { setTourIndex(null); };
+  const tourNext = () => {
+    if (tourIndex >= TOUR_STEPS.length - 1) { setTourIndex(null); setScreen('build'); window.scrollTo(0, 0); }
+    else setTourIndex((i) => i + 1);
+  };
+  const tourBack = () => { if (tourIndex > 0) setTourIndex((i) => i - 1); };
+
+  const handleDecompose = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      setAnimKey((v) => v + 1);
+      setScreen('results');
+      window.scrollTo(0, 0);
+    }, 700);
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Header displayCurrency={displayCurrency} setDisplayCurrency={setDisplayCurrency} />
+      {screen === 'build' ? (
+        <BuildScreen
+          rows={rows} setRows={setRows}
+          defaultInputType={defaultInputType} setDefaultInputType={setDefaultInputType}
+          total={totalUSD} displayCurrency={displayCurrency}
+          onDecompose={handleDecompose} loading={loading}
+          onStartTour={startTour} onShowLegal={setLegal}
+        />
+      ) : (
+        <ResultsScreen
+          total={totalUSD} displayCurrency={displayCurrency}
+          onBack={() => setScreen('build')} animKey={animKey}
+          onShowLegal={setLegal}
+        />
+      )}
+      {tourIndex != null && (
+        <Tour steps={TOUR_STEPS} index={tourIndex} onNext={tourNext} onBack={tourBack} onClose={endTour} />
+      )}
+      {legal === 'privacy' && <PrivacyModal onClose={() => setLegal(null)} />}
+      {legal === 'terms' && <TermsModal onClose={() => setLegal(null)} />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -3,9 +3,11 @@ import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/dec
 import { fmtMoney } from '../utils/format';
 import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../services/fetchPrices';
 import { supabase } from '../lib/supabase';
+import Seg from './Seg';
+import Modal from './Modal';
+import PortfolioSwitcher from './PortfolioSwitcher';
 import ImportCsvModal from './ImportCsvModal';
-
-const ACCENT = '#a78bfa';
+import HowItWorksModal from './HowItWorksModal';
 
 function autoType(ticker) {
   const t = ticker.trim().toUpperCase();
@@ -15,189 +17,9 @@ function autoType(ticker) {
   return 'Unknown';
 }
 
-function CurrencyToggle({ value, onChange }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 2,
-        background: 'var(--input-bg)',
-        borderRadius: 3,
-        padding: 2,
-        border: '1px solid var(--border)',
-        alignItems: 'center',
-        flexShrink: 0,
-      }}
-    >
-      {['USD', 'CAD'].map((cur) => (
-        <button
-          key={cur}
-          type="button"
-          className="currency-toggle-btn"
-          onClick={() => onChange(cur)}
-          style={{
-            padding: '3px 5px',
-            background: value === cur ? ACCENT : 'transparent',
-            border: 'none',
-            borderRadius: 2,
-            cursor: 'pointer',
-            fontFamily: 'var(--mono)',
-            fontWeight: 600,
-            fontSize: 9,
-            color: value === cur ? '#07090e' : 'var(--text3)',
-            letterSpacing: '0.06em',
-            transition: 'all 0.12s',
-            lineHeight: 1,
-          }}
-        >
-          {cur}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function InputTypeToggle({ value, onChange }) {
-  return (
-    <div
-      style={{
-        display: 'flex',
-        gap: 2,
-        background: 'var(--input-bg)',
-        borderRadius: 3,
-        padding: 2,
-        border: '1px solid var(--border)',
-        alignItems: 'center',
-        flexShrink: 0,
-      }}
-    >
-      {[{ key: 'amount', label: '$' }, { key: 'shares', label: '#' }].map(({ key, label }) => (
-        <button
-          key={key}
-          type="button"
-          className="input-type-toggle-btn"
-          onClick={() => onChange(key)}
-          title={key === 'amount' ? 'Dollar amount' : 'Share count'}
-          style={{
-            padding: '3px 6px',
-            background: value === key ? ACCENT : 'transparent',
-            border: 'none',
-            borderRadius: 2,
-            cursor: 'pointer',
-            fontFamily: 'var(--mono)',
-            fontWeight: 700,
-            fontSize: 10,
-            color: value === key ? '#07090e' : 'var(--text3)',
-            letterSpacing: '0.04em',
-            transition: 'all 0.12s',
-            lineHeight: 1,
-          }}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function InfoTooltip({ text }) {
-  const [visible, setVisible] = useState(false);
-  return (
-    <span
-      style={{ position: 'relative', display: 'inline-flex', alignItems: 'center' }}
-      onMouseEnter={() => setVisible(true)}
-      onMouseLeave={() => setVisible(false)}
-    >
-      <span style={{
-        display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-        width: 12, height: 12, borderRadius: '50%',
-        border: '1px solid var(--text3)', color: 'var(--text3)',
-        fontSize: 8, fontFamily: 'var(--mono)', cursor: 'default',
-        userSelect: 'none', lineHeight: 1, marginLeft: 4, flexShrink: 0,
-      }}>
-        i
-      </span>
-      {visible && (
-        <div style={{
-          position: 'absolute', bottom: 'calc(100% + 6px)', left: '50%',
-          transform: 'translateX(-50%)', width: 230,
-          background: 'var(--card)', border: '1px solid var(--border2)',
-          borderRadius: 4, padding: '8px 10px',
-          boxShadow: '0 4px 16px rgba(0,0,0,0.35)', zIndex: 200, pointerEvents: 'none',
-        }}>
-          <span style={{ fontFamily: 'var(--sans)', fontSize: 11, color: 'var(--text2)', lineHeight: 1.5, display: 'block' }}>
-            {text}
-          </span>
-        </div>
-      )}
-    </span>
-  );
-}
-
-function OverrideModal({ portfolios, onOverride, onClose, loading }) {
-  const [selectedId, setSelectedId] = useState('');
-  const [confirmName, setConfirmName] = useState('');
-  const [error, setError] = useState('');
-  const selectedPortfolio = portfolios.find((p) => p.id === selectedId);
-  // Case-insensitive: the confirm label is rendered uppercase via CSS, so a
-  // name like "Main" shows as "MAIN" — don't punish the user for matching it.
-  const nameMatches = !!selectedPortfolio
-    && confirmName.trim().toLowerCase() === selectedPortfolio.name.trim().toLowerCase();
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!selectedId) { setError('Select a portfolio.'); return; }
-    if (!nameMatches) { setError(`Type "${selectedPortfolio.name}" to confirm.`); return; }
-    setError('');
-    const err = await onOverride(selectedId);
-    if (err) { setError(err); }
-  }
-
-  return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'var(--modal-overlay)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ width: 340, background: 'var(--panel)', border: '1px solid var(--border2)', borderRadius: 6, padding: '20px', boxShadow: '0 24px 64px rgba(0,0,0,0.3)' }}>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
-          Override Portfolio
-        </div>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <div>
-            <label style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', marginBottom: 5, textTransform: 'uppercase' }}>
-              Select Portfolio
-            </label>
-            <select value={selectedId} onChange={(e) => { setSelectedId(e.target.value); setConfirmName(''); setError(''); }}
-              style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: 13, padding: '8px 10px', outline: 'none', boxSizing: 'border-box' }}>
-              <option value="">-- Choose one --</option>
-              {portfolios.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
-            </select>
-          </div>
-          {selectedId && (
-            <div>
-              <label style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', marginBottom: 5, textTransform: 'uppercase' }}>
-                Type "{selectedPortfolio?.name}" to confirm
-              </label>
-              <input type="text" value={confirmName} onChange={(e) => setConfirmName(e.target.value)} placeholder={selectedPortfolio?.name}
-                style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: 13, padding: '8px 10px', outline: 'none', boxSizing: 'border-box' }} />
-            </div>
-          )}
-          {error && <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#f05a7e' }}>{error}</div>}
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button type="submit" disabled={loading || !nameMatches}
-              style={{ flex: 1, padding: '9px 0', background: nameMatches && !loading ? ACCENT : '#3d2f6e', border: 'none', borderRadius: 3, color: nameMatches && !loading ? '#07090e' : '#9b8ec4', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: nameMatches && !loading ? 'pointer' : 'not-allowed' }}>
-              {loading ? '...' : 'OVERRIDE'}
-            </button>
-            <button type="button" onClick={onClose}
-              style={{ flex: 1, padding: '9px 0', background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.12em', cursor: 'pointer' }}>
-              CANCEL
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  );
-}
-
-function SaveNameModal({ onSave, onClose, mode, currentName }) {
-  const [name, setName] = useState(mode === 'update' ? currentName : '');
+// ── Name-a-new-portfolio modal ─────────────────────────────────────────────
+function SaveNameModal({ onSave, onClose }) {
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const inputRef = useRef(null);
@@ -214,29 +36,75 @@ function SaveNameModal({ onSave, onClose, mode, currentName }) {
     if (err) { setError(err); setLoading(false); }
   }
 
-  const isUpdate = mode === 'update';
   return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, background: 'var(--modal-overlay)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-      <div onClick={(e) => e.stopPropagation()} style={{ width: 320, background: 'var(--panel)', border: '1px solid var(--border2)', borderRadius: 6, padding: '20px', boxShadow: '0 24px 64px rgba(0,0,0,0.3)' }}>
-        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: 14 }}>
-          {isUpdate ? `Update Portfolio (currently updating: ${currentName})` : 'Save Portfolio'}
+    <Modal title="Save portfolio" onClose={onClose} width={380}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <input
+          ref={inputRef}
+          className="pv-input"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Portfolio name"
+          maxLength={64}
+        />
+        {error && <div style={{ fontSize: 12.5, color: 'var(--red)' }}>{error}</div>}
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <button type="button" onClick={onClose} className="pv-btn-ghost">Cancel</button>
+          <button type="submit" disabled={loading} className="pv-btn-primary" style={{ padding: '9px 22px', fontSize: 14, opacity: loading ? 0.7 : 1 }}>
+            {loading ? 'Saving…' : 'Save'}
+          </button>
         </div>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <input ref={inputRef} value={name} onChange={(e) => setName(e.target.value)} placeholder="Portfolio name" maxLength={64}
-            style={{ background: 'var(--input-bg)', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: 13, padding: '8px 10px', outline: 'none', width: '100%', boxSizing: 'border-box' }} />
-          {error && <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#f05a7e' }}>{error}</div>}
-          <div style={{ display: 'flex', gap: 8 }}>
-            <button type="submit" disabled={loading}
-              style={{ flex: 1, padding: '9px 0', background: loading ? '#3d2f6e' : ACCENT, border: 'none', borderRadius: 3, color: loading ? '#9b8ec4' : '#07090e', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: loading ? 'not-allowed' : 'pointer' }}>
-              {loading ? '...' : isUpdate ? 'UPDATE' : 'SAVE'}
-            </button>
-            <button type="button" onClick={onClose}
-              style={{ flex: 1, padding: '9px 0', background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.12em', cursor: 'pointer' }}>
-              CANCEL
-            </button>
-          </div>
-        </form>
+      </form>
+    </Modal>
+  );
+}
+
+// ── Position row (build screen) ────────────────────────────────────────────
+function PositionRow({ row, onChange, onRemove, onTickerBlur, isUnknown }) {
+  const set = (field, val) => onChange(row.id, field, val);
+  const isShares = row.inputType === 'shares';
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '108px 1fr auto auto 28px', gap: 8, alignItems: 'center', padding: '10px 0' }}>
+      <input
+        value={row.ticker}
+        maxLength={8}
+        placeholder="Ticker"
+        onChange={(e) => set('ticker', e.target.value.toUpperCase())}
+        onBlur={() => onTickerBlur(row.id)}
+        className="pv-input"
+        style={{ fontWeight: 700, letterSpacing: '0.03em', color: isUnknown ? 'var(--amber)' : 'var(--text)' }}
+      />
+      <div style={{ position: 'relative' }}>
+        <span style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', fontSize: 13.5, color: 'var(--text3)', fontWeight: 600, pointerEvents: 'none' }}>{isShares ? '#' : '$'}</span>
+        <input
+          type="number"
+          min="0"
+          step="any"
+          value={isShares ? row.shares : row.amount}
+          placeholder={isShares ? 'Shares' : 'Amount'}
+          onChange={(e) => set(isShares ? 'shares' : 'amount', e.target.value)}
+          className="pv-input"
+          style={{ width: '100%', paddingLeft: 28, fontVariantNumeric: 'tabular-nums' }}
+        />
       </div>
+      <Seg small value={row.inputType} onChange={(v) => set('inputType', v)}
+        options={[{ value: 'amount', label: '$' }, { value: 'shares', label: '#' }]} />
+      {!isShares ? (
+        <Seg small value={row.currency} onChange={(v) => set('currency', v)}
+          options={[{ value: 'USD', label: 'USD' }, { value: 'CAD', label: 'CAD' }]} />
+      ) : (
+        <span />
+      )}
+      <button
+        type="button"
+        onClick={() => onRemove(row.id)}
+        title="Remove"
+        style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 16, lineHeight: 1, width: 28, height: 28, borderRadius: 999, transition: 'color 0.12s, background 0.12s' }}
+        onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--seg-bg)'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text3)'; e.currentTarget.style.background = 'none'; }}
+      >
+        ✕
+      </button>
     </div>
   );
 }
@@ -247,30 +115,38 @@ export default function PortfolioPanel({
   rowErrors,
   setRowErrors,
   onDecomposeComputed,
-  onAutoDecompose,
   displayCurrency,
-  portfolioTotal,
   nextId,
   defaultInputType,
+  setDefaultInputType,
   user,
   onOpenAuth,
   onLoadPortfolio,
+  onStartTour,
+  onShowLegal,
 }) {
   const [priceFetching, setPriceFetching] = useState(false);
   const [pricesFetchedAt, setPricesFetchedAt] = useState(null);
   const [priceError, setPriceError] = useState('');
   const [priceStatusMsg, setPriceStatusMsg] = useState('');
 
-  const [focusedId, setFocusedId] = useState(null);
   const [sortFrozen, setSortFrozen] = useState(false);
   const frozenOrderRef = useRef(null);
   const freezeTimerRef = useRef(null);
+
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [showHow, setShowHow] = useState(false);
+  const [portfolios, setPortfolios] = useState([]);
+  const [pfError, setPfError] = useState('');
+  const [loadedPortfolioId, setLoadedPortfolioId] = useState(null);
+  const [sortMode, setSortMode] = useState('default');
+  const [dirty, setDirty] = useState(false);
 
   function freezeSort() {
     if (freezeTimerRef.current) clearTimeout(freezeTimerRef.current);
     setSortFrozen(true);
   }
-
   function scheduleUnfreeze() {
     if (freezeTimerRef.current) clearTimeout(freezeTimerRef.current);
     freezeTimerRef.current = setTimeout(() => {
@@ -278,32 +154,20 @@ export default function PortfolioPanel({
       freezeTimerRef.current = null;
     }, 250);
   }
-  const [saveOpen, setSaveOpen] = useState(false);
-  const [saveMode, setSaveMode] = useState('new');
-  const [overrideOpen, setOverrideOpen] = useState(false);
-  const [importOpen, setImportOpen] = useState(false);
-  const [portfolios, setPortfolios] = useState([]);
-  const [pfLoading, setPfLoading] = useState(false);
-  const [pfError, setPfError] = useState('');
-  const [confirmDeleteId, setConfirmDeleteId] = useState(null);
-  const [deleteError, setDeleteError] = useState('');
-  const [loadedPortfolioId, setLoadedPortfolioId] = useState(null);
-  const [sortMode, setSortMode] = useState('default');
 
   useEffect(() => {
     if (user) fetchPortfolios();
-    else setPortfolios([]);
+    else { setPortfolios([]); setLoadedPortfolioId(null); }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   async function fetchPortfolios() {
-    setPfLoading(true);
     setPfError('');
     const { data, error } = await supabase
       .from('portfolios')
       .select('id, name, holdings, created_at')
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-    setPfLoading(false);
     if (error) { setPfError('Failed to load portfolios.'); return; }
     setPortfolios(data || []);
   }
@@ -320,70 +184,71 @@ export default function PortfolioPanel({
       }));
   }
 
-  // Build merged rows (all in amount+currency format) for onAutoDecompose
-  // Only safe to call when no rows are in shares mode
-  function buildMergedAmountRows() {
-    return rows
-      .filter((r) => r.ticker.trim() && r.inputType === 'amount' && r.amount)
-      .map((r) => ({ id: r.id, ticker: r.ticker.trim().toUpperCase(), amount: r.amount, currency: r.currency }));
-  }
+  const currentPortfolio = portfolios.find((p) => p.id === loadedPortfolioId);
 
-  async function handleSave(name) {
+  async function saveNew(name) {
     const holdings = buildHoldingsPayload();
-    if (saveMode === 'update' && loadedPortfolioId) {
-      const { error } = await supabase.from('portfolios').update({ holdings, name }).eq('id', loadedPortfolioId);
-      if (error) return error.message;
-    } else {
-      const { error } = await supabase.from('portfolios').insert({ user_id: user.id, name, holdings });
-      if (error) return error.message;
-    }
-    setSaveOpen(false);
-    setSaveMode('new');
-    fetchPortfolios();
-    const hasSharesRows = rows.some((r) => r.inputType === 'shares');
-    if (!hasSharesRows) onAutoDecompose?.(buildMergedAmountRows());
-    return null;
-  }
-
-  async function handleOverride(portfolioId) {
-    const holdings = buildHoldingsPayload();
-    const { error } = await supabase.from('portfolios').update({ holdings }).eq('id', portfolioId);
+    const { data, error } = await supabase
+      .from('portfolios')
+      .insert({ user_id: user.id, name, holdings })
+      .select('id, name, holdings, created_at')
+      .single();
     if (error) return error.message;
-    setOverrideOpen(false);
+    setSaveOpen(false);
+    setDirty(false);
+    if (data) setLoadedPortfolioId(data.id);
     fetchPortfolios();
-    const hasSharesRows = rows.some((r) => r.inputType === 'shares');
-    if (!hasSharesRows) onAutoDecompose?.(buildMergedAmountRows());
     return null;
+  }
+
+  async function saveUpdate() {
+    if (!loadedPortfolioId) return;
+    const holdings = buildHoldingsPayload();
+    const name = currentPortfolio?.name;
+    const { error } = await supabase.from('portfolios').update({ holdings, name }).eq('id', loadedPortfolioId);
+    if (error) { setPfError(error.message); return; }
+    setDirty(false);
+    fetchPortfolios();
+  }
+
+  function handleSwitcherSave() {
+    if (loadedPortfolioId) saveUpdate();
+    else setSaveOpen(true);
   }
 
   async function handleDelete(id) {
-    setDeleteError('');
     const { error } = await supabase.from('portfolios').delete().eq('id', id);
-    if (error) { setDeleteError('Failed to delete.'); return; }
-    setConfirmDeleteId(null);
+    if (error) { setPfError('Failed to delete.'); return; }
+    if (id === loadedPortfolioId) setLoadedPortfolioId(null);
     setPortfolios((prev) => prev.filter((p) => p.id !== id));
   }
 
   function handleLoad(portfolio) {
     const raw = portfolio.holdings;
-    // Support both old format (array of {ticker,amount,currency}) and new per-row format
     const rawRows = Array.isArray(raw) ? raw : (raw ?? []);
     setLoadedPortfolioId(portfolio.id);
     setPricesFetchedAt(null);
     setPriceError('');
+    setDirty(false);
     onLoadPortfolio(rawRows);
+  }
+
+  function handleNewPortfolio() {
+    setRows([]);
+    setRowErrors({});
+    setLoadedPortfolioId(null);
+    setSortMode('default');
+    setPricesFetchedAt(null);
+    setPriceError('');
+    setDirty(false);
   }
 
   function addRow() {
     setRows((prev) => [...prev, {
-      id: nextId(),
-      ticker: '',
-      inputType: defaultInputType,
-      amount: '',
-      currency: 'USD',
-      shares: '',
+      id: nextId(), ticker: '', inputType: defaultInputType, amount: '', currency: 'USD', shares: '',
     }]);
     setSortMode('default');
+    setDirty(true);
   }
 
   function rowDisplayValue(row) {
@@ -410,18 +275,10 @@ export default function PortfolioPanel({
 
     const sorted = [...rows];
     switch (sortMode) {
-      case 'value-high':
-        sorted.sort((a, b) => rowDisplayValue(b) - rowDisplayValue(a));
-        break;
-      case 'value-low':
-        sorted.sort((a, b) => rowDisplayValue(a) - rowDisplayValue(b));
-        break;
-      case 'ticker-az':
-        sorted.sort((a, b) => a.ticker.localeCompare(b.ticker));
-        break;
-      case 'ticker-za':
-        sorted.sort((a, b) => b.ticker.localeCompare(a.ticker));
-        break;
+      case 'value-high': sorted.sort((a, b) => rowDisplayValue(b) - rowDisplayValue(a)); break;
+      case 'value-low': sorted.sort((a, b) => rowDisplayValue(a) - rowDisplayValue(b)); break;
+      case 'ticker-az': sorted.sort((a, b) => a.ticker.localeCompare(b.ticker)); break;
+      case 'ticker-za': sorted.sort((a, b) => b.ticker.localeCompare(a.ticker)); break;
     }
     frozenOrderRef.current = sorted.map((r) => r.id);
     return sorted;
@@ -430,17 +287,16 @@ export default function PortfolioPanel({
   function removeRow(id) {
     setRows((prev) => prev.filter((r) => r.id !== id));
     setRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
+    setDirty(true);
   }
 
   function handleTickerBlur(id) {
-    setFocusedId(null);
     setRows((prev) => {
       const row = prev.find((r) => r.id === id);
       if (!row || !row.ticker.trim()) return prev;
       const ticker = row.ticker.trim().toUpperCase();
-      // Only merge rows with same ticker AND same inputType
       const allMatching = prev.filter(
-        (r) => r.ticker.trim().toUpperCase() === ticker && r.inputType === row.inputType
+        (r) => r.ticker.trim().toUpperCase() === ticker && r.inputType === row.inputType,
       );
       if (allMatching.length < 2) return prev;
 
@@ -454,9 +310,7 @@ export default function PortfolioPanel({
           .map((r) => r.id === keeper.id ? { ...r, shares: String(parseFloat(total.toFixed(4))) } : r);
       }
 
-      const merged = allMatching.reduce((sum, r) => {
-        return sum + convertAmount(parseFloat(r.amount) || 0, r.currency, keeper.currency);
-      }, 0);
+      const merged = allMatching.reduce((sum, r) => sum + convertAmount(parseFloat(r.amount) || 0, r.currency, keeper.currency), 0);
       return prev
         .filter((r) => !mergedIds.has(r.id) || r.id === keeper.id)
         .map((r) => r.id === keeper.id ? { ...r, amount: String(parseFloat(merged.toFixed(2))) } : r);
@@ -465,6 +319,8 @@ export default function PortfolioPanel({
   }
 
   function updateRow(id, field, value) {
+    setDirty(true);
+    if (field === 'inputType' || field === 'currency') freezeSort();
     setRows((prev) => prev.map((r) => {
       if (r.id !== id) return r;
       const updated = { ...r, [field]: value };
@@ -481,22 +337,9 @@ export default function PortfolioPanel({
     }
   }
 
-  function updateRowInputType(id, newType) {
-    setRows((prev) => prev.map((r) => r.id === id ? { ...r, inputType: newType } : r));
-    if (rowErrors[id]) {
-      setRowErrors((prev) => { const next = { ...prev }; delete next[id]; return next; });
-    }
-  }
-
   // Validates rows, fetches live prices for share rows, converts them to
   // amount+CAD, and commits via onDecomposeComputed.
-  //   targetRows: operate on this array directly (lets the import path decompose
-  //     freshly-built rows without waiting on async setRows state).
-  //   lenient: when a share row can't be priced, drop it from the result and
-  //     flag it instead of aborting the whole decompose (used for CSV import,
-  //     where an export may contain tickers our proxy can't price).
   async function runDecompose(targetRows = rows, { lenient = false } = {}) {
-    // 1. Validate all rows
     const errors = {};
     for (const row of targetRows) {
       const ticker = row.ticker.trim();
@@ -512,7 +355,6 @@ export default function PortfolioPanel({
     }
     if (Object.keys(errors).length > 0) { setRowErrors(errors); return; }
 
-    // 2. Fetch prices for # rows
     const shareRows = targetRows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
     let prices = {};
     if (shareRows.length > 0) {
@@ -530,18 +372,13 @@ export default function PortfolioPanel({
       setPriceFetching(false);
     }
 
-    // 3. Check for unavailable prices
     const priceErrors = {};
     for (const row of shareRows) {
       const t = row.ticker.trim().toUpperCase();
       if (prices[t] == null) priceErrors[row.id] = 'Price unavailable';
     }
-    // Strict path: any missing price aborts so the user can fix the ticker.
-    // Lenient path: keep going, excluding the unpriceable rows below.
     if (Object.keys(priceErrors).length > 0 && !lenient) { setRowErrors(priceErrors); return; }
 
-    // 4. Build merged rows: $ rows pass through, # rows become amount+CAD.
-    //    In lenient mode, drop share rows that couldn't be priced.
     const mergedRows = targetRows
       .filter((row) => !(lenient && row.inputType === 'shares' && prices[row.ticker.trim().toUpperCase()] == null))
       .map((row) => {
@@ -558,12 +395,10 @@ export default function PortfolioPanel({
       const oldest = getOldestFetchedAt(tickers);
       setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
     }
-    // Lenient: surface the unpriceable rows as row errors but still render the rest.
     setRowErrors(lenient ? priceErrors : {});
     onDecomposeComputed(mergedRows);
   }
 
-  // Replace all rows with parsed CSV holdings, then auto-decompose (lenient).
   async function handleImport(holdings, summary) {
     const newRows = holdings.map((h) => ({
       id: nextId(),
@@ -580,6 +415,7 @@ export default function PortfolioPanel({
     setPricesFetchedAt(null);
     setPriceError('');
     setImportOpen(false);
+    setDirty(true);
 
     const parts = [`Imported ${summary.imported} holding${summary.imported === 1 ? '' : 's'}`];
     if (summary.cadHedged) parts.push(`${summary.cadHedged} CAD-hedged as $ value`);
@@ -595,7 +431,6 @@ export default function PortfolioPanel({
     if (row.inputType === 'amount') {
       return sum + convertAmount(parseFloat(row.amount) || 0, row.currency, displayCurrency);
     }
-    // Shares row: use cached price if available
     const shares = parseFloat(row.shares) || 0;
     if (!shares || !row.ticker.trim()) return sum;
     const priceCAD = getCachedPrice(row.ticker.trim().toUpperCase());
@@ -608,368 +443,128 @@ export default function PortfolioPanel({
     return getCachedPrice(r.ticker.trim().toUpperCase()) != null;
   });
 
-  const totalLabel = !hasSharesRows
-    ? 'TOTAL INVESTED'
-    : hasSharesWithCachedPrice
-    ? 'TOTAL (EST.)'
-    : 'TOTAL ($ ROWS)';
+  const totalLabel = !hasSharesRows ? 'Total invested' : hasSharesWithCachedPrice ? 'Total (est.)' : 'Total ($ rows)';
+  const totalMuted = hasSharesRows && !hasSharesWithCachedPrice;
 
-  const inputBase = {
-    background: 'var(--input-bg)',
-    border: '1px solid var(--border)',
-    borderRadius: 3,
-    color: 'var(--text)',
-    padding: '5px 8px',
-    width: '100%',
-    transition: 'border-color 0.12s',
-    fontFamily: 'var(--mono)',
-  };
-
-  const currentPortfolio = portfolios.find((p) => p.id === loadedPortfolioId);
   const fetchedTimeLabel = pricesFetchedAt
     ? pricesFetchedAt.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })
     : null;
 
-  // Grid: ticker | value | $/# toggle | USD/CAD toggle | delete
-  const GRID = '90px 1fr 46px 64px 24px';
+  const sortedRows = getSortedRows();
 
   return (
-    <>
-      {saveOpen && (
-        <SaveNameModal
-          onSave={handleSave}
-          onClose={() => setSaveOpen(false)}
-          mode={saveMode}
-          currentName={currentPortfolio?.name || ''}
-        />
-      )}
-      {overrideOpen && (
-        <OverrideModal
-          portfolios={portfolios}
-          onOverride={handleOverride}
-          onClose={() => setOverrideOpen(false)}
-          loading={false}
-        />
-      )}
-      {importOpen && (
-        <ImportCsvModal
-          onClose={() => setImportOpen(false)}
-          onImport={handleImport}
-        />
-      )}
-      <div
-        className="portfolio-panel"
-        style={{
-          width: 420,
-          minWidth: 420,
-          background: 'var(--panel)',
-          borderRight: '1px solid var(--border)',
-          display: 'flex',
-          flexDirection: 'column',
-          flexShrink: 0,
-        }}
-      >
-        {/* Panel header */}
-        <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-              Portfolio
-            </span>
-            <button
-              type="button"
-              onClick={() => setImportOpen(true)}
-              title="Import holdings from a broker CSV"
-              style={{ background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 9, fontWeight: 600, letterSpacing: '0.08em', cursor: 'pointer', padding: '3px 7px', transition: 'border-color 0.15s, color 0.15s', flexShrink: 0 }}
-              onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--text3)'; }}
-            >
-              ⬆ IMPORT CSV
-            </button>
+    <div className="pv-screen" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px 64px' }}>
+      {saveOpen && <SaveNameModal onSave={saveNew} onClose={() => setSaveOpen(false)} />}
+      {importOpen && <ImportCsvModal onClose={() => setImportOpen(false)} onImport={handleImport} />}
+      {showHow && <HowItWorksModal onClose={() => setShowHow(false)} />}
+
+      {/* Hero */}
+      <div style={{ textAlign: 'center', marginBottom: 36, maxWidth: 520 }}>
+        <h1 className="pv-hero-title" style={{ fontSize: 36, fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 1.15, marginBottom: 10 }}>
+          See everything.<br />Invest better.
+        </h1>
+        <p style={{ fontSize: 15, color: 'var(--text2)', marginBottom: 10 }}>
+          Add your positions and we'll show you what you really own.
+        </p>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12 }}>
+          <button className="pv-link-btn" style={{ color: 'var(--accent)' }} onClick={() => setShowHow(true)}>How does this work?</button>
+          <span style={{ color: 'var(--border2)' }}>·</span>
+          <button className="pv-btn-ghost" style={{ padding: '7px 16px' }} onClick={onStartTour}>Take the tour</button>
+        </div>
+      </div>
+
+      {/* Portfolio card */}
+      <div className="pv-card" style={{ width: '100%', maxWidth: 620, background: 'var(--card)', borderRadius: 24, border: '1px solid var(--border)', overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px 14px', gap: 12, flexWrap: 'wrap' }}>
+          <div data-tour="switcher" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <PortfolioSwitcher
+              portfolios={portfolios}
+              activeId={loadedPortfolioId}
+              activeName={currentPortfolio?.name}
+              dirty={dirty}
+              signedIn={!!user}
+              onOpenAuth={onOpenAuth}
+              onSelect={handleLoad}
+              onSave={handleSwitcherSave}
+              onSaveAsNew={() => setSaveOpen(true)}
+              onNew={handleNewPortfolio}
+              onDelete={handleDelete}
+            />
+            <span style={{ fontSize: 13, color: 'var(--text3)' }}>{rows.length} {rows.length === 1 ? 'position' : 'positions'}</span>
           </div>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', flexShrink: 0 }}>
-            {rows.length} POSITION{rows.length !== 1 ? 'S' : ''}
-          </span>
-        </div>
-
-        {/* Loaded portfolio banner */}
-        {loadedPortfolioId && currentPortfolio && (
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 16px', background: 'rgba(167,139,250,0.12)', borderBottom: '1px solid rgba(167,139,250,0.3)', gap: 8 }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 13, fontWeight: 600, color: ACCENT, letterSpacing: '0.06em', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', minWidth: 0 }} title={currentPortfolio.name}>
-              EDITING: {currentPortfolio.name}
-            </span>
-            <button type="button" title="Stop editing this portfolio" onClick={() => setLoadedPortfolioId(null)}
-              style={{ background: 'rgba(240,90,126,0.1)', border: '1px solid rgba(240,90,126,0.4)', borderRadius: 3, color: '#f05a7e', cursor: 'pointer', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', lineHeight: 1, padding: '5px 9px', flexShrink: 0, transition: 'background 0.12s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.22)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.1)')}>
-              ✕ EXIT
-            </button>
+          <div data-tour="toolbar" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <select className="pv-select" value={sortMode} onChange={(e) => setSortMode(e.target.value)}>
+              <option value="default">Order entered</option>
+              <option value="value-high">Value: high → low</option>
+              <option value="value-low">Value: low → high</option>
+              <option value="ticker-az">Ticker: A → Z</option>
+              <option value="ticker-za">Ticker: Z → A</option>
+            </select>
+            <span style={{ color: 'var(--border2)' }}>·</span>
+            <button className="pv-link-btn" onClick={() => setImportOpen(true)}>Import CSV</button>
           </div>
-        )}
-
-        {/* Sort control */}
-        <div style={{ padding: '8px 16px', borderBottom: '1px solid var(--card)' }}>
-          <label style={{ display: 'block', fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 5 }}>
-            Sort By
-          </label>
-          <select value={sortMode} onChange={(e) => setSortMode(e.target.value)}
-            style={{ width: '100%', background: 'var(--input-bg)', border: '1px solid var(--border)', borderRadius: 3, color: 'var(--text)', fontFamily: 'var(--mono)', fontSize: 11, padding: '6px 8px', outline: 'none', cursor: 'pointer', transition: 'border-color 0.12s' }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = ACCENT)}
-            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}>
-            <option value="default">Default (order entered)</option>
-            <option value="value-high">Value: High to Low</option>
-            <option value="value-low">Value: Low to High</option>
-            <option value="ticker-az">Ticker: A to Z</option>
-            <option value="ticker-za">Ticker: Z to A</option>
-          </select>
         </div>
 
-        {/* Column headers */}
-        <div className="portfolio-row-grid" style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, padding: '7px 16px 5px', borderBottom: '1px solid var(--card)', alignItems: 'end' }}>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.08em' }}>TICKER</span>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.08em', textAlign: 'right' }}>VALUE: AMOUNT/SHARES</span>
-          <span />
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.08em' }}>CCY</span>
-          <span />
-        </div>
-
-        {/* Scrollable rows */}
-        <div className="portfolio-panel-rows" style={{ flex: 1, overflowY: 'auto', padding: '3px 16px', minHeight: 0 }}>
-          {getSortedRows().map((row) => {
-            const type = autoType(row.ticker);
+        <div style={{ padding: '0 24px' }} data-tour="rows">
+          {sortedRows.map((row) => {
             const hasError = !!rowErrors[row.id];
-            const isUnknown = type === 'Unknown' && !!row.ticker;
-            const showTypeBadge = !!row.ticker && type !== 'Unknown';
-            const isShares = row.inputType === 'shares';
-
+            const isUnknown = autoType(row.ticker) === 'Unknown' && !!row.ticker;
             return (
               <div
                 key={row.id}
                 onFocus={() => freezeSort()}
-                onBlur={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget)) scheduleUnfreeze();
-                }}
-                style={{
-                  borderBottom: '1px solid ' + (isUnknown ? 'rgba(244,185,66,0.2)' : 'var(--border-sub)'),
-                  background: isUnknown ? 'rgba(244,185,66,0.04)' : 'transparent',
-                  paddingBottom: 2,
-                  marginLeft: -16, marginRight: -16,
-                  paddingLeft: 16, paddingRight: 16,
-                }}
+                onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) scheduleUnfreeze(); }}
+                style={{ borderTop: '1px solid var(--border)' }}
               >
-                <div className="portfolio-row-grid" style={{ display: 'grid', gridTemplateColumns: GRID, gap: 6, alignItems: 'center', paddingTop: 5, paddingBottom: hasError ? 2 : 5 }}>
-
-                  {/* Ticker */}
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      value={row.ticker}
-                      maxLength={8}
-                      placeholder="TICKER"
-                      onChange={(e) => updateRow(row.id, 'ticker', e.target.value.toUpperCase())}
-                      onFocus={() => setFocusedId(`${row.id}-t`)}
-                      onBlur={() => handleTickerBlur(row.id)}
-                      style={{
-                        ...inputBase,
-                        fontSize: 13,
-                        fontWeight: 500,
-                        letterSpacing: '0.1em',
-                        borderColor: hasError ? '#f05a7e' : focusedId === `${row.id}-t` ? ACCENT : 'var(--border)',
-                        color: isUnknown ? '#f4b942' : 'var(--text)',
-                      }}
-                    />
-                  </div>
-
-                  {/* Amount or Shares */}
-                  <div style={{ position: 'relative' }}>
-                    {showTypeBadge && (
-                      <span style={{ position: 'absolute', left: 6, top: '50%', transform: 'translateY(-50%)', fontFamily: 'var(--mono)', fontSize: 7.5, fontWeight: 600, color: type === 'ETF' ? ACCENT : 'var(--text3)', letterSpacing: '0.06em', pointerEvents: 'none', lineHeight: 1 }}>
-                        {type === 'ETF' ? 'ETF' : 'STK'}
-                      </span>
-                    )}
-                    <input
-                      type="number"
-                      className="portfolio-value-input"
-                      value={isShares ? row.shares : row.amount}
-                      placeholder="0"
-                      min="0"
-                      step="any"
-                      onChange={(e) => updateRow(row.id, isShares ? 'shares' : 'amount', e.target.value)}
-                      onFocus={() => setFocusedId(`${row.id}-v`)}
-                      onBlur={() => setFocusedId(null)}
-                      style={{
-                        ...inputBase,
-                        fontSize: 13,
-                        textAlign: 'right',
-                        paddingLeft: showTypeBadge ? 30 : 8,
-                        paddingRight: 6,
-                        borderColor:
-                          hasError && !rowErrors[row.id]?.includes('Ticker')
-                            ? '#f05a7e'
-                            : focusedId === `${row.id}-v`
-                            ? ACCENT
-                            : 'var(--border)',
-                      }}
-                    />
-                  </div>
-
-                  {/* Input type toggle */}
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <InputTypeToggle
-                      value={row.inputType}
-                      onChange={(t) => { freezeSort(); updateRowInputType(row.id, t); }}
-                    />
-                  </div>
-
-                  {/* Currency toggle (hidden for # rows) */}
-                  <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {!isShares && (
-                      <CurrencyToggle value={row.currency} onChange={(cur) => { freezeSort(); updateRow(row.id, 'currency', cur); }} />
-                    )}
-                  </div>
-
-                  {/* Remove */}
-                  <button type="button" onClick={() => removeRow(row.id)}
-                    style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 16, lineHeight: 1, padding: 2, borderRadius: 2, transition: 'color 0.12s', textAlign: 'center' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = '#f05a7e')}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
-                    title="Remove">
-                    ×
-                  </button>
-                </div>
-
+                <PositionRow
+                  row={row}
+                  onChange={updateRow}
+                  onRemove={removeRow}
+                  onTickerBlur={handleTickerBlur}
+                  isUnknown={isUnknown}
+                />
                 {hasError && (
-                  <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#f05a7e', paddingBottom: 4, paddingLeft: 2 }}>
-                    {rowErrors[row.id]}
-                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--red)', padding: '0 0 8px 2px' }}>{rowErrors[row.id]}</div>
                 )}
               </div>
             );
           })}
-
-          {/* Add position */}
-          <button type="button" onClick={addRow}
-            style={{ width: '100%', marginTop: 10, padding: '7px 0', background: 'none', border: '1px dashed var(--border2)', borderRadius: 3, cursor: 'pointer', color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.12em', transition: 'all 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-            onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-            onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--text3)'; }}>
-            + ADD POSITION
-          </button>
-
-          {/* Clear */}
-          {rows.length > 0 && (
-            <button type="button"
-              onClick={() => { setRows([]); setRowErrors({}); setSortMode('default'); setLoadedPortfolioId(null); setPricesFetchedAt(null); setPriceError(''); }}
-              style={{ width: '100%', marginTop: 6, padding: '7px 0', background: 'none', border: '1px solid transparent', borderRadius: 3, cursor: 'pointer', color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 10, letterSpacing: '0.12em', transition: 'color 0.15s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = '#f05a7e')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}>
-              CLEAR ALL
-            </button>
-          )}
-        </div>
-
-        {/* My Portfolios section */}
-        {!user ? (
-          <div style={{ borderTop: '1px solid var(--border)', flexShrink: 0, padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <span onClick={onOpenAuth}
-              style={{ fontFamily: 'var(--mono)', fontSize: 14, color: 'var(--text3)', letterSpacing: '0.06em', cursor: 'pointer', textDecoration: 'underline', textDecorationColor: 'var(--border2)', textUnderlineOffset: 3, transition: 'color 0.15s' }}
-              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--accent)')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}>
-              Sign in to save portfolios
-            </span>
-          </div>
-        ) : (
-          <div style={{ borderTop: '1px solid var(--border)', flexShrink: 0, maxHeight: 180, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-            <div style={{ padding: '8px 16px 6px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexShrink: 0 }}>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>My Portfolios</span>
-              {pfError && <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: '#f05a7e' }}>{pfError}</span>}
-            </div>
-            {pfLoading ? (
-              <div style={{ padding: '4px 16px 12px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>Loading…</div>
-            ) : portfolios.length === 0 ? (
-              <div style={{ padding: '4px 16px 12px', fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>No saved portfolios yet</div>
-            ) : (
-              <div style={{ overflowY: 'auto', flex: 1, padding: '0 16px 8px' }}>
-                {deleteError && <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#f05a7e', marginBottom: 4 }}>{deleteError}</div>}
-                {portfolios.map((pf) => (
-                  <div key={pf.id} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '4px 0', borderBottom: '1px solid var(--border-sub)' }}>
-                    <span style={{ flex: 1, fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={pf.name}>
-                      {pf.name}
-                    </span>
-                    {confirmDeleteId === pf.id ? (
-                      <>
-                        <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', whiteSpace: 'nowrap' }}>Sure?</span>
-                        <button type="button" onClick={() => handleDelete(pf.id)} style={smallBtnStyle('#f05a7e')}>Yes</button>
-                        <button type="button" onClick={() => { setConfirmDeleteId(null); setDeleteError(''); }} style={smallBtnStyle('var(--text3)')}>No</button>
-                      </>
-                    ) : (
-                      <>
-                        <button type="button" onClick={() => handleLoad(pf)} style={smallBtnStyle(ACCENT)}>Load</button>
-                        <button type="button" onClick={() => { setConfirmDeleteId(pf.id); setDeleteError(''); }} style={smallBtnStyle('var(--text3)')}>×</button>
-                      </>
-                    )}
-                  </div>
-                ))}
-              </div>
+          <div style={{ borderTop: '1px solid var(--border)', padding: '12px 0 16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <button className="pv-link-btn" data-tour="add" style={{ color: 'var(--accent)', paddingLeft: 0 }} onClick={addRow}>+ Add position</button>
+            {rows.length > 0 && (
+              <button className="pv-link-btn" onClick={() => { setRows([]); setRowErrors({}); setSortMode('default'); setDirty(true); }}>Clear all</button>
             )}
           </div>
-        )}
+        </div>
 
         {/* Footer */}
-        <div style={{ padding: '14px 16px', borderTop: '1px solid var(--border)', background: 'var(--footer-bg)', flexShrink: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 10 }}>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text2)', letterSpacing: '0.1em' }}>
-              {totalLabel}
-            </span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 22, fontWeight: 600, color: hasSharesRows && !hasSharesWithCachedPrice ? 'var(--text3)' : 'var(--text)' }}>
-              {fmtMoney(liveTotal)}{' '}
-              <span style={{ fontSize: 12, color: 'var(--text3)' }}>{displayCurrency}</span>
+        <div style={{ background: 'var(--card2)', padding: '18px 24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+            <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>{totalLabel}</span>
+            <span style={{ fontSize: 24, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: totalMuted ? 'var(--text3)' : 'var(--text)' }}>
+              {fmtMoney(liveTotal)} <span style={{ fontSize: 13, color: 'var(--text3)', fontWeight: 600 }}>{displayCurrency}</span>
             </span>
           </div>
-
-          {user && (
-            <div style={{ display: 'flex', gap: 6, marginBottom: 8 }}>
-              <button type="button" onClick={() => { setSaveMode('new'); setSaveOpen(true); }}
-                style={{ flex: 1, padding: '8px 0', background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text2)', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--text2)'; }}>
-                + SAVE AS NEW
-              </button>
-              {!loadedPortfolioId && portfolios.length > 0 ? (
-                <button type="button" onClick={() => setOverrideOpen(true)}
-                  style={{ flex: 1, padding: '8px 0', background: 'none', border: '1px solid var(--border2)', borderRadius: 3, color: 'var(--text2)', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: 'pointer', transition: 'border-color 0.15s, color 0.15s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = ACCENT; e.currentTarget.style.color = ACCENT; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border2)'; e.currentTarget.style.color = 'var(--text2)'; }}>
-                  OVERRIDE
-                </button>
-              ) : loadedPortfolioId ? (
-                <button type="button" onClick={() => { setSaveMode('update'); setSaveOpen(true); }}
-                  style={{ flex: 1, padding: '8px 0', background: ACCENT, border: 'none', borderRadius: 3, color: '#07090e', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.12em', cursor: 'pointer', transition: 'opacity 0.15s' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.88')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}>
-                  ⬆ UPDATE
-                </button>
-              ) : null}
-            </div>
-          )}
-
-          <button type="button" disabled={priceFetching} onClick={() => runDecompose(rows)}
-            style={{ width: '100%', padding: '11px 0', background: priceFetching ? '#3d2f6e' : ACCENT, border: 'none', borderRadius: 3, color: priceFetching ? '#9b8ec4' : '#07090e', fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.14em', cursor: priceFetching ? 'not-allowed' : 'pointer', transition: 'opacity 0.15s, background 0.15s' }}
-            onMouseEnter={(e) => { if (!priceFetching) e.currentTarget.style.opacity = '0.88'; }}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}>
-            {priceFetching ? 'FETCHING PRICES…' : '▶  DECOMPOSE PORTFOLIO'}
+          <button
+            className="pv-btn-primary"
+            data-tour="decompose"
+            onClick={() => runDecompose(rows)}
+            disabled={priceFetching}
+            style={{ width: '100%', opacity: priceFetching ? 0.7 : 1 }}
+          >
+            {priceFetching ? 'Fetching prices…' : 'Decompose portfolio'}
           </button>
 
-          {/* Prices as of / Refresh — only shown after a shares fetch */}
           {fetchedTimeLabel && (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 7 }}>
-              <span style={{ display: 'flex', alignItems: 'center', fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.05em' }}>
-                Prices as of {fetchedTimeLabel}
-                <InfoTooltip text="Stock prices are fetched once per day per ticker to minimise API usage. New holdings are fetched immediately. Click Refresh to fetch any tickers not yet updated today." />
-              </span>
-              <button type="button" disabled={priceFetching}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+              <span style={{ fontSize: 12, color: 'var(--text3)' }}>Prices as of {fetchedTimeLabel}</span>
+              <button
+                type="button"
+                disabled={priceFetching}
                 onClick={async () => {
                   const shareRows = rows.filter((r) => r.inputType === 'shares' && r.ticker.trim());
                   if (shareRows.length === 0) return;
                   const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
-
                   setPriceFetching(true);
                   setPriceError('');
                   setPriceStatusMsg('');
@@ -996,42 +591,44 @@ export default function PortfolioPanel({
                     setPriceFetching(false);
                   }
                 }}
-                style={{ background: 'none', border: 'none', color: priceFetching ? 'var(--text3)' : ACCENT, fontFamily: 'var(--mono)', fontSize: 10, cursor: priceFetching ? 'not-allowed' : 'pointer', padding: 0, letterSpacing: '0.06em' }}>
+                className="pv-link-btn"
+                style={{ color: priceFetching ? 'var(--text3)' : 'var(--accent)', padding: 0 }}
+              >
                 ↻ Refresh
               </button>
             </div>
           )}
 
           {priceStatusMsg && (
-            <div style={{ marginTop: 6, fontFamily: 'var(--mono)', fontSize: 10, color: '#6ee7b7', background: 'rgba(110,231,183,0.06)', border: '1px solid rgba(110,231,183,0.2)', borderRadius: 3, padding: '6px 8px' }}>
+            <div style={{ fontSize: 12, color: 'var(--green)', background: 'rgba(47,208,140,0.08)', border: '1px solid rgba(47,208,140,0.25)', borderRadius: 12, padding: '8px 12px' }}>
               {priceStatusMsg}
             </div>
           )}
-
           {priceError && (
-            <div style={{ marginTop: 6, fontFamily: 'var(--mono)', fontSize: 10, color: '#f05a7e', background: 'rgba(240,90,126,0.07)', border: '1px solid rgba(240,90,126,0.2)', borderRadius: 3, padding: '6px 8px' }}>
+            <div style={{ fontSize: 12, color: 'var(--red)', background: 'rgba(240,90,126,0.08)', border: '1px solid rgba(240,90,126,0.25)', borderRadius: 12, padding: '8px 12px' }}>
               {priceError}
             </div>
           )}
-
-          <div style={{ marginTop: 8, fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', textAlign: 'center', lineHeight: 1.6 }}>
-            DATA COVERAGE: ETF HOLDINGS · MAY 2026
-          </div>
+          {pfError && (
+            <div style={{ fontSize: 12, color: 'var(--red)' }}>{pfError}</div>
+          )}
         </div>
       </div>
-    </>
-  );
-}
 
-function smallBtnStyle(color) {
-  return {
-    background: 'none',
-    border: 'none',
-    color,
-    fontFamily: 'var(--mono)',
-    fontSize: 10,
-    cursor: 'pointer',
-    padding: '2px 4px',
-    flexShrink: 0,
-  };
+      {/* Default input type */}
+      <div style={{ width: '100%', maxWidth: 620, display: 'flex', justifyContent: 'flex-end', alignItems: 'center', marginTop: 18, padding: '0 4px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span style={{ fontSize: 12.5, color: 'var(--text3)', fontWeight: 600 }}>Default input</span>
+          <Seg small value={defaultInputType} onChange={setDefaultInputType}
+            options={[{ value: 'amount', label: '$ Amount' }, { value: 'shares', label: '# Shares' }]} />
+        </div>
+      </div>
+
+      <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 28, textAlign: 'center' }}>
+        Data coverage: ETF holdings · May 2026 ·{' '}
+        <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('privacy'); }}>Privacy</a> ·{' '}
+        <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('terms'); }}>Terms</a>
+      </p>
+    </div>
+  );
 }

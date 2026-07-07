@@ -5,82 +5,53 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
+import Seg from '../components/Seg';
 
-const ACCENT = '#a78bfa';
-const RED = '#f05a7e';
-
-const sectionStyle = {
+const card = {
   background: 'var(--card)',
   border: '1px solid var(--border)',
-  borderRadius: 6,
+  borderRadius: 18,
   overflow: 'hidden',
-  marginBottom: 16,
+  marginBottom: 18,
 };
 
-const sectionHeaderStyle = {
-  padding: '12px 20px',
+const cardHeader = {
+  padding: '14px 22px',
   borderBottom: '1px solid var(--border)',
-  fontFamily: 'var(--mono)',
-  fontSize: 10,
-  fontWeight: 600,
-  letterSpacing: '0.14em',
+  fontSize: 11,
+  fontWeight: 700,
+  letterSpacing: '0.06em',
   color: 'var(--text3)',
   textTransform: 'uppercase',
 };
 
-const sectionBodyStyle = {
-  padding: '18px 20px',
+const cardBody = {
+  padding: '20px 22px',
   display: 'flex',
   flexDirection: 'column',
-  gap: 14,
+  gap: 16,
 };
 
-const labelStyle = {
-  fontFamily: 'var(--mono)',
-  fontSize: 9,
+const label = {
+  fontSize: 11,
+  fontWeight: 700,
   color: 'var(--text3)',
-  letterSpacing: '0.1em',
+  letterSpacing: '0.06em',
   textTransform: 'uppercase',
-  marginBottom: 5,
+  marginBottom: 6,
   display: 'block',
-};
-
-const inputStyle = {
-  width: '100%',
-  background: 'var(--input-bg)',
-  border: '1px solid var(--border2)',
-  borderRadius: 3,
-  color: 'var(--text)',
-  fontFamily: 'var(--mono)',
-  fontSize: 12,
-  padding: '9px 12px',
-  outline: 'none',
-  boxSizing: 'border-box',
-};
-
-const btnStyle = {
-  padding: '8px 16px',
-  borderRadius: 3,
-  border: 'none',
-  fontFamily: 'var(--mono)',
-  fontSize: 10,
-  fontWeight: 600,
-  letterSpacing: '0.12em',
-  cursor: 'pointer',
-  transition: 'opacity 0.15s',
 };
 
 function Msg({ text, isError }) {
   if (!text) return null;
   return (
     <div style={{
-      fontFamily: 'var(--mono)',
-      fontSize: 11,
-      color: isError ? RED : '#22d3a0',
-      background: isError ? 'rgba(240,90,126,0.07)' : 'rgba(34,211,160,0.07)',
-      border: `1px solid ${isError ? 'rgba(240,90,126,0.2)' : 'rgba(34,211,160,0.2)'}`,
-      borderRadius: 3,
-      padding: '7px 10px',
+      fontSize: 12.5,
+      color: isError ? 'var(--red)' : 'var(--green)',
+      background: isError ? 'rgba(240,90,126,0.08)' : 'rgba(47,208,140,0.08)',
+      border: `1px solid ${isError ? 'rgba(240,90,126,0.25)' : 'rgba(47,208,140,0.25)'}`,
+      borderRadius: 12,
+      padding: '8px 12px',
     }}>
       {text}
     </div>
@@ -108,31 +79,13 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
       .then(({ data }) => setPortfolios(data || []));
   }, [user]);
 
-  // Sync local currency if prop changes (e.g. user logs in with metadata)
-  useEffect(() => {
-    setLocalCurrency(displayCurrency);
-  }, [displayCurrency]);
+  useEffect(() => { setLocalCurrency(displayCurrency); }, [displayCurrency]);
 
   if (!user) {
     return (
-      <div style={{
-        flex: 1,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: 16,
-        background: 'var(--bg)',
-      }}>
-        <span style={{ fontFamily: 'var(--mono)', fontSize: 13, color: 'var(--text3)' }}>
-          You need to be signed in to view settings.
-        </span>
-        <button
-          onClick={() => navigate('/')}
-          style={{ ...btnStyle, background: ACCENT, color: '#07090e' }}
-        >
-          GO BACK
-        </button>
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 16, padding: 24 }}>
+        <span style={{ fontSize: 14, color: 'var(--text3)' }}>You need to be signed in to view settings.</span>
+        <button onClick={() => navigate('/')} className="pv-btn-primary" style={{ padding: '10px 22px', fontSize: 14 }}>Go back</button>
       </div>
     );
   }
@@ -142,13 +95,8 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
     const { error } = await supabase.auth.resetPasswordForEmail(user.email, {
       redirectTo: window.location.origin + '/settings',
     });
-    if (error) {
-      setPwMsg(error.message);
-      setPwErr(true);
-    } else {
-      setPwMsg('Password reset email sent — check your inbox.');
-      setPwErr(false);
-    }
+    if (error) { setPwMsg(error.message); setPwErr(true); }
+    else { setPwMsg('Password reset email sent — check your inbox.'); setPwErr(false); }
   }
 
   async function handleSaveCurrency() {
@@ -164,13 +112,8 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
     if (deleteInput !== 'DELETE') return;
     setDeleting(true);
     const { error } = await supabase.rpc('delete_user');
-    if (error) {
-      setDeleteError(error.message);
-      setDeleting(false);
-    } else {
-      await supabase.auth.signOut();
-      navigate('/');
-    }
+    if (error) { setDeleteError(error.message); setDeleting(false); }
+    else { await supabase.auth.signOut(); navigate('/'); }
   }
 
   const portfolioJson = JSON.stringify(
@@ -180,253 +123,94 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
   );
 
   return (
-    <div style={{
-      flex: 1,
-      display: 'flex',
-      flexDirection: 'column',
-      background: 'var(--bg)',
-      overflow: 'hidden',
-    }}>
-      {/* Top bar */}
-      <div style={{
-        height: 56,
-        minHeight: 56,
-        background: 'var(--panel)',
-        borderBottom: '1px solid var(--border)',
-        display: 'flex',
-        alignItems: 'center',
-        padding: '0 20px',
-        gap: 14,
-        flexShrink: 0,
-      }}>
-        <button
-          type="button"
-          onClick={() => navigate('/')}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--text3)',
-            cursor: 'pointer',
-            fontFamily: 'var(--mono)',
-            fontSize: 16,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '4px 6px',
-            borderRadius: 3,
-            transition: 'color 0.12s',
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
-          onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
-        >
-          ←
-        </button>
-        <span style={{
-          fontFamily: 'var(--mono)',
-          fontSize: 11,
-          fontWeight: 600,
-          letterSpacing: '0.14em',
-          color: 'var(--text2)',
-          textTransform: 'uppercase',
-        }}>
-          Settings
-        </span>
-      </div>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <header style={{ height: 68, display: 'flex', alignItems: 'center', padding: '0 28px', gap: 14, flexShrink: 0 }}>
+        <button type="button" onClick={() => navigate('/')} className="pv-btn-ghost" style={{ padding: '7px 16px' }}>← Back</button>
+        <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Settings</span>
+      </header>
 
-      {/* Scrollable content */}
-      <div style={{
-        flex: 1,
-        overflowY: 'auto',
-        padding: '28px 0',
-        display: 'flex',
-        justifyContent: 'center',
-      }}>
-        <div style={{ width: '100%', maxWidth: 560, padding: '0 24px' }}>
+      <div className="pv-screen" style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 24px 64px' }}>
+        <div style={{ width: '100%', maxWidth: 560 }}>
 
           {/* Account */}
-          <div style={sectionStyle}>
-            <div style={sectionHeaderStyle}>Account</div>
-            <div style={sectionBodyStyle}>
+          <div style={card}>
+            <div style={cardHeader}>Account</div>
+            <div style={cardBody}>
               <div>
-                <span style={labelStyle}>Email</span>
-                <input
-                  type="text"
-                  readOnly
-                  value={user.email}
-                  style={{ ...inputStyle, color: 'var(--text2)', cursor: 'default' }}
-                />
+                <span style={label}>Email</span>
+                <input type="text" readOnly value={user.email} className="pv-input" style={{ color: 'var(--text2)', cursor: 'default' }} />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  onClick={handleChangePassword}
-                  style={{ ...btnStyle, background: 'var(--border2)', color: 'var(--text)' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.8')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  CHANGE PASSWORD
-                </button>
+                <button type="button" onClick={handleChangePassword} className="pv-btn-ghost">Change password</button>
                 {pwMsg && <Msg text={pwMsg} isError={pwErr} />}
               </div>
             </div>
           </div>
 
           {/* Display */}
-          <div style={sectionStyle}>
-            <div style={sectionHeaderStyle}>Display</div>
-            <div style={sectionBodyStyle}>
+          <div style={card}>
+            <div style={cardHeader}>Display</div>
+            <div style={cardBody}>
               <div>
-                <span style={labelStyle}>Default Currency</span>
-                <div style={{
-                  display: 'flex',
-                  gap: 3,
-                  background: 'var(--input-bg)',
-                  borderRadius: 4,
-                  padding: 3,
-                  border: '1px solid var(--border2)',
-                  width: 'fit-content',
-                }}>
-                  {['USD', 'CAD'].map((cur) => (
-                    <button
-                      key={cur}
-                      onClick={() => setLocalCurrency(cur)}
-                      style={{
-                        padding: '5px 14px',
-                        background: localCurrency === cur ? ACCENT : 'transparent',
-                        border: 'none',
-                        borderRadius: 2,
-                        cursor: 'pointer',
-                        fontFamily: 'var(--mono)',
-                        fontWeight: 600,
-                        color: localCurrency === cur ? '#07090e' : 'var(--text3)',
-                        transition: 'all 0.15s',
-                        letterSpacing: '0.08em',
-                        fontSize: 11,
-                      }}
-                    >
-                      {cur}
-                    </button>
-                  ))}
-                </div>
+                <span style={label}>Default currency</span>
+                <Seg
+                  value={localCurrency}
+                  onChange={setLocalCurrency}
+                  options={[{ value: 'USD', label: 'USD' }, { value: 'CAD', label: 'CAD' }]}
+                />
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <button
-                  type="button"
-                  onClick={handleSaveCurrency}
-                  style={{ ...btnStyle, background: ACCENT, color: '#07090e' }}
-                  onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
-                  onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
-                >
-                  SAVE
-                </button>
-                {saveMsg && (
-                  <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: '#22d3a0' }}>
-                    {saveMsg}
-                  </span>
-                )}
+                <button type="button" onClick={handleSaveCurrency} className="pv-btn-primary" style={{ padding: '9px 22px', fontSize: 14 }}>Save</button>
+                {saveMsg && <span style={{ fontSize: 12.5, color: 'var(--green)' }}>{saveMsg}</span>}
               </div>
             </div>
           </div>
 
           {/* Data */}
-          <div style={sectionStyle}>
-            <div style={sectionHeaderStyle}>Data</div>
-            <div style={sectionBodyStyle}>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>
-                Your saved portfolios as raw JSON.
-              </span>
+          <div style={card}>
+            <div style={cardHeader}>Data</div>
+            <div style={cardBody}>
+              <span style={{ fontSize: 13, color: 'var(--text3)' }}>Your saved portfolios as raw JSON.</span>
               <textarea
                 readOnly
                 value={portfolioJson}
                 rows={Math.min(portfolios.length * 6 + 4, 20)}
-                style={{
-                  ...inputStyle,
-                  resize: 'vertical',
-                  fontFamily: 'var(--mono)',
-                  fontSize: 11,
-                  lineHeight: 1.6,
-                  color: 'var(--text2)',
-                  cursor: 'text',
-                  minHeight: 80,
-                }}
+                className="pv-input"
+                style={{ resize: 'vertical', fontSize: 12, lineHeight: 1.6, color: 'var(--text2)', cursor: 'text', minHeight: 80 }}
               />
             </div>
           </div>
 
           {/* Danger Zone */}
-          <div style={{
-            ...sectionStyle,
-            border: '1px solid rgba(240,90,126,0.3)',
-            marginBottom: 0,
-          }}>
-            <div style={{
-              ...sectionHeaderStyle,
-              color: RED,
-              borderBottom: '1px solid rgba(240,90,126,0.2)',
-            }}>
-              Danger Zone
-            </div>
-            <div style={sectionBodyStyle}>
+          <div style={{ ...card, border: '1px solid rgba(240,90,126,0.3)', marginBottom: 0 }}>
+            <div style={{ ...cardHeader, color: 'var(--red)', borderBottom: '1px solid rgba(240,90,126,0.2)' }}>Danger Zone</div>
+            <div style={cardBody}>
               {!deleteConfirm ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   <button
                     type="button"
                     onClick={() => setDeleteConfirm(true)}
-                    style={{
-                      ...btnStyle,
-                      background: 'rgba(240,90,126,0.1)',
-                      color: RED,
-                      border: '1px solid rgba(240,90,126,0.3)',
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.18)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(240,90,126,0.1)')}
+                    style={{ background: 'rgba(240,90,126,0.1)', color: 'var(--red)', border: '1px solid rgba(240,90,126,0.3)', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 700, cursor: 'pointer' }}
                   >
-                    DELETE ACCOUNT
+                    Delete account
                   </button>
-                  <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text3)' }}>
-                    Permanently deletes your account and all saved portfolios.
-                  </span>
+                  <span style={{ fontSize: 12.5, color: 'var(--text3)' }}>Permanently deletes your account and all saved portfolios.</span>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-                  <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: RED }}>
-                    Type <strong>DELETE</strong> to confirm account deletion.
-                  </span>
-                  <input
-                    type="text"
-                    value={deleteInput}
-                    onChange={(e) => setDeleteInput(e.target.value)}
-                    placeholder="DELETE"
-                    style={{
-                      ...inputStyle,
-                      borderColor: 'rgba(240,90,126,0.4)',
-                      maxWidth: 240,
-                    }}
-                  />
+                  <span style={{ fontSize: 13, color: 'var(--red)' }}>Type <strong>DELETE</strong> to confirm account deletion.</span>
+                  <input type="text" value={deleteInput} onChange={(e) => setDeleteInput(e.target.value)} placeholder="DELETE" className="pv-input" style={{ maxWidth: 240 }} />
                   {deleteError && <Msg text={deleteError} isError />}
                   <div style={{ display: 'flex', gap: 10 }}>
                     <button
                       type="button"
                       onClick={handleDeleteAccount}
                       disabled={deleteInput !== 'DELETE' || deleting}
-                      style={{
-                        ...btnStyle,
-                        background: deleteInput === 'DELETE' ? RED : 'rgba(240,90,126,0.15)',
-                        color: deleteInput === 'DELETE' ? '#fff' : 'rgba(240,90,126,0.4)',
-                        cursor: deleteInput === 'DELETE' ? 'pointer' : 'not-allowed',
-                      }}
+                      style={{ background: deleteInput === 'DELETE' ? 'var(--red)' : 'rgba(240,90,126,0.15)', color: deleteInput === 'DELETE' ? '#fff' : 'rgba(240,90,126,0.5)', border: 'none', borderRadius: 999, padding: '9px 18px', fontSize: 13, fontWeight: 700, cursor: deleteInput === 'DELETE' ? 'pointer' : 'not-allowed' }}
                     >
-                      {deleting ? '...' : 'CONFIRM DELETE'}
+                      {deleting ? '…' : 'Confirm delete'}
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => { setDeleteConfirm(false); setDeleteInput(''); setDeleteError(''); }}
-                      style={{ ...btnStyle, background: 'var(--border2)', color: 'var(--text3)' }}
-                      onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text)')}
-                      onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text3)')}
-                    >
-                      CANCEL
-                    </button>
+                    <button type="button" onClick={() => { setDeleteConfirm(false); setDeleteInput(''); setDeleteError(''); }} className="pv-btn-ghost">Cancel</button>
                   </div>
                 </div>
               )}

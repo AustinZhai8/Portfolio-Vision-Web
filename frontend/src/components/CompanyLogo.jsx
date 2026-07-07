@@ -4,7 +4,7 @@ import { letterAvatarColor } from '../utils/colors';
 
 const LOGO_DEV_KEY = import.meta.env.VITE_LOGO_DEV_KEY;
 
-export default function CompanyLogo({ ticker, size = 24 }) {
+export default function CompanyLogo({ ticker, size = 34 }) {
   const dt = displayTicker(ticker);
   const [failed, setFailed] = useState(false);
 
@@ -19,19 +19,19 @@ export default function CompanyLogo({ ticker, size = 24 }) {
         style={{
           width: size,
           height: size,
-          borderRadius: 4,
+          borderRadius: 999,
           background: letterAvatarColor(dt),
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: 9,
+          fontSize: Math.round(size * 0.32),
           fontWeight: 700,
-          color: 'rgba(255,255,255,0.88)',
-          fontFamily: 'var(--mono)',
+          color: 'rgba(255,255,255,0.92)',
+          letterSpacing: '0.02em',
           flexShrink: 0,
         }}
       >
-        {dt.slice(0, 2)}
+        {dt.replace('.', '').slice(0, 2)}
       </div>
     );
   }
@@ -44,10 +44,10 @@ export default function CompanyLogo({ ticker, size = 24 }) {
       style={{
         width: size,
         height: size,
-        borderRadius: 4,
+        borderRadius: 999,
         objectFit: 'cover',
         flexShrink: 0,
-        background: 'var(--card)',
+        background: 'var(--card2)',
       }}
     />
   );

@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 
-export default function HorizBar({ name, w, color, max, animKey }) {
+// v2 breakdown bar: label / track / percentage. Accent fill (monochrome per the
+// v2 design); "Untracked"/"Unknown" render dimmed and italic. `color` is accepted
+// for prop-shape compatibility but intentionally unused for the fill.
+export default function HorizBar({ name, w, max, animKey }) {
   const [pct, setPct] = useState(0);
 
   useEffect(() => {
@@ -11,59 +14,38 @@ export default function HorizBar({ name, w, color, max, animKey }) {
 
   const isUnknown = name === 'Unknown';
   const isUntracked = name === 'Untracked';
-  const isDimmed = isUnknown || isUntracked;
-
-  const barFill = isUntracked
-    ? 'repeating-linear-gradient(45deg, var(--stripe1) 0px, var(--stripe1) 5px, var(--stripe2) 5px, var(--stripe2) 10px)'
-    : color;
+  const dimmed = isUnknown || isUntracked;
+  const label = isUntracked ? 'Untracked (data cutoff)' : name;
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns: '150px 1fr 44px',
-        gap: 8,
-        alignItems: 'center',
-        marginBottom: 5,
-        marginTop: isUntracked ? 6 : 0,
-      }}
-    >
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0' }}>
       <span
         style={{
-          fontFamily: 'var(--sans)',
-          fontSize: 13,
-          color: isDimmed ? 'var(--text3)' : 'var(--text2)',
-          textAlign: 'right',
-          whiteSpace: 'nowrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          fontStyle: 'italic',
-          opacity: isDimmed ? 0.75 : 1,
+          width: 150, fontSize: 13, color: dimmed ? 'var(--text3)' : 'var(--text2)',
+          textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+          fontStyle: dimmed ? 'italic' : 'normal', flexShrink: 0,
         }}
+        title={label}
       >
-        {isUntracked ? 'Untracked (data cutoff)' : name}
+        {label}
       </span>
-      <div style={{ height: 12, background: 'var(--bar-track)', borderRadius: 2, overflow: 'hidden' }}>
+      <div style={{ flex: 1, height: 8, background: 'var(--track)', borderRadius: 999, overflow: 'hidden' }}>
         <div
           style={{
-            width: `${pct}%`,
-            height: '100%',
-            background: barFill,
-            borderRadius: 2,
-            transition: 'width 0.85s cubic-bezier(0.16,1,0.3,1)',
-            opacity: isUnknown ? 0.6 : 1,
+            width: `${pct}%`, height: '100%', borderRadius: 999,
+            background: dimmed ? 'var(--text3)' : 'var(--accent)',
+            opacity: dimmed ? 0.4 : 0.9,
+            transition: 'width 0.9s cubic-bezier(0.16,1,0.3,1)',
           }}
         />
       </div>
       <span
         style={{
-          fontFamily: 'var(--mono)',
-          fontSize: 12,
-          color: isDimmed ? 'var(--text3)' : 'var(--text)',
-          textAlign: 'right',
+          width: 52, fontSize: 13, fontWeight: 600, color: dimmed ? 'var(--text3)' : 'var(--text)',
+          textAlign: 'right', fontVariantNumeric: 'tabular-nums', flexShrink: 0,
         }}
       >
-        {w.toFixed(window.innerWidth >= 768 ? 2 : 1)}%
+        {w.toFixed(2)}%
       </span>
     </div>
   );

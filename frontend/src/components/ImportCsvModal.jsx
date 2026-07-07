@@ -1,14 +1,12 @@
 import { useState, useRef } from 'react';
 import { parseHoldingsCsv } from '../utils/parseHoldingsCsv';
+import Modal from './Modal';
 
-const ACCENT = '#a78bfa';
-const RED = '#f05a7e';
-
-const STEPS = [
+const WS_STEPS = [
   'Log in to your Wealthsimple profile on a desktop web browser.',
   'Select the Profile menu in the bottom-left corner.',
   'Choose Documents from the menu.',
-  'Click the Custom download (or Request Documents) button in the top-right, then download your holdings report.',
+  'Click Custom download (or Request Documents) in the top-right, then download your holdings report.',
 ];
 
 export default function ImportCsvModal({ onClose, onImport }) {
@@ -41,88 +39,59 @@ export default function ImportCsvModal({ onClose, onImport }) {
   }
 
   return (
-    <div
-      onClick={onClose}
-      style={{ position: 'fixed', inset: 0, background: 'var(--modal-overlay)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{ width: 'calc(100% - 40px)', maxWidth: 460, background: 'var(--panel)', border: '1px solid var(--border2)', borderRadius: 6, overflow: 'hidden', boxShadow: '0 24px 64px rgba(0,0,0,0.3)' }}
-      >
-        {/* Header */}
-        <div style={{ padding: '18px 20px', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Import Holdings from CSV
-          </span>
-          <button
-            type="button"
-            onClick={onClose}
-            style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 20, lineHeight: 1, padding: '2px 6px' }}
-          >
-            ×
-          </button>
+    <Modal title="Import from CSV" onClose={onClose} width={480}>
+      <div style={{ maxHeight: '68vh', overflowY: 'auto', paddingRight: 6 }}>
+        {/* Drop zone */}
+        <div
+          onClick={() => inputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+          onDragLeave={() => setDragOver(false)}
+          onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
+          style={{
+            border: `1.5px dashed ${dragOver ? 'var(--accent)' : 'var(--border2)'}`,
+            borderRadius: 16, padding: '30px 20px', textAlign: 'center',
+            transition: 'border-color 0.15s, background 0.15s',
+            background: dragOver ? 'var(--accent-soft)' : 'transparent',
+            cursor: busy ? 'progress' : 'pointer',
+          }}
+        >
+          <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--text)', marginBottom: 4 }}>
+            {busy ? 'Reading…' : 'Drop your holdings file here'}
+          </div>
+          <div style={{ fontSize: 12.5, color: 'var(--text3)' }}>
+            or <span style={{ color: 'var(--accent)', fontWeight: 600 }}>browse files</span>
+          </div>
+          <input
+            ref={inputRef}
+            type="file"
+            accept=".csv,text/csv"
+            style={{ display: 'none' }}
+            onChange={(e) => handleFile(e.target.files?.[0])}
+          />
         </div>
 
-        <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {/* Wealthsimple instructions */}
-          <div>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 8 }}>
-              Getting your CSV from Wealthsimple
-            </div>
-            <ol style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 5 }}>
-              {STEPS.map((step, i) => (
-                <li key={i} style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 12, color: 'var(--text2)', lineHeight: 1.5 }}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-            <p style={{ fontFamily: 'var(--sans, sans-serif)', fontSize: 11, color: 'var(--text3)', lineHeight: 1.5, margin: '8px 0 0' }}>
-              Other brokers export different formats — if yours doesn't import cleanly, let me know at austinhzhai@gmail.com.
-            </p>
+        {error && (
+          <div style={{ marginTop: 14, fontSize: 12.5, color: 'var(--red)', background: 'rgba(240,90,126,0.08)', border: '1px solid rgba(240,90,126,0.25)', borderRadius: 12, padding: '9px 12px', lineHeight: 1.5 }}>
+            {error}
           </div>
+        )}
 
-          {/* Drop zone */}
-          <div
-            onClick={() => inputRef.current?.click()}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setDragOver(false);
-              handleFile(e.dataTransfer.files?.[0]);
-            }}
-            style={{
-              border: `1px dashed ${dragOver ? ACCENT : 'var(--border2)'}`,
-              background: dragOver ? 'rgba(167,139,250,0.06)' : 'var(--input-bg)',
-              borderRadius: 4,
-              padding: '26px 16px',
-              textAlign: 'center',
-              cursor: busy ? 'progress' : 'pointer',
-              transition: 'border-color 0.15s, background 0.15s',
-            }}
-          >
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text2)', letterSpacing: '0.04em' }}>
-              {busy ? 'Reading…' : 'Drop your CSV here, or click to choose a file'}
-            </div>
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)', marginTop: 6 }}>
-              Imports as shares · CAD-hedged CDRs use their CAD value · options are skipped
-            </div>
-            <input
-              ref={inputRef}
-              type="file"
-              accept=".csv,text/csv"
-              style={{ display: 'none' }}
-              onChange={(e) => handleFile(e.target.files?.[0])}
-            />
-          </div>
-
-          {error && (
-            <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: RED, background: 'rgba(240,90,126,0.07)', border: '1px solid rgba(240,90,126,0.2)', borderRadius: 3, padding: '8px 10px', lineHeight: 1.5 }}>
-              {error}
-            </div>
-          )}
+        <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--text3)', letterSpacing: '0.06em', textTransform: 'uppercase', margin: '18px 0 12px' }}>
+          Getting your CSV from Wealthsimple
         </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {WS_STEPS.map((s, i) => (
+            <div key={i} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
+              <div style={{ width: 22, height: 22, borderRadius: 999, background: 'var(--accent-soft)', color: 'var(--accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11.5, fontWeight: 700, flexShrink: 0 }}>{i + 1}</div>
+              <div style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.5, paddingTop: 1 }}>{s}</div>
+            </div>
+          ))}
+        </div>
+        <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 14, lineHeight: 1.5 }}>
+          Positions import as shares; CAD-hedged CDRs come in at their CAD value. Options are skipped. Other
+          brokers export different formats — if yours doesn't import cleanly, email <a href="mailto:austinhzhai@gmail.com">austinhzhai@gmail.com</a>.
+        </p>
       </div>
-    </div>
+    </Modal>
   );
 }

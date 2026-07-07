@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Vision</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <script type="text/babel" src="tweaks-panel.jsx"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #07090e;
+      --panel: #0b1119;
+      --card: #0f1825;
+      --card-hover: #131f2e;
+      --border: #182335;
+      --text: #e8f0fb;
+      --text2: #b8d4f1;
+      --text3: #8fa8c8;
+      --green: #22d3a0;
+      --red: #f05a7e;
+      --amber: #f4b942;
+      --purple: #a78bfa;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
+    html, body { height: 100%; overflow: hidden; background: var(--bg); }
+    body { color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.4; -webkit-font-smoothing: antialiased; }
+    #root { height: 100%; display: flex; flex-direction: column; }
+    input, select, button { font-family: inherit; font-size: inherit; color: inherit; outline: none; }
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input[type=range] { accent-color: var(--accent, #a78bfa); }
+    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #253548; border-radius: 2px; }
+    @keyframes shimmer { 0%{background-position:-400px 0} 100%{background-position:400px 0} }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+
+
+
+const { useState, useEffect, useRef } = React;
+
+// ── TWEAK DEFAULTS ─────────────────────────────────────────────────────────────
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "#a78bfa",
+  "density": "compact",
+  "showGeo": true,
+  "holdingsCount": 30
+} /*EDITMODE-END*/;
+
+// ── DATA ───────────────────────────────────────────────────────────────────────
+const ALL_HOLDINGS = [
+{ r: 1, t: 'MSFT', n: 'Microsoft Corp.', sec: 'Technology', w: 8.42, v: 8420, etfs: ['SPY', 'QQQ', 'VGT'], c: '#1d4ed8' },
+{ r: 2, t: 'AAPL', n: 'Apple Inc.', sec: 'Technology', w: 7.91, v: 7910, etfs: ['SPY', 'QQQ', 'VGT'], c: '#374151' },
+{ r: 3, t: 'NVDA', n: 'NVIDIA Corporation', sec: 'Technology', w: 5.83, v: 5830, etfs: ['SPY', 'QQQ', 'VGT'], c: '#15803d' },
+{ r: 4, t: 'AMZN', n: 'Amazon.com Inc.', sec: 'Cons. Disc.', w: 4.15, v: 4150, etfs: ['SPY', 'QQQ'], c: '#b45309' },
+{ r: 5, t: 'GOOGL', n: 'Alphabet Inc.', sec: 'Comm. Svcs', w: 3.72, v: 3720, etfs: ['SPY', 'QQQ'], c: '#1e40af' },
+{ r: 6, t: 'META', n: 'Meta Platforms', sec: 'Comm. Svcs', w: 3.28, v: 3280, etfs: ['SPY', 'QQQ'], c: '#1d4ed8' },
+{ r: 7, t: 'TSLA', n: 'Tesla Inc.', sec: 'Cons. Disc.', w: 2.94, v: 2940, etfs: ['SPY', 'QQQ'], c: '#b91c1c' },
+{ r: 8, t: 'BRK.B', n: 'Berkshire Hathaway', sec: 'Financials', w: 1.89, v: 1890, etfs: ['SPY'], c: '#78350f' },
+{ r: 9, t: 'JPM', n: 'JPMorgan Chase', sec: 'Financials', w: 1.74, v: 1740, etfs: ['SPY'], c: '#1e3a8a' },
+{ r: 10, t: 'AVGO', n: 'Broadcom Inc.', sec: 'Technology', w: 1.65, v: 1650, etfs: ['SPY', 'VGT'], c: '#9f1239' },
+{ r: 11, t: 'LLY', n: 'Eli Lilly & Co.', sec: 'Healthcare', w: 1.42, v: 1420, etfs: ['SPY'], c: '#6d28d9' },
+{ r: 12, t: 'UNH', n: 'UnitedHealth Group', sec: 'Healthcare', w: 1.31, v: 1310, etfs: ['SPY'], c: '#0369a1' },
+{ r: 13, t: 'COST', n: 'Costco Wholesale', sec: 'Cons. Staples', w: 1.18, v: 1180, etfs: ['SPY'], c: '#1e40af' },
+{ r: 14, t: 'HD', n: 'Home Depot Inc.', sec: 'Cons. Disc.', w: 1.09, v: 1090, etfs: ['SPY'], c: '#b45309' },
+{ r: 15, t: 'V', n: 'Visa Inc.', sec: 'Financials', w: 1.02, v: 1020, etfs: ['SPY'], c: '#1e3a8a' },
+{ r: 16, t: 'MA', n: 'Mastercard Inc.', sec: 'Financials', w: 0.97, v: 970, etfs: ['SPY'], c: '#991b1b' },
+{ r: 17, t: 'NFLX', n: 'Netflix Inc.', sec: 'Comm. Svcs', w: 0.91, v: 910, etfs: ['SPY', 'QQQ'], c: '#b91c1c' },
+{ r: 18, t: 'CRM', n: 'Salesforce Inc.', sec: 'Technology', w: 0.86, v: 860, etfs: ['SPY', 'QQQ'], c: '#1d4ed8' },
+{ r: 19, t: 'AMD', n: 'Advanced Micro Dev.', sec: 'Technology', w: 0.82, v: 820, etfs: ['SPY', 'QQQ', 'VGT'], c: '#15803d' },
+{ r: 20, t: 'TMO', n: 'Thermo Fisher Sci.', sec: 'Healthcare', w: 0.78, v: 780, etfs: ['SPY'], c: '#0369a1' },
+{ r: 21, t: 'ABBV', n: 'AbbVie Inc.', sec: 'Healthcare', w: 0.74, v: 740, etfs: ['SPY'], c: '#6d28d9' },
+{ r: 22, t: 'WMT', n: 'Walmart Inc.', sec: 'Cons. Staples', w: 0.71, v: 710, etfs: ['SPY'], c: '#15803d' },
+{ r: 23, t: 'DIS', n: 'Walt Disney Co.', sec: 'Comm. Svcs', w: 0.68, v: 680, etfs: ['SPY'], c: '#1e40af' },
+{ r: 24, t: 'ORCL', n: 'Oracle Corporation', sec: 'Technology', w: 0.65, v: 650, etfs: ['SPY', 'VGT'], c: '#b91c1c' },
+{ r: 25, t: 'TXN', n: 'Texas Instruments', sec: 'Technology', w: 0.62, v: 620, etfs: ['SPY', 'VGT'], c: '#78350f' },
+{ r: 26, t: 'QCOM', n: 'Qualcomm Inc.', sec: 'Technology', w: 0.59, v: 590, etfs: ['SPY', 'VGT'], c: '#374151' },
+{ r: 27, t: 'NEE', n: 'NextEra Energy Inc.', sec: 'Utilities', w: 0.55, v: 550, etfs: ['SPY'], c: '#065f46' },
+{ r: 28, t: 'CAT', n: 'Caterpillar Inc.', sec: 'Industrials', w: 0.52, v: 520, etfs: ['SPY'], c: '#b45309' },
+{ r: 29, t: 'GS', n: 'Goldman Sachs Group', sec: 'Financials', w: 0.49, v: 490, etfs: ['SPY'], c: '#1e3a8a' },
+{ r: 30, t: '???', n: 'Unclassified Holdings', sec: 'Unknown', w: 0.43, v: 430, etfs: ['SPY', 'VXUS'], c: '#475569' }];
+
+
+const SECTORS = [
+{ name: 'Information Technology', w: 39.2, color: '#38bdf8' },
+{ name: 'Healthcare', w: 12.8, color: '#22d3a0' },
+{ name: 'Financials', w: 11.4, color: '#a78bfa' },
+{ name: 'Consumer Disc.', w: 9.7, color: '#fbbf24' },
+{ name: 'Industrials', w: 8.2, color: '#60a5fa' },
+{ name: 'Comm. Services', w: 7.9, color: '#fb7185' },
+{ name: 'Consumer Staples', w: 5.1, color: '#34d399' },
+{ name: 'Energy', w: 3.4, color: '#f97316' },
+{ name: 'Unknown', w: 2.3, color: '#64748b' }];
+
+
+const GEO = [
+{ name: 'United States', w: 71.8, color: '#38bdf8' },
+{ name: 'Japan', w: 6.2, color: '#22d3a0' },
+{ name: 'United Kingdom', w: 4.8, color: '#a78bfa' },
+{ name: 'Canada', w: 3.1, color: '#fbbf24' },
+{ name: 'Germany', w: 2.7, color: '#fb7185' },
+{ name: 'Switzerland', w: 1.9, color: '#f97316' },
+{ name: 'Unknown', w: 9.5, color: '#64748b' }];
+
+
+const DEFAULT_ROWS = [
+{ id: 1, ticker: 'SPY', amount: '50000', currency: 'USD', type: 'etf' },
+{ id: 2, ticker: 'QQQ', amount: '25000', currency: 'USD', type: 'etf' },
+{ id: 3, ticker: 'VGT', amount: '15000', currency: 'USD', type: 'etf' },
+{ id: 4, ticker: 'VXUS', amount: '10000', currency: 'USD', type: 'etf' }];
+
+
+let _uid = 5;
+const uid = () => _uid++;
+const fmtMoney = (n) => '$' + Math.round(n).toLocaleString('en-US');
+const getTotal = (rows) => rows.reduce((s, r) => s + (parseFloat(r.amount) || 0), 0);
+
+// ── HEADER ─────────────────────────────────────────────────────────────────────
+function Header({ accent, displayCurrency, setDisplayCurrency }) {
+  return (
+    <header style={{ height: 80, minHeight: 80, background: '#0b1119', borderBottom: '1px solid #182335', display: 'flex', alignItems: 'center', padding: '0 20px', gap: 16, flexShrink: 0, zIndex: 20 }}>
+      <img src="logo.png" alt="Portfolio Vision" style={{ objectFit: 'contain', flexShrink: 0, width: "80px", height: "80px" }} />
+      
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 3 }}>
+        <span style={{ fontFamily: 'var(--sans)', color: '#e8f0fb', fontWeight: 500, letterSpacing: '0.04em', whiteSpace: 'nowrap', fontSize: "18px", lineHeight: 1 }}>See everythig. Invest better.
+
+        </span>
+        <span style={{ fontFamily: 'var(--mono)', fontWeight: 600, letterSpacing: '0.12em', color: 'var(--text3)', textTransform: 'uppercase', fontSize: "11px", lineHeight: 1 }}>
+          PORTFOLIO<span style={{ color: accent }}>VISION</span>
+        </span>
+      </div>
+      
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <span style={{ fontFamily: 'var(--mono)', color: 'var(--text3)', letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: "11px" }}>Display:</span>
+        <div style={{ display: 'flex', gap: 3, background: '#060c16', borderRadius: 4, padding: 3, border: '1px solid #253548' }}>
+          {['USD', 'CAD'].map((cur) =>
+          <button key={cur} onClick={() => setDisplayCurrency(cur)}
+          style={{ padding: '4px 10px', background: displayCurrency === cur ? accent : 'transparent', border: 'none', borderRadius: 2, cursor: 'pointer', fontFamily: 'var(--mono)', fontWeight: 600, color: displayCurrency === cur ? '#07090e' : 'var(--text3)', transition: 'all 0.15s', letterSpacing: '0.08em', fontSize: "9px" }}>
+            {cur}
+            </button>
+          )}
+        </div>
+      </div>
+      <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#182335', border: '1px solid #253548', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text2)' }}>JS</span>
+      </div>
+    </header>);
+
+}
+
+// ── PORTFOLIO PANEL ────────────────────────────────────────────────────────────
+function PortfolioPanel({ rows, setRows, onAnalyze, loading, accent }) {
+  const total = getTotal(rows);
+  const addRow = () => setRows((r) => [...r, { id: uid(), ticker: '', amount: '', currency: 'USD' }]);
+  const removeRow = (id) => setRows((r) => r.filter((x) => x.id !== id));
+  const updateRow = (id, field, val) => setRows((r) => r.map((x) => x.id === id ? { ...x, [field]: val } : x));
+
+  const inputStyle = {
+    background: '#060c16', border: '1px solid #182335', borderRadius: 3,
+    color: '#c8ddf0', padding: '5px 8px', width: '100%', transition: 'border-color 0.15s'
+  };
+
+  return (
+    <div style={{ width: 352, minWidth: 352, background: '#0b1119', borderRight: '1px solid #182335', display: 'flex', flexDirection: 'column', flexShrink: 0 }}>
+      {/* Panel header */}
+      <div style={{ padding: '13px 16px 11px', borderBottom: '1px solid #182335', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>Portfolio</span>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)' }}>{rows.length} POSITIONS</span>
+      </div>
+
+      {/* Column headers */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 104px 50px 70px 20px', gap: 6, padding: '7px 16px 6px', borderBottom: '1px solid #0f1825' }}>
+        {['STOCK/ETF', 'AMOUNT', 'CCY', 'TYPE', ''].map((h, i) =>
+        <span key={i} style={{ ...{ fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)', letterSpacing: '0.08em', textAlign: i === 1 ? 'right' : 'left' }, textAlign: "center" }}>{h}</span>
+        )}
+      </div>
+
+      {/* Rows */}
+      <div style={{ flex: 1, overflowY: 'auto', padding: '4px 16px' }}>
+        {rows.map((row) =>
+        <div key={row.id} style={{ display: 'grid', gridTemplateColumns: '1fr 104px 50px 70px 20px', gap: 6, alignItems: 'center', padding: '4px 0', borderBottom: '1px solid #0d1520' }}>
+            <input
+            value={row.ticker} maxLength={7} placeholder="TICKER"
+            onChange={(e) => updateRow(row.id, 'ticker', e.target.value.toUpperCase())}
+            style={{ ...inputStyle, fontFamily: 'var(--mono)', fontSize: 12, fontWeight: 500, letterSpacing: '0.1em' }}
+            onFocus={(e) => e.target.style.borderColor = accent}
+            onBlur={(e) => e.target.style.borderColor = '#182335'} />
+          
+            <input
+            type="number" value={row.amount} placeholder="0"
+            onChange={(e) => updateRow(row.id, 'amount', e.target.value)}
+            style={{ ...inputStyle, fontFamily: 'var(--mono)', fontSize: 13, textAlign: 'right' }}
+            onFocus={(e) => e.target.style.borderColor = accent}
+            onBlur={(e) => e.target.style.borderColor = '#182335'} />
+          
+            <select
+            value={row.currency}
+            onChange={(e) => updateRow(row.id, 'currency', e.target.value)}
+            style={{ ...inputStyle, cursor: 'pointer', fontSize: 10, fontFamily: 'var(--mono)', textAlign: 'center', appearance: 'none' }}>
+            
+              {['USD', 'CAD'].map((c) => <option key={c}>{c}</option>)}
+            </select>
+            <select
+            value={row.type || 'etf'}
+            onChange={(e) => updateRow(row.id, 'type', e.target.value)}
+            style={{ ...inputStyle, cursor: 'pointer', fontSize: 9, fontFamily: 'var(--mono)', appearance: 'none' }}>
+            
+              {['ETF', 'Fund', 'Direct'].map((t) => <option key={t} value={t.toLowerCase()}>{t}</option>)}
+            </select>
+            <button onClick={() => removeRow(row.id)}
+          style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 15, lineHeight: 1, padding: 2, borderRadius: 2, transition: 'color 0.12s' }}
+          onMouseEnter={(e) => e.target.style.color = '#f05a7e'}
+          onMouseLeave={(e) => e.target.style.color = 'var(--text3)'}>
+            ×</button>
+          </div>
+        )}
+
+        <button onClick={addRow}
+        style={{ width: '100%', marginTop: 10, padding: '7px 0', background: 'none', border: '1px dashed #253548', borderRadius: 3, cursor: 'pointer', color: 'var(--text3)', fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '0.12em', transition: 'all 0.15s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6 }}
+        onMouseEnter={(e) => {e.currentTarget.style.borderColor = accent;e.currentTarget.style.color = accent;}}
+        onMouseLeave={(e) => {e.currentTarget.style.borderColor = '#253548';e.currentTarget.style.color = 'var(--text3)';}}>
+          
+          + ADD POSITION
+        </button>
+      </div>
+
+      {/* Footer */}
+      <div style={{ padding: '14px 16px', borderTop: '1px solid #182335', background: '#060c16', flexShrink: 0 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 14 }}>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text2)', letterSpacing: '0.1em' }}>TOTAL INVESTED</span>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 21, fontWeight: 600, color: '#c8ddf0' }}>{fmtMoney(total)}</span>
+        </div>
+        <button onClick={onAnalyze} disabled={loading}
+        style={{ width: '100%', padding: '11px 0', background: loading ? '#1a1030' : accent, border: 'none', borderRadius: 3, color: loading ? accent : '#07090e', fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 600, letterSpacing: '0.14em', cursor: loading ? 'wait' : 'pointer', transition: 'all 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+          
+          {loading ? <><LoadingBar accent={accent} /> ANALYZING</> : '▶  DECOMPOSE PORTFOLIO'}
+        </button>
+        <div style={{ marginTop: 8, fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', textAlign: 'center', lineHeight: 1.6 }}>
+          DATA COVERAGE: 3,241 ETF HOLDINGS · MAY 8 2026
+        </div>
+      </div>
+    </div>);
+
+}
+
+function LoadingBar({ accent }) {
+  const [w, setW] = useState(0);
+  useEffect(() => {
+    let v = 0;
+    const t = setInterval(() => {v = Math.min(v + Math.random() * 8, 90);setW(v);}, 120);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div style={{ width: 80, height: 3, background: '#1a1030', borderRadius: 2, overflow: 'hidden' }}>
+      <div style={{ height: '100%', width: `${w}%`, background: accent, borderRadius: 2, transition: 'width 0.12s' }} />
+    </div>);
+
+}
+
+// ── HOLDING ROW ────────────────────────────────────────────────────────────────
+function HoldingRow({ h, even, accent }) {
+  const [hov, setHov] = useState(false);
+  const maxW = 8.42;
+  const isUnknown = h.sec === 'Unknown';
+  return (
+    <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    style={{ display: 'grid', gridTemplateColumns: '24px 30px 1fr 68px 1fr 76px 100px 60px', gap: 0, alignItems: 'center', padding: '0 16px', height: 38, background: hov ? '#131f2e' : even ? '#0f1825' : '#0b1119', borderBottom: '1px solid #0d1520', transition: 'background 0.1s', cursor: 'default' }}>
+      
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text3)' }}>{h.r}</span>
+
+      <div style={{ width: 24, height: 24, borderRadius: 4, background: isUnknown ? '#2a3548' : h.c, border: isUnknown ? '1px dashed #475569' : 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 9, fontWeight: 700, color: isUnknown ? '#64748b' : 'rgba(255,255,255,0.88)', fontFamily: 'var(--mono)', flexShrink: 0 }}>
+        {h.t.slice(0, 2)}
+      </div>
+
+      <div style={{ paddingLeft: 10 }}>
+        <div style={{ fontSize: 13, color: isUnknown ? '#b8d4f1' : '#e8f0fb', fontWeight: 500, lineHeight: 1.2 }}>{h.n}</div>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: isUnknown ? '#64748b' : 'var(--text2)', marginTop: 1, fontStyle: isUnknown ? 'italic' : 'normal' }}>{h.sec}</div>
+      </div>
+
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: isUnknown ? '#64748b' : hov ? accent : '#b8d4f1', letterSpacing: '0.06em', transition: 'color 0.1s' }}>{h.t}</span>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, paddingRight: 8 }}>
+        <div style={{ flex: 1, height: 3, background: '#182335', borderRadius: 2, overflow: 'hidden' }}>
+          <div style={{ width: `${h.w / maxW * 100}%`, height: '100%', background: isUnknown ? '#64748b' : accent, borderRadius: 2, opacity: 0.85 }} />
+        </div>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: '#e8f0fb', minWidth: 38, textAlign: 'right' }}>{h.w.toFixed(2)}%</span>
+      </div>
+
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: '#b8d4f1', textAlign: 'right', paddingRight: 12 }}>{fmtMoney(h.v)}</span>
+
+      <div style={{ display: 'flex', gap: 3, flexWrap: 'wrap' }}>
+        {h.etfs.map((e) =>
+        <span key={e} style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text2)', background: '#182335', borderRadius: 2, padding: '1px 5px', letterSpacing: '0.04em' }}>{e}</span>
+        )}
+      </div>
+
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>ETF</span>
+    </div>);
+
+}
+
+// ── BAR CHART ──────────────────────────────────────────────────────────────────
+function HorizBar({ name, w, color, max, compact, animKey }) {
+  const [pct, setPct] = useState(0);
+  useEffect(() => {
+    setPct(0);
+    const t = setTimeout(() => setPct(w / max * 100), 80);
+    return () => clearTimeout(t);
+  }, [animKey, w, max]);
+
+  const barH = compact ? 12 : 16;
+  const isUnknown = name === 'Unknown';
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '150px 1fr 44px', gap: 8, alignItems: 'center', marginBottom: compact ? 5 : 8 }}>
+      <span style={{ fontFamily: 'var(--sans)', fontSize: 12, color: isUnknown ? '#64748b' : 'var(--text2)', textAlign: 'right', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontStyle: isUnknown ? 'italic' : 'normal' }}>{name}</span>
+      <div style={{ height: barH, background: '#182335', borderRadius: 2, overflow: 'hidden' }}>
+        <div style={{ width: `${pct}%`, height: '100%', background: color, borderRadius: 2, transition: 'width 0.85s cubic-bezier(0.16,1,0.3,1)', opacity: isUnknown ? 0.6 : 0.88 }} />
+      </div>
+      <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: isUnknown ? '#64748b' : '#e8f0fb', textAlign: 'right' }}>{w.toFixed(1)}%</span>
+    </div>);
+
+}
+
+function ChartSection({ title, data, compact, animKey }) {
+  const max = Math.max(...data.map((d) => d.w));
+  return (
+    <div style={{ flex: 1, background: '#0f1825', border: '1px solid #182335', borderRadius: 4, padding: '14px 16px', overflow: 'hidden' }}>
+      <div style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text2)', letterSpacing: '0.12em', textTransform: 'uppercase', marginBottom: compact ? 10 : 14 }}>{title}</div>
+      {data.map((d) => <HorizBar key={d.name} name={d.name} w={d.w} color={d.color} max={max} compact={compact} animKey={animKey} />)}
+    </div>);
+
+}
+
+// ── RESULTS PANEL ──────────────────────────────────────────────────────────────
+function ResultsPanel({ accent, density, holdingsCount, showGeo, version }) {
+  const compact = density === 'compact';
+  const shown = ALL_HOLDINGS.slice(0, holdingsCount);
+
+  return (
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', padding: '14px', gap: 11 }}>
+
+      {/* Holdings table — scrollable rows, flex:1 fills remaining space */}
+      <div style={{ background: '#0b1119', border: '1px solid #182335', borderRadius: 4, display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0, overflow: 'hidden' }}>
+        {/* Table header */}
+        <div style={{ display: 'grid', gridTemplateColumns: '24px 30px 1fr 68px 1fr 76px 100px 60px', gap: 0, padding: '8px 16px', borderBottom: '1px solid #182335', flexShrink: 0 }}>
+          {['#', '', 'COMPANY', 'TICKER', 'WEIGHT', 'VALUE', 'ETF EXPOSURE', 'TYPE'].map((h, i) =>
+          <span key={i} style={{ fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)', letterSpacing: '0.08em', paddingLeft: i === 2 ? 10 : 0, paddingRight: i === 5 ? 12 : 0, textAlign: i === 5 ? 'right' : 'left' }}>{h}</span>
+          )}
+        </div>
+        {/* Scrollable rows */}
+        <div style={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+          {shown.map((h, i) => <HoldingRow key={h.t} h={h} even={i % 2 === 0} accent={accent} />)}
+        </div>
+      </div>
+
+      {/* Charts — fixed height at bottom */}
+      <div style={{ display: 'flex', gap: 10, flexShrink: 0, height: compact ? 230 : 268 }}>
+        <ChartSection title="SECTOR BREAKDOWN" data={SECTORS} compact={compact} animKey={version} />
+        {showGeo && <ChartSection title="GEOGRAPHIC EXPOSURE" data={GEO} compact={compact} animKey={version} />}
+      </div>
+    </div>);
+
+}
+
+// ── TWEAKS PANEL ───────────────────────────────────────────────────────────────
+function AppTweaks({ tweaks, setTweak, onClose }) {
+  const { accent, density, showGeo, holdingsCount } = tweaks;
+  const ACCENTS = [['#38bdf8', 'Sky'], ['#22d3a0', 'Teal'], ['#f4b942', 'Amber'], ['#a78bfa', 'Violet'], ['#fb7185', 'Rose']];
+  const seg = (active) => ({
+    flex: 1, padding: '5px 0', background: active ? accent : '#182335', border: 'none', borderRadius: 3, cursor: 'pointer',
+    color: active ? '#07090e' : 'var(--text2)', fontFamily: 'var(--mono)', fontSize: 8, letterSpacing: '0.08em',
+    textTransform: 'uppercase', transition: 'all 0.15s'
+  });
+
+  return (
+    <div style={{ position: 'fixed', bottom: 20, right: 20, width: 264, background: '#0f1825', border: '1px solid #253548', borderRadius: 8, padding: 18, boxShadow: '0 12px 40px rgba(0,0,0,0.75)', zIndex: 1000, fontFamily: 'var(--sans)' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18 }}>
+        <span style={{ fontFamily: 'var(--mono)', fontSize: 9, color: 'var(--text2)', letterSpacing: '0.14em', textTransform: 'uppercase' }}>Tweaks</span>
+        <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--text2)', cursor: 'pointer', fontSize: 18, lineHeight: 1, padding: '0 2px' }}>×</button>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <span style={{ fontSize: 10, color: 'var(--text2)', marginBottom: 8, display: 'block', fontWeight: 500 }}>Accent Color</span>
+        <div style={{ display: 'flex', gap: 7 }}>
+          {ACCENTS.map(([c, label]) =>
+          <div key={c} title={label} onClick={() => setTweak('accent', c)}
+          style={{ width: 30, height: 30, borderRadius: 4, background: c, cursor: 'pointer', border: `2px solid ${accent === c ? '#fff' : 'transparent'}`, transition: 'border-color 0.15s', boxSizing: 'border-box' }} />
+          )}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <span style={{ fontSize: 10, color: 'var(--text2)', marginBottom: 8, display: 'block', fontWeight: 500 }}>Row Density</span>
+        <div style={{ display: 'flex', gap: 5 }}>
+          {['compact', 'comfortable'].map((d) => <button key={d} style={seg(density === d)} onClick={() => setTweak('density', d)}>{d}</button>)}
+        </div>
+      </div>
+
+      <div style={{ marginBottom: 16 }}>
+        <span style={{ fontSize: 10, color: 'var(--text2)', marginBottom: 8, display: 'block', fontWeight: 500 }}>Geographic Chart</span>
+        <div style={{ display: 'flex', gap: 5 }}>
+          {[['true', 'Visible'], ['false', 'Hidden']].map(([v, l]) => <button key={v} style={seg(String(showGeo) === v)} onClick={() => setTweak('showGeo', v === 'true')}>{l}</button>)}
+        </div>
+      </div>
+
+      <div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
+          <span style={{ fontSize: 10, color: 'var(--text2)', fontWeight: 500 }}>Top Holdings</span>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: accent }}>{holdingsCount}</span>
+        </div>
+        <input type="range" min={5} max={30} step={1} value={holdingsCount} style={{ width: '100%', accentColor: accent }} onChange={(e) => setTweak('holdingsCount', Number(e.target.value))} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)' }}>5</span>
+          <span style={{ fontFamily: 'var(--mono)', fontSize: 8, color: 'var(--text3)' }}>30</span>
+        </div>
+      </div>
+    </div>);
+
+}
+
+// ── APP ────────────────────────────────────────────────────────────────────────
+function App() {
+  const [tweaks, setTweaksState] = useState(TWEAK_DEFAULTS);
+  const [rows, setRows] = useState(DEFAULT_ROWS);
+  const [loading, setLoading] = useState(false);
+  const [showTweaks, setShowTweaks] = useState(false);
+  const [version, setVersion] = useState(0);
+  const [displayCurrency, setDisplayCurrency] = useState('USD');
+
+  const setTweak = (k, v) => {
+    setTweaksState((prev) => {
+      const next = { ...prev, [k]: v };
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [k]: v } }, '*');
+      return next;
+    });
+  };
+
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.data?.type === '__activate_edit_mode') setShowTweaks(true);
+      if (e.data?.type === '__deactivate_edit_mode') setShowTweaks(false);
+    };
+    window.addEventListener('message', handler);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+    return () => window.removeEventListener('message', handler);
+  }, []);
+
+  const handleAnalyze = () => {
+    setLoading(true);
+    setTimeout(() => {setLoading(false);setVersion((v) => v + 1);}, 1700);
+  };
+
+  const closeTweaks = () => {
+    setShowTweaks(false);
+    window.parent.postMessage({ type: '__edit_mode_dismissed' }, '*');
+  };
+
+  const { accent, density, showGeo, holdingsCount } = tweaks;
+
+  return (
+    <div style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Header accent={accent} displayCurrency={displayCurrency} setDisplayCurrency={setDisplayCurrency} />
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
+        <PortfolioPanel rows={rows} setRows={setRows} onAnalyze={handleAnalyze} loading={loading} accent={accent} />
+        <ResultsPanel accent={accent} density={density} holdingsCount={holdingsCount} showGeo={showGeo} version={version} />
+      </div>
+      {showTweaks && <AppTweaks tweaks={tweaks} setTweak={setTweak} onClose={closeTweaks} />}
+    </div>);
+
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
