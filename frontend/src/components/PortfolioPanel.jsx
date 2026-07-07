@@ -171,7 +171,7 @@ export default function PortfolioPanel({
   const freezeTimerRef = useRef(null);
 
   const [saveOpen, setSaveOpen] = useState(false);
-  const [overrideConfirmOpen, setOverrideConfirmOpen] = useState(false);
+  const [overrideTarget, setOverrideTarget] = useState(null);
   const [importOpen, setImportOpen] = useState(false);
   const [showHow, setShowHow] = useState(false);
   const [portfolios, setPortfolios] = useState([]);
@@ -238,18 +238,18 @@ export default function PortfolioPanel({
     return null;
   }
 
-  async function saveUpdate() {
-    if (!loadedPortfolioId) return;
+  async function saveOverride(id) {
     const holdings = buildHoldingsPayload();
-    const name = currentPortfolio?.name;
-    const { error } = await supabase.from('portfolios').update({ holdings, name }).eq('id', loadedPortfolioId);
+    const name = portfolios.find((p) => p.id === id)?.name;
+    const { error } = await supabase.from('portfolios').update({ holdings, name }).eq('id', id);
     if (error) { setPfError(error.message); return; }
+    setLoadedPortfolioId(id);
     setDirty(false);
     fetchPortfolios();
   }
 
   function handleSwitcherSave() {
-    if (loadedPortfolioId) setOverrideConfirmOpen(true);
+    if (loadedPortfolioId) setOverrideTarget({ id: loadedPortfolioId, name: currentPortfolio?.name });
     else setSaveOpen(true);
   }
 
@@ -490,11 +490,11 @@ export default function PortfolioPanel({
   return (
     <div className="pv-screen" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '40px 24px 64px' }}>
       {saveOpen && <SaveNameModal onSave={saveNew} onClose={() => setSaveOpen(false)} />}
-      {overrideConfirmOpen && (
+      {overrideTarget && (
         <OverrideConfirmModal
-          name={currentPortfolio?.name}
-          onConfirm={async () => { await saveUpdate(); setOverrideConfirmOpen(false); }}
-          onClose={() => setOverrideConfirmOpen(false)}
+          name={overrideTarget.name}
+          onConfirm={async () => { await saveOverride(overrideTarget.id); setOverrideTarget(null); }}
+          onClose={() => setOverrideTarget(null)}
         />
       )}
       {importOpen && <ImportCsvModal onClose={() => setImportOpen(false)} onImport={handleImport} />}
@@ -528,6 +528,7 @@ export default function PortfolioPanel({
               onOpenAuth={onOpenAuth}
               onSelect={handleLoad}
               onSave={handleSwitcherSave}
+              onOverride={(p) => setOverrideTarget({ id: p.id, name: p.name })}
               onSaveAsNew={() => setSaveOpen(true)}
               onNew={handleNewPortfolio}
               onDelete={handleDelete}

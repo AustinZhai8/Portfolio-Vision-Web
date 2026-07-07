@@ -11,6 +11,7 @@ export default function PortfolioSwitcher({
   onOpenAuth,
   onSelect,
   onSave,
+  onOverride,
   onSaveAsNew,
   onNew,
   onDelete,
@@ -75,7 +76,7 @@ export default function PortfolioSwitcher({
         <div
           style={{
             position: 'absolute', top: 'calc(100% + 8px)', left: 0, zIndex: 200,
-            minWidth: 250, background: 'var(--card2)', border: '1px solid var(--border2)',
+            minWidth: 280, background: 'var(--card2)', border: '1px solid var(--border2)',
             borderRadius: 16, padding: 6, boxShadow: '0 16px 40px rgba(0,0,0,0.5)',
           }}
         >
@@ -102,6 +103,16 @@ export default function PortfolioSwitcher({
                   </svg>
                 )}
               </button>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onOverride(p); setOpen(false); setConfirmDeleteId(null); }}
+                title={`Overwrite "${p.name}" with your current portfolio`}
+                style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 13, lineHeight: 1, padding: '0 6px', flexShrink: 0 }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--accent)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text3)'; }}
+              >
+                ↻
+              </button>
               {confirmDeleteId === p.id ? (
                 <button
                   type="button"
@@ -124,16 +135,6 @@ export default function PortfolioSwitcher({
             </div>
           ))}
           <div style={{ height: 1, background: 'var(--border2)', margin: '6px' }} />
-          {activeId && (
-            <button
-              type="button"
-              className="pv-menu-item"
-              onClick={() => { onSave(); setOpen(false); }}
-              style={{ display: 'block', width: '100%', background: 'none', border: 'none', borderRadius: 10, padding: '9px 12px', fontSize: 14, fontWeight: 600, color: 'var(--text2)', cursor: 'pointer', textAlign: 'left' }}
-            >
-              Overwrite &quot;{label}&quot;
-            </button>
-          )}
           <button
             type="button"
             className="pv-menu-item"
