@@ -27,13 +27,13 @@ let _uid = 3;
 const nextId = () => _uid++;
 
 const TOUR_STEPS = [
-  { target: 'switcher', screen: 'build', title: 'Your portfolios', body: 'This shows which portfolio you’re editing. Sign in to switch between saved portfolios, save a copy, or start a new one — a purple dot marks unsaved changes.' },
-  { target: 'rows', screen: 'build', title: 'Add what you own', body: 'One row per position — ticker plus how much you hold. Enter by dollar amount ($) or share count (#), in USD or CAD, per row. ETFs, stocks, and Canadian tickers all work.' },
-  { target: 'toolbar', screen: 'build', title: 'Sort & import', body: 'Reorder rows, or skip typing entirely — import your Wealthsimple CSV in one click. The import dialog shows exactly where to download it.' },
+  { target: 'switcher', screen: 'build', title: 'Your portfolios', body: 'This shows which portfolio you’re editing. Sign in to switch between saved portfolios, save a copy, or start a new one. A purple dot marks unsaved changes.' },
+  { target: 'rows', screen: 'build', title: 'Add what you own', body: 'One row per position: ticker plus how much you hold. Enter by dollar amount ($) or share count (#), in USD or CAD, per row. ETFs, stocks, and Canadian tickers all work.' },
+  { target: 'toolbar', screen: 'build', title: 'Sort & import', body: 'Reorder rows, or skip typing entirely and import your Wealthsimple CSV in one click. The import dialog shows exactly where to download it.' },
   { target: 'display-currency', screen: 'build', title: 'Display currency', body: 'Flip the entire app between USD and CAD. Every value converts automatically.' },
-  { target: 'decompose', screen: 'build', title: 'Decompose', body: 'The main event. We unpack every ETF into its underlying companies — including ETFs inside ETFs — and combine it all into one true picture.' },
+  { target: 'decompose', screen: 'build', title: 'Decompose', body: 'The main event. We unpack every ETF into its underlying companies, including ETFs inside ETFs, and combine it all into one true picture.' },
   { target: 'holdings', screen: 'results', title: 'What you really own', body: 'Every company across all your funds, weighted by what you actually hold. Bars show relative position size, and the ⓘ on each row reveals exactly which funds the money comes from.' },
-  { target: 'breakdowns', screen: 'results', title: 'Sectors & geography', body: 'Your real exposure by sector and country. “Untracked” marks the slice beyond our data coverage. Use “Edit portfolio” up top to tweak and re-run — that’s the whole flow.' },
+  { target: 'breakdowns', screen: 'results', title: 'Sectors & geography', body: 'Your real exposure by sector and country. “Untracked” marks the slice beyond our data coverage. Use “Edit portfolio” up top to tweak and re-run. That’s the whole flow.' },
 ];
 
 export default function App() {

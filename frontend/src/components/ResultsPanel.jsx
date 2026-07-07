@@ -70,7 +70,7 @@ export default function ResultsPanel({
           </div>
           <div style={{ padding: '12px 24px 16px', borderTop: '1px solid var(--border)' }}>
             <span style={{ fontSize: 12.5, color: 'var(--text3)' }}>
-              Showing {shown.length} of {totalCount} holdings — positions below {MIN_WEIGHT_PCT}% of portfolio total hidden
+              Showing {shown.length} of {totalCount} holdings (positions below {MIN_WEIGHT_PCT}% of portfolio total hidden)
             </span>
           </div>
         </div>

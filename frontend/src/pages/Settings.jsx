@@ -96,7 +96,7 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
       redirectTo: window.location.origin + '/settings',
     });
     if (error) { setPwMsg(error.message); setPwErr(true); }
-    else { setPwMsg('Password reset email sent — check your inbox.'); setPwErr(false); }
+    else { setPwMsg('Password reset email sent. Check your inbox.'); setPwErr(false); }
   }
 
   async function handleSaveCurrency() {

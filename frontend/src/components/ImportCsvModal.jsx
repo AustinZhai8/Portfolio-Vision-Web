@@ -89,7 +89,7 @@ export default function ImportCsvModal({ onClose, onImport }) {
         </div>
         <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 14, lineHeight: 1.5 }}>
           Positions import as shares; CAD-hedged CDRs come in at their CAD value. Options are skipped. Other
-          brokers export different formats — if yours doesn't import cleanly, email <a href="mailto:austinhzhai@gmail.com">austinhzhai@gmail.com</a>.
+          brokers export different formats, so if yours doesn't import cleanly, email <a href="mailto:austinhzhai@gmail.com">austinhzhai@gmail.com</a>.
         </p>
       </div>
     </Modal>

@@ -12,7 +12,7 @@ export const PRIVACY_SECTIONS = [
   {
     title: 'No account? No data.',
     body: (
-      <>If you just use the decomposition tool, we don't collect any personal data — your portfolio rows
+      <>If you just use the decomposition tool, we don't collect any personal data. Your portfolio rows
       live only in your browser's memory and localStorage. A local price cache also stays on your device
       and is never sent to us.</>
     ),
@@ -20,8 +20,8 @@ export const PRIVACY_SECTIONS = [
   {
     title: 'With an account',
     body: (
-      <>We store (via Supabase): your email and a hashed password — or basic Google profile info if you
-      sign in with Google — plus any portfolios you choose to save and your display currency preference.</>
+      <>We store (via Supabase): your email and a hashed password (or basic Google profile info if you
+      sign in with Google), plus any portfolios you choose to save and your display currency preference.</>
     ),
   },
   {
@@ -75,7 +75,7 @@ export const TERMS_SECTIONS = [
     title: 'Accounts',
     body: (
       <>You're responsible for keeping your credentials secure. You can permanently delete your account
-      and all saved portfolios from Settings → Danger Zone — irreversible. Accounts that abuse the service
+      and all saved portfolios from Settings → Danger Zone (irreversible). Accounts that abuse the service
       (e.g. excessive automated requests) may be suspended.</>
     ),
   },

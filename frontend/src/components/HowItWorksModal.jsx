@@ -2,16 +2,16 @@ import Modal from './Modal';
 
 const STEPS = [
   ['Add your positions', 'Enter each ETF or stock you own, by dollar amount or share count, in USD or CAD.'],
-  ['We decompose it', 'Every ETF is unpacked into its underlying holdings — including ETFs inside ETFs — weighted by what you actually own.'],
+  ['We decompose it', 'Every ETF is unpacked into its underlying holdings, including ETFs inside ETFs, weighted by what you actually own.'],
   ['See what you really hold', 'One combined view of every company, sector, and country across your whole portfolio.'],
 ];
 
 const NOTES = [
   ['Weightings are estimates', 'Some weightings may be off by a percent or so due to database update timing and partial holdings data.'],
   ['Covered-call & leveraged ETFs excluded', 'These don’t reflect true ownership of the underlying stocks. For a leveraged ETF, enter the underlying ETF instead and mentally scale the exposure.'],
-  ['Yellow ticker?', 'It just isn’t in our database yet — you can still enter and track it as-is.'],
+  ['Yellow ticker?', 'It just isn’t in our database yet, but you can still enter and track it as-is.'],
   ['Commodities', 'Type the asset name directly: “Gold” instead of GLD, “Silver” instead of SLV, “Copper” instead of CPER.'],
-  ['“Untracked”', 'The slice we can’t break down further — funds with too many positions to list, or only partial public data. Your total is still accurate.'],
+  ['“Untracked”', 'The slice we can’t break down further: funds with too many positions to list, or only partial public data. Your total is still accurate.'],
 ];
 
 export default function HowItWorksModal({ onClose }) {
