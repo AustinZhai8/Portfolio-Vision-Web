@@ -94,7 +94,7 @@ function OtpInput({ email, type, onVerified, onBack }) {
               onKeyDown={(e) => handleKeyDown(i, e)}
               onPaste={handlePaste}
               className="pv-input"
-              style={{ width: 46, height: 48, textAlign: 'center', fontSize: 18, fontWeight: 700, padding: 0, borderColor: error ? 'var(--red)' : 'transparent' }}
+              style={{ flex: 1, minWidth: 0, maxWidth: 46, height: 48, textAlign: 'center', fontSize: 18, fontWeight: 700, padding: 0, borderColor: error ? 'var(--red)' : 'transparent' }}
             />
           ))}
         </div>

@@ -64,17 +64,17 @@ function PositionRow({ row, onChange, onRemove, onTickerBlur, isUnknown }) {
   const set = (field, val) => onChange(row.id, field, val);
   const isShares = row.inputType === 'shares';
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '108px 1fr auto auto 28px', gap: 8, alignItems: 'center', padding: '10px 0' }}>
+    <div className="pos-row">
       <input
         value={row.ticker}
         maxLength={8}
         placeholder="Ticker"
         onChange={(e) => set('ticker', e.target.value.toUpperCase())}
         onBlur={() => onTickerBlur(row.id)}
-        className="pv-input"
+        className="pv-input pos-ticker"
         style={{ fontWeight: 700, letterSpacing: '0.03em', color: isUnknown ? 'var(--amber)' : 'var(--text)' }}
       />
-      <div style={{ position: 'relative' }}>
+      <div className="pos-value">
         <span style={{ position: 'absolute', left: 13, top: '50%', transform: 'translateY(-50%)', fontSize: 13.5, color: 'var(--text3)', fontWeight: 600, pointerEvents: 'none' }}>{isShares ? '#' : '$'}</span>
         <input
           type="number"
@@ -87,18 +87,21 @@ function PositionRow({ row, onChange, onRemove, onTickerBlur, isUnknown }) {
           style={{ width: '100%', paddingLeft: 28, fontVariantNumeric: 'tabular-nums' }}
         />
       </div>
-      <Seg small value={row.inputType} onChange={(v) => set('inputType', v)}
-        options={[{ value: 'amount', label: '$' }, { value: 'shares', label: '#' }]} />
-      {!isShares ? (
-        <Seg small value={row.currency} onChange={(v) => set('currency', v)}
-          options={[{ value: 'USD', label: 'USD' }, { value: 'CAD', label: 'CAD' }]} />
-      ) : (
-        <span />
-      )}
+      <div className="pos-type">
+        <Seg small value={row.inputType} onChange={(v) => set('inputType', v)}
+          options={[{ value: 'amount', label: '$' }, { value: 'shares', label: '#' }]} />
+      </div>
+      <div className="pos-ccy">
+        {!isShares && (
+          <Seg small value={row.currency} onChange={(v) => set('currency', v)}
+            options={[{ value: 'USD', label: 'USD' }, { value: 'CAD', label: 'CAD' }]} />
+        )}
+      </div>
       <button
         type="button"
         onClick={() => onRemove(row.id)}
         title="Remove"
+        className="pos-del"
         style={{ background: 'none', border: 'none', color: 'var(--text3)', cursor: 'pointer', fontSize: 16, lineHeight: 1, width: 28, height: 28, borderRadius: 999, transition: 'color 0.12s, background 0.12s' }}
         onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--text)'; e.currentTarget.style.background = 'var(--seg-bg)'; }}
         onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text3)'; e.currentTarget.style.background = 'none'; }}
@@ -475,7 +478,7 @@ export default function PortfolioPanel({
 
       {/* Portfolio card */}
       <div className="pv-card" style={{ width: '100%', maxWidth: 620, background: 'var(--card)', borderRadius: 24, border: '1px solid var(--border)', overflow: 'hidden' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px 14px', gap: 12, flexWrap: 'wrap' }}>
+        <div className="pv-card-head" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 24px 14px', gap: 12, flexWrap: 'wrap' }}>
           <div data-tour="switcher" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <PortfolioSwitcher
               portfolios={portfolios}
@@ -505,7 +508,7 @@ export default function PortfolioPanel({
           </div>
         </div>
 
-        <div style={{ padding: '0 24px' }} data-tour="rows">
+        <div className="pv-card-rows" style={{ padding: '0 24px' }} data-tour="rows">
           {sortedRows.map((row) => {
             const hasError = !!rowErrors[row.id];
             const isUnknown = autoType(row.ticker) === 'Unknown' && !!row.ticker;
@@ -538,7 +541,7 @@ export default function PortfolioPanel({
         </div>
 
         {/* Footer */}
-        <div style={{ background: 'var(--card2)', padding: '18px 24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <div className="pv-card-foot" style={{ background: 'var(--card2)', padding: '18px 24px 20px', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
             <span style={{ fontSize: 13, color: 'var(--text2)', fontWeight: 600 }}>{totalLabel}</span>
             <span style={{ fontSize: 24, fontWeight: 700, fontVariantNumeric: 'tabular-nums', color: totalMuted ? 'var(--text3)' : 'var(--text)' }}>

@@ -184,11 +184,68 @@ select.pv-select option { background: var(--card2); color: var(--text); }
   }
 }
 
+/* ── Position row grid (build screen) ────────────────────────────────────── */
+.pos-row {
+  display: grid;
+  grid-template-columns: 108px 1fr auto auto 28px;
+  grid-template-areas: 'ticker value type ccy del';
+  gap: 8px;
+  align-items: center;
+  padding: 10px 0;
+}
+.pos-ticker { grid-area: ticker; }
+.pos-value  { grid-area: value; position: relative; }
+.pos-type   { grid-area: type; display: flex; align-items: center; }
+.pos-ccy    { grid-area: ccy; display: flex; align-items: center; }
+.pos-del    { grid-area: del; }
+
 /* ── Mobile ──────────────────────────────────────────────────────────────── */
 @media (max-width: 767px) {
+  /* Screens & cards: less padding, softer radius */
+  .pv-screen { padding: 24px 14px 48px !important; }
   .pv-hero-title { font-size: 30px !important; }
   .pv-card { border-radius: 18px !important; }
-  /* Results breakdown cards already flex-wrap; make sure each takes full width */
+  .pv-card-head { padding: 14px 16px 12px !important; }
+  .pv-card-rows { padding: 0 16px !important; }
+  .pv-card-foot { padding: 14px 16px 16px !important; }
+
+  /* Header: tighter, smaller logo, compact currency toggle */
+  .app-header { padding: 0 14px !important; gap: 10px !important; }
+  .header-logo { width: 40px !important; height: 40px !important; }
+  [data-tour='display-currency'] button { padding: 5px 10px !important; font-size: 12px !important; }
+
+  /* 16px inputs stop iOS Safari's zoom-on-focus */
+  .pv-input { font-size: 16px; }
+
+  /* Position rows: restack onto two lines so nothing collides */
+  .pos-row {
+    grid-template-columns: 1.1fr 1.4fr 28px;
+    grid-template-areas:
+      'ticker value del'
+      'type   ccy   .';
+    row-gap: 8px;
+    padding: 12px 0;
+  }
+  .pos-ccy { justify-content: flex-end; }
+
+  /* Results: smaller total, hide the weight bar + hint, tighter rows */
+  .pv-total-num { font-size: 34px !important; }
+  .holdings-hint { display: none !important; }
+  .holding-item { padding: 10px 14px !important; gap: 10px !important; }
+  .holding-bar { display: none !important; }
+  .holding-val { width: auto !important; }
+
+  /* Breakdown bars: narrower labels so the bars keep room */
+  .bd-label { width: 104px !important; font-size: 12.5px !important; }
+  .bd-pct { width: 46px !important; }
+
+  /* Portfolio switcher pill */
+  .pf-switch-btn { max-width: 150px !important; font-size: 14px !important; }
+
+  /* Modals */
+  .pv-modal { padding: 22px 18px 20px !important; }
+
+  /* Breakdown cards stack full width */
   .pv-breakdowns > * { min-width: 100% !important; }
   button { min-height: 36px; }
 }

@@ -21,6 +21,7 @@ export default function Modal({ title, onClose, children, width }) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
+        className="pv-modal"
         style={{
           width: width || 440, maxWidth: '100%',
           background: 'var(--card)', borderRadius: 24, padding: '28px 28px 24px',

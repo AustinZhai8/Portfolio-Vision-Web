@@ -114,6 +114,7 @@ function AvatarButton({ user, onOpenAuth }) {
 export default function Header({ displayCurrency, setDisplayCurrency, user, onOpenAuth }) {
   return (
     <header
+      className="app-header"
       style={{
         height: 68, display: 'flex', alignItems: 'center',
         padding: '0 28px', gap: 14, flexShrink: 0,
@@ -122,6 +123,7 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
       <img
         src="/PortfolioVision.png"
         alt="Portfolio Vision"
+        className="header-logo"
         style={{ width: 52, height: 52, objectFit: 'contain' }}
       />
       <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Portfolio Vision</span>

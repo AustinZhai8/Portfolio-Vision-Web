@@ -20,6 +20,7 @@ export default function HorizBar({ name, w, max, animKey }) {
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '7px 0' }}>
       <span
+        className="bd-label"
         style={{
           width: 150, fontSize: 13, color: dimmed ? 'var(--text3)' : 'var(--text2)',
           textAlign: 'left', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
@@ -40,6 +41,7 @@ export default function HorizBar({ name, w, max, animKey }) {
         />
       </div>
       <span
+        className="bd-pct"
         style={{
           width: 52, fontSize: 13, fontWeight: 600, color: dimmed ? 'var(--text3)' : 'var(--text)',
           textAlign: 'right', fontVariantNumeric: 'tabular-nums', flexShrink: 0,

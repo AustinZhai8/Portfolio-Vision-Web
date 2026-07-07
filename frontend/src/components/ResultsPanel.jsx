@@ -45,7 +45,7 @@ export default function ResultsPanel({
         {/* Total */}
         <div data-tour="total" style={{ marginBottom: 32 }}>
           <div style={{ fontSize: 14, color: 'var(--text2)', fontWeight: 600, marginBottom: 6 }}>Total portfolio (est.)</div>
-          <div style={{ fontSize: 46, fontWeight: 800, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
+          <div className="pv-total-num" style={{ fontSize: 46, fontWeight: 800, letterSpacing: '-0.02em', fontVariantNumeric: 'tabular-nums', lineHeight: 1 }}>
             {fmtMoney(portfolioTotal)} <span style={{ fontSize: 18, color: 'var(--text3)', fontWeight: 600 }}>{displayCurrency}</span>
           </div>
         </div>
@@ -54,7 +54,7 @@ export default function ResultsPanel({
         <div data-tour="holdings" style={{ background: 'var(--card)', borderRadius: 20, border: '1px solid var(--border)', overflow: 'hidden', marginBottom: 20 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px 24px 12px', gap: 12 }}>
             <h3 style={{ fontSize: 15, fontWeight: 700 }}>Top holdings</h3>
-            <span style={{ fontSize: 12.5, color: 'var(--text3)' }}>Tap ⓘ to see which funds hold it</span>
+            <span className="holdings-hint" style={{ fontSize: 12.5, color: 'var(--text3)' }}>Tap ⓘ to see which funds hold it</span>
           </div>
           <div>
             {shown.map(([ticker, amount]) => (

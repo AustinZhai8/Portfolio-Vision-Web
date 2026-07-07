@@ -45,6 +45,7 @@ export default function PortfolioSwitcher({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
+        className="pf-switch-btn"
         style={{
           display: 'flex', alignItems: 'center', gap: 8,
           background: 'var(--seg-bg)', border: '1.5px solid ' + (open ? 'var(--accent)' : 'transparent'),

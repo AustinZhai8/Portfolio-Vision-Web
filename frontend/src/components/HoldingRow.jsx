@@ -28,6 +28,7 @@ export default function HoldingRow({ ticker, amount, weight, maxWeight, portfoli
     <div
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
+      className="holding-item"
       style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '11px 20px', background: hov ? 'var(--card2)' : 'transparent', transition: 'background 0.12s', cursor: 'default', position: 'relative' }}
     >
       <CompanyLogo ticker={ticker} size={34} />
@@ -48,7 +49,7 @@ export default function HoldingRow({ ticker, amount, weight, maxWeight, portfoli
         </div>
       </div>
 
-      <div style={{ textAlign: 'right', flexShrink: 0, width: 92 }}>
+      <div className="holding-val" style={{ textAlign: 'right', flexShrink: 0, width: 92 }}>
         <div style={{ fontSize: 14.5, fontWeight: 600, color: 'var(--text)', fontVariantNumeric: 'tabular-nums' }}>{fmtMoney(amount)}</div>
         <div style={{ fontSize: 12.5, color: 'var(--text3)', marginTop: 1, fontVariantNumeric: 'tabular-nums' }}>{weight.toFixed(2)}%</div>
       </div>

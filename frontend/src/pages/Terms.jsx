@@ -5,7 +5,7 @@ export default function Terms() {
   const navigate = useNavigate();
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-      <header style={{ height: 68, display: 'flex', alignItems: 'center', padding: '0 28px', gap: 14, flexShrink: 0 }}>
+      <header className="app-header" style={{ height: 68, display: 'flex', alignItems: 'center', padding: '0 28px', gap: 14, flexShrink: 0 }}>
         <button type="button" onClick={() => navigate('/')} className="pv-btn-ghost" style={{ padding: '7px 16px' }}>← Back</button>
         <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Terms of Service</span>
       </header>
