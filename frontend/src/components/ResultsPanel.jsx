@@ -13,6 +13,7 @@ export default function ResultsPanel({
   animKey,
   portfolio,
   displayCurrency,
+  notice,
   onBack,
   onShowLegal,
 }) {
@@ -41,6 +42,12 @@ export default function ResultsPanel({
         <div style={{ marginBottom: 24 }}>
           <button className="pv-btn-ghost" data-tour="back" onClick={onBack}>← Edit portfolio</button>
         </div>
+
+        {notice && (
+          <div style={{ fontSize: 12.5, color: 'var(--amber)', background: 'rgba(244,185,66,0.08)', border: '1px solid rgba(244,185,66,0.25)', borderRadius: 12, padding: '10px 14px', marginBottom: 24 }}>
+            {notice}
+          </div>
+        )}
 
         {/* Total */}
         <div data-tour="total" style={{ marginBottom: 32 }}>

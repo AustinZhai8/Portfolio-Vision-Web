@@ -39,6 +39,8 @@ export const HOLDINGS_ALIASES = {
   AQN: 'AQN.TO',
   MX: 'MX.TO',
   BAM: 'BAM.TO',
+  BRK: 'BRK.B',
+  BERKSHIRE: 'BRK.B',
   // Internal holdings-list normalizations (foreign-suffix form → existing DB key)
   'SHOP.TO': 'SHOP',
   'BN.TO': 'BN',
@@ -77,6 +79,11 @@ export const PRICE_ALIASES = {
   T: 'T.TO',
   AQN: 'AQN.TO',
   MX: 'MX.TO',
+  // Yahoo needs a dash for share-class suffixes, not a dot
+  BRK: 'BRK-B',
+  BERKSHIRE: 'BRK-B',
+  'BRK.B': 'BRK-B',
+  'BRK.A': 'BRK-A',
   // FINN/FEQT trade on Cboe Canada — Yahoo wants the .NE suffix
   FINN: 'FINN.NE',
   'FINN.TO': 'FINN.NE',

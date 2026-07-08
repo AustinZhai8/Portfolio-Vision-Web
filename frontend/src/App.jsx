@@ -48,6 +48,7 @@ export default function App() {
   const [screen, setScreen] = useState('build');
   const [tourIndex, setTourIndex] = useState(null);
   const [legal, setLegal] = useState(null);
+  const [decomposeNotice, setDecomposeNotice] = useState('');
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -99,9 +100,11 @@ export default function App() {
 
   // Called by PortfolioPanel after it has validated, fetched prices for # rows,
   // and converted everything to { id, ticker, amount, currency } format.
-  function handleDecomposeComputed(mergedRows) {
+  // `notice` carries a one-line warning when a row got excluded (e.g. no live
+  // price available) so the portfolio still decomposes instead of being blocked.
+  function handleDecomposeComputed(mergedRows, notice = '') {
     setCommittedRows(mergedRows);
-    setRowErrors({});
+    setDecomposeNotice(notice);
     setAnimVersion((v) => v + 1);
     setScreen('results');
     window.scrollTo(0, 0);
@@ -162,6 +165,7 @@ export default function App() {
           animKey={animKey}
           portfolio={portfolio}
           displayCurrency={displayCurrency}
+          notice={decomposeNotice}
           onBack={() => { setScreen('build'); window.scrollTo(0, 0); }}
           onShowLegal={setLegal}
         />

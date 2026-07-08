@@ -375,8 +375,10 @@ export default function PortfolioPanel({
   }
 
   // Validates rows, fetches live prices for share rows, converts them to
-  // amount+CAD, and commits via onDecomposeComputed.
-  async function runDecompose(targetRows = rows, { lenient = false } = {}) {
+  // amount+CAD, and commits via onDecomposeComputed. A row whose ticker can't
+  // be priced (unknown, delisted, wrong exchange, etc.) is excluded rather
+  // than blocking the rest of the portfolio from decomposing.
+  async function runDecompose(targetRows = rows) {
     const errors = {};
     for (const row of targetRows) {
       const ticker = row.ticker.trim();
@@ -414,10 +416,9 @@ export default function PortfolioPanel({
       const t = row.ticker.trim().toUpperCase();
       if (prices[t] == null) priceErrors[row.id] = 'Price unavailable';
     }
-    if (Object.keys(priceErrors).length > 0 && !lenient) { setRowErrors(priceErrors); return; }
 
     const mergedRows = targetRows
-      .filter((row) => !(lenient && row.inputType === 'shares' && prices[row.ticker.trim().toUpperCase()] == null))
+      .filter((row) => !(row.inputType === 'shares' && prices[row.ticker.trim().toUpperCase()] == null))
       .map((row) => {
         const ticker = row.ticker.trim().toUpperCase();
         if (row.inputType === 'shares') {
@@ -427,13 +428,26 @@ export default function PortfolioPanel({
         return { id: row.id, ticker, amount: row.amount, currency: row.currency };
       });
 
+    if (targetRows.length > 0 && mergedRows.length === 0) {
+      setRowErrors(priceErrors);
+      setPriceError("Couldn't get a live price for any position, so there's nothing to decompose yet.");
+      return;
+    }
+
     if (shareRows.length > 0) {
       const tickers = [...new Set(shareRows.map((r) => r.ticker.trim().toUpperCase()))];
       const oldest = getOldestFetchedAt(tickers);
       setPricesFetchedAt(oldest ? new Date(oldest) : new Date());
     }
-    setRowErrors(lenient ? priceErrors : {});
-    onDecomposeComputed(mergedRows);
+    // Leave any price-unavailable rows flagged so they're still visible if the
+    // user comes back to Build; the Results screen itself gets a one-line notice
+    // (passed up since this component unmounts once `screen` flips away).
+    setRowErrors(priceErrors);
+    const skipped = [...new Set(shareRows.filter((r) => priceErrors[r.id]).map((r) => r.ticker.trim().toUpperCase()))];
+    const notice = skipped.length > 0
+      ? `Couldn't get a live price for ${skipped.join(', ')}, so ${skipped.length === 1 ? 'it was' : 'they were'} left out of this decomposition.`
+      : '';
+    onDecomposeComputed(mergedRows, notice);
   }
 
   async function handleImport(holdings, summary) {
