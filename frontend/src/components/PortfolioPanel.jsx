@@ -375,9 +375,10 @@ export default function PortfolioPanel({
   }
 
   // Validates rows, fetches live prices for share rows, converts them to
-  // amount+CAD, and commits via onDecomposeComputed. A row whose ticker can't
-  // be priced (unknown, delisted, wrong exchange, etc.) is excluded rather
-  // than blocking the rest of the portfolio from decomposing.
+  // amount+CAD, and commits via onDecomposeComputed. A # (shares) row whose
+  // ticker Yahoo can't price gets switched to $ entry instead of blocking the
+  // rest of the portfolio from decomposing, since shares × unknown price has
+  // no dollar value to compute.
   async function runDecompose(targetRows = rows) {
     const errors = {};
     for (const row of targetRows) {
@@ -414,11 +415,17 @@ export default function PortfolioPanel({
     const priceErrors = {};
     for (const row of shareRows) {
       const t = row.ticker.trim().toUpperCase();
-      if (prices[t] == null) priceErrors[row.id] = 'Price unavailable';
+      if (prices[t] == null) priceErrors[row.id] = 'No live price found. Enter a dollar amount instead.';
+    }
+
+    if (Object.keys(priceErrors).length > 0) {
+      // Can't turn a share count into a dollar value without a price, so switch
+      // these rows to $ entry instead of dropping the position altogether.
+      setRows((prev) => prev.map((r) => (priceErrors[r.id] ? { ...r, inputType: 'amount', amount: '' } : r)));
     }
 
     const mergedRows = targetRows
-      .filter((row) => !(row.inputType === 'shares' && prices[row.ticker.trim().toUpperCase()] == null))
+      .filter((row) => !priceErrors[row.id])
       .map((row) => {
         const ticker = row.ticker.trim().toUpperCase();
         if (row.inputType === 'shares') {
@@ -430,7 +437,7 @@ export default function PortfolioPanel({
 
     if (targetRows.length > 0 && mergedRows.length === 0) {
       setRowErrors(priceErrors);
-      setPriceError("Couldn't get a live price for any position, so there's nothing to decompose yet.");
+      setPriceError("Couldn't get a live price for any position. Switch them to $ and enter an amount instead.");
       return;
     }
 
@@ -445,7 +452,7 @@ export default function PortfolioPanel({
     setRowErrors(priceErrors);
     const skipped = [...new Set(shareRows.filter((r) => priceErrors[r.id]).map((r) => r.ticker.trim().toUpperCase()))];
     const notice = skipped.length > 0
-      ? `Couldn't get a live price for ${skipped.join(', ')}, so ${skipped.length === 1 ? 'it was' : 'they were'} left out of this decomposition.`
+      ? `Couldn't find a live price for ${skipped.join(', ')}, so ${skipped.length === 1 ? "it's" : "they're"} now set to $ entry. Go back and add an amount to include ${skipped.length === 1 ? 'it' : 'them'}.`
       : '';
     onDecomposeComputed(mergedRows, notice);
   }
