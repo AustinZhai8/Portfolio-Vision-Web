@@ -268,4 +268,4 @@ git push
 
 ## About
 
-Built by **Austin Zhai**, second-year Computer Engineering student at UBC. A personal project built to get hands-on experience with full-stack development, API design, and real-world data problems: the kind where the data is messy, the identifiers don't line up, and the "obvious" solution breaks on the second ticker you try.
+Built by **Austin Zhai**, second-year Computer Engineering student at UBC. A personal project built to get hands-on experience with full-stack development, API design, and real-world data problems: the kind where the data is messy, the identifiers don't line up, but the result is a potentially significant impact on people investment journey.
