@@ -31,20 +31,20 @@ Nobody tells you. Portfolio Vision does.
 
 Enter positions by dollar amount or share count, mix USD and CAD per row, or import a broker CSV. Live prices are fetched on decompose.
 
-![Portfolio Vision — portfolio builder screen](docs/screenshots/main-screen.png)
+![Portfolio Vision portfolio builder screen](docs/screenshots/main-screen.png)
 
 ### See what you really own
 
 Every ETF is recursively unwrapped into its underlying companies, duplicate positions are merged, and everything is re-weighted against your total.
 
-![Portfolio Vision — decomposed portfolio results](docs/screenshots/decomposed-portfolio.png)
+![Portfolio Vision decomposed portfolio results](docs/screenshots/decomposed-portfolio.png)
 
 ---
 
 ## Features
 
 **Decomposition**
-- Recursive ETF unwrapping — ETFs holding ETFs are resolved automatically (up to 5 levels deep)
+- Recursive ETF unwrapping, so ETFs holding ETFs are resolved automatically (up to 5 levels deep)
 - Overlapping positions merged, so `AAPL` held directly and via three funds becomes one correctly-weighted row
 - "Which funds hold this?" breakdown on every holding
 - Holdings filtered to ≥ 0.25% weight, with the remainder collapsed into a summary row
@@ -53,7 +53,7 @@ Every ETF is recursively unwrapped into its underlying companies, duplicate posi
 **Input**
 - Enter positions by dollar amount **or** share count
 - Per-row USD/CAD currency toggle, plus a global display-currency toggle
-- Wealthsimple CSV import — auto-populates rows as shares, imports CAD-hedged CDRs at their CAD value, skips options
+- Wealthsimple CSV import: auto-populates rows as shares, imports CAD-hedged CDRs at their CAD value, skips options
 - Rows that can't be priced fall back to dollar entry instead of blocking the whole decomposition
 
 **Analysis**
@@ -62,7 +62,7 @@ Every ETF is recursively unwrapped into its underlying companies, duplicate posi
 - JSON export of decomposed portfolio data
 
 **Platform**
-- Live prices via a Yahoo Finance proxy — TSX, TSX-V, Cboe Canada (NEO), CSE, US exchanges, FX and crypto
+- Live prices via a Yahoo Finance proxy: TSX, TSX-V, Cboe Canada (NEO), CSE, US exchanges, FX and crypto
 - Price cache persisted to `localStorage`
 - Save and load named portfolios (account required)
 - Google OAuth and email/password auth with OTP verification
@@ -96,7 +96,7 @@ User input (ticker + amount, or ticker + shares)
 
 Two things make this non-trivial in practice:
 
-**Ticker identity is ambiguous.** `XEQT` is the ticker you type, `VEQT.TO` is the key its holdings live under, and `XEQT.TO` is the symbol Yahoo Finance will price. The app keeps two independent alias maps — one for holdings resolution, one for pricing — because collapsing them into one breaks a different set of tickers each way.
+**Ticker identity is ambiguous.** `XEQT` is the ticker you type, `VEQT.TO` is the key its holdings live under, and `XEQT.TO` is the symbol Yahoo Finance will price. The app keeps two independent alias maps, one for holdings resolution and one for pricing, because collapsing them into one breaks a different set of tickers each way.
 
 **Weights don't sum to 100.** ETF holdings data is truncated and drifts with the market, so leftover weight is tracked and reported as "Untracked" rather than being normalized away and quietly misrepresenting the portfolio.
 
@@ -122,7 +122,7 @@ Two things make this non-trivial in practice:
 4. Supabase stores users, saved portfolios, and an admin mirror of the ETF holdings data
 5. Response is returned to the frontend
 
-Decomposition itself runs entirely client-side against a bundled dataset — no round-trip, no rate limit, instant results.
+Decomposition itself runs entirely client-side against a bundled dataset: no round-trip, no rate limit, instant results.
 
 ---
 
@@ -166,7 +166,7 @@ portfolio-vision-web/
 │   │   ├── services/             # API clients (fetchPrices.js)
 │   │   ├── lib/                  # SDK clients (supabase.js)
 │   │   ├── utils/                # Pure helpers (decompose, parseHoldingsCsv, colors, format)
-│   │   ├── data/                 # Reference data (etf_data.json — source of truth)
+│   │   ├── data/                 # Reference data (etf_data.json, source of truth)
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   ├── App.css
@@ -194,13 +194,13 @@ portfolio-vision-web/
 └── README.md
 ```
 
-The three conceptual layers map to `frontend/` (React app), `api/` + `backend/` (serverless functions + maintenance scripts), and `database/` (Supabase SQL). `api/` lives at the repo root because Vercel requires it there — it can't be relocated via config. `vercel.json` points the build at `frontend/` and sets the output directory.
+The three conceptual layers map to `frontend/` (React app), `api/` + `backend/` (serverless functions + maintenance scripts), and `database/` (Supabase SQL). `api/` lives at the repo root because Vercel requires it there, and it can't be relocated via config. `vercel.json` points the build at `frontend/` and sets the output directory.
 
 ---
 
 ## Local Development
 
-Price fetching runs through Vercel serverless functions, so use `vercel dev` — **not** `npm run dev`. The plain Vite server doesn't serve `/api/*`, so shares-mode pricing silently fails.
+Price fetching runs through Vercel serverless functions, so use `vercel dev`, **not** `npm run dev`. The plain Vite server doesn't serve `/api/*`, so shares-mode pricing silently fails.
 
 ```bash
 npm install
@@ -221,7 +221,7 @@ npm run import-etf   # sync etf_data.json → Supabase
 
 ## Environment Variables
 
-`.env` lives at the **repo root**, not inside `frontend/` — Vite is configured with `envDir: '..'`.
+`.env` lives at the **repo root**, not inside `frontend/`, because Vite is configured with `envDir: '..'`.
 
 ```
 VITE_SUPABASE_URL=
@@ -235,13 +235,13 @@ Set the same variables in the Vercel project dashboard under Environment Variabl
 
 ## Data & Database
 
-[frontend/src/data/etf_data.json](frontend/src/data/etf_data.json) is the single source of truth for all ETF and stock data (~280 KB, bundled with the app). The Supabase tables (`etf_metadata`, `etf_holdings`, `stock_info`) are **admin-only mirrors** — never queried by the frontend. After editing the JSON:
+[frontend/src/data/etf_data.json](frontend/src/data/etf_data.json) is the single source of truth for all ETF and stock data (~280 KB, bundled with the app). The Supabase tables (`etf_metadata`, `etf_holdings`, `stock_info`) are **admin-only mirrors** and are never queried by the frontend. After editing the JSON:
 
 ```bash
 npm run import-etf
 ```
 
-User-saved portfolios live in the `portfolios` table. [database/002_security_fixes.sql](database/002_security_fixes.sql) enables Row-Level Security on it (owner-only access) and hardens the `delete_user()` account-deletion RPC. There's no migration tooling — run the `.sql` files directly in the Supabase SQL editor, in order.
+User-saved portfolios live in the `portfolios` table. [database/002_security_fixes.sql](database/002_security_fixes.sql) enables Row-Level Security on it (owner-only access) and hardens the `delete_user()` account-deletion RPC. There's no migration tooling, so run the `.sql` files directly in the Supabase SQL editor, in order.
 
 ---
 
@@ -268,4 +268,4 @@ git push
 
 ## About
 
-Built by **Austin Zhai**, second-year Computer Engineering student at UBC. A personal project built to get hands-on experience with full-stack development, API design, and real-world data problems — the kind where the data is messy, the identifiers don't line up, and the "obvious" solution breaks on the second ticker you try.
+Built by **Austin Zhai**, second-year Computer Engineering student at UBC. A personal project built to get hands-on experience with full-stack development, API design, and real-world data problems: the kind where the data is messy, the identifiers don't line up, and the "obvious" solution breaks on the second ticker you try.
