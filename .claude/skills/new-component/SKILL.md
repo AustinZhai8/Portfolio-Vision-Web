@@ -1,3 +1,8 @@
+---
+name: new-component
+description: Conventions and copy-paste templates for building a new UI component in Portfolio Vision (cards, modals, toggles, dropdowns, status messages) matching the existing design system.
+---
+
 # Skill: new-component
 
 Use this skill before building any new UI component in Portfolio Vision. It defines the exact conventions so the result fits the existing design without deviation.

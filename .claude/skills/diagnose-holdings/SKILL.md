@@ -1,3 +1,8 @@
+---
+name: diagnose-holdings
+description: Diagnose why a ticker in Portfolio Vision shows as unknown, is missing from decompose results, won't price, or has the wrong sector/country.
+---
+
 # Skill: diagnose-holdings
 
 Use this skill when a ticker isn't decomposing correctly: it shows up as "unknown" (amber), it disappears from results, its weight looks wrong, or a share-count row can't be priced.

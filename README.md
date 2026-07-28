@@ -1,32 +1,104 @@
+<div align="center">
+
 # Portfolio Vision
 
 **See everything. Invest better.**
 
-[portfoliovision.online](https://portfoliovision.online)
+Your ETFs, broken down into the companies you actually own.
+
+[**portfoliovision.online**](https://portfoliovision.online)
+
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth-3ECF8E?logo=supabase&logoColor=white)
+![Vercel](https://img.shields.io/badge/Vercel-Serverless-000000?logo=vercel&logoColor=white)
+
+</div>
 
 ---
 
-## What it does
+## The problem
 
-Portfolio Vision takes your portfolio of ETFs and stocks, decomposes each ETF into its underlying holdings, and shows you exactly what you own across sector and geographic breakdowns. If you hold VFV, XEQT, and AAPL, you don't just see three positions — you see every company underneath them, weighted correctly, all in one place.
+You own VFV, XEQT, and some AAPL. Your brokerage shows you three rows. But VFV holds 500 companies, XEQT holds four other ETFs which together hold thousands, and AAPL is already sitting inside both of them. So how much Apple do you actually own? What percent of your money is in tech? How much is outside North America?
+
+Nobody tells you. Portfolio Vision does.
+
+---
+
+## Screenshots
+
+### Build your portfolio
+
+Enter positions by dollar amount or share count, mix USD and CAD per row, or import a broker CSV. Live prices are fetched on decompose.
+
+![Portfolio Vision — portfolio builder screen](docs/screenshots/main-screen.png)
+
+### See what you really own
+
+Every ETF is recursively unwrapped into its underlying companies, duplicate positions are merged, and everything is re-weighted against your total.
+
+![Portfolio Vision — decomposed portfolio results](docs/screenshots/decomposed-portfolio.png)
 
 ---
 
 ## Features
 
-- ETF decomposition with recursive depth (ETFs holding ETFs handled automatically)
-- Sector and geographic breakdown with animated horizontal bar charts
-- Input by dollar amount or number of shares
-- Import holdings from a broker CSV (Wealthsimple format) — auto-populates rows as shares, with CAD-hedged CDRs imported at their CAD value and options skipped
-- Per-row currency toggle (USD/CAD) and global USD/CAD display toggle
-- Live price fetching via Yahoo Finance proxy (TSX, TSX-V, NEO/Cboe Canada, CSE, US exchanges, FX, crypto)
-- Price cache persisted to localStorage
-- Holdings filtered to >= 0.25% weight, remainder collapsed into a summary row
-- Sort by value, ticker, or default order
-- Save and load portfolios (requires account)
+**Decomposition**
+- Recursive ETF unwrapping — ETFs holding ETFs are resolved automatically (up to 5 levels deep)
+- Overlapping positions merged, so `AAPL` held directly and via three funds becomes one correctly-weighted row
+- "Which funds hold this?" breakdown on every holding
+- Holdings filtered to ≥ 0.25% weight, with the remainder collapsed into a summary row
+- Untracked weight surfaced explicitly rather than silently rounded away
+
+**Input**
+- Enter positions by dollar amount **or** share count
+- Per-row USD/CAD currency toggle, plus a global display-currency toggle
+- Wealthsimple CSV import — auto-populates rows as shares, imports CAD-hedged CDRs at their CAD value, skips options
+- Rows that can't be priced fall back to dollar entry instead of blocking the whole decomposition
+
+**Analysis**
+- Sector and geographic breakdowns with animated bar charts
+- Sort holdings by value, ticker, or entry order
+- JSON export of decomposed portfolio data
+
+**Platform**
+- Live prices via a Yahoo Finance proxy — TSX, TSX-V, Cboe Canada (NEO), CSE, US exchanges, FX and crypto
+- Price cache persisted to `localStorage`
+- Save and load named portfolios (account required)
 - Google OAuth and email/password auth with OTP verification
-- JSON export of portfolio data
-- Canadian ETFs fully supported in shares mode (VFV.TO, XEQT.TO, FEQT.NE, FINN.NE, etc.)
+- Full mobile layout
+
+---
+
+## How decomposition works
+
+```
+User input (ticker + amount, or ticker + shares)
+        │
+        ▼
+  PortfolioPanel.runDecompose()
+  validate rows → fetch live prices for # rows → shares × priceCAD → dollar amount
+        │
+        ▼
+  App.jsx  ·  committedRows → useMemo
+  build { TICKER: dollarAmountInDisplayCurrency }
+        │
+        ▼
+  decompose.js  ·  decompose(portfolio)
+  for each ticker:
+      ETF   → getHoldings() → recurse (depth ≤ 5)
+      stock → accumulate dollars
+  returns { result: { ticker → amount }, unknown: [] }
+        │
+        ▼
+  ResultsPanel + ChartSection
+```
+
+Two things make this non-trivial in practice:
+
+**Ticker identity is ambiguous.** `XEQT` is the ticker you type, `VEQT.TO` is the key its holdings live under, and `XEQT.TO` is the symbol Yahoo Finance will price. The app keeps two independent alias maps — one for holdings resolution, one for pricing — because collapsing them into one breaks a different set of tickers each way.
+
+**Weights don't sum to 100.** ETF holdings data is truncated and drifts with the market, so leftover weight is tracked and reported as "Untracked" rather than being normalized away and quietly misrepresenting the portfolio.
 
 ---
 
@@ -38,7 +110,7 @@ Portfolio Vision takes your portfolio of ETFs and stocks, decomposes each ETF in
 │   (React)   │        │ (Vercel API fns) │        │  (Supabase)  │
 └─────────────┘        └──────────────────┘        └──────────────┘
         │                       │                          │
-        │                       └─▶ Yahoo Finance proxy    │
+        │                       ├─▶ Yahoo Finance proxy    │
         │                       └─▶ Frankfurter FX proxy   │
         │                                                  │
         └─────────────────── auth (OAuth / OTP) ───────────┘
@@ -46,20 +118,25 @@ Portfolio Vision takes your portfolio of ETFs and stocks, decomposes each ETF in
 
 1. User interacts with the React frontend
 2. Frontend sends price/FX requests to Vercel serverless functions
-3. Backend proxies requests to Yahoo Finance / Frankfurter and shapes the response
-4. Supabase stores users, saved portfolios, and a mirror of the ETF holdings data
-5. Response is sent back to the frontend
+3. Backend proxies to Yahoo Finance / Frankfurter and shapes the response
+4. Supabase stores users, saved portfolios, and an admin mirror of the ETF holdings data
+5. Response is returned to the frontend
+
+Decomposition itself runs entirely client-side against a bundled dataset — no round-trip, no rate limit, instant results.
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React 19, Vite, Tailwind CSS, React Router DOM
-- **Backend:** Vercel serverless functions (Node)
-- **Database/Auth:** Supabase (Postgres + auth)
-- **Data sources:** Yahoo Finance (via proxy), Frankfurter API (FX), Logo.dev (logos)
-- **Hosting:** Vercel
-- **Analytics:** Vercel Analytics + Speed Insights
+| Layer | Stack |
+|---|---|
+| **Frontend** | React 19, Vite 8, React Router 7 |
+| **Styling** | Hand-rolled CSS design system (CSS custom properties + inline styles), Tailwind v4 `@theme` tokens |
+| **Backend** | Vercel serverless functions (Node) |
+| **Database / Auth** | Supabase (Postgres + Auth, RLS-protected) |
+| **Data sources** | Yahoo Finance (proxied), Frankfurter API (FX), Logo.dev (company logos) |
+| **Hosting** | Vercel, auto-deploy from `main` |
+| **Analytics** | Vercel Analytics |
 
 ---
 
@@ -93,7 +170,7 @@ portfolio-vision-web/
 │   │   ├── App.jsx
 │   │   ├── main.jsx
 │   │   ├── App.css
-│   │   └── index.css
+│   │   └── index.css             # Full design system: tokens, utilities, mobile overrides
 │   ├── index.html
 │   ├── vite.config.js
 │   └── eslint.config.js
@@ -110,21 +187,20 @@ portfolio-vision-web/
 │   ├── 001_etf_data.sql          # Tables: etf_metadata, etf_holdings, stock_info
 │   └── 002_security_fixes.sql    # portfolios RLS + hardened delete_user()
 │
+├── docs/screenshots/             # README screenshots
 ├── .env                          # Local env vars (gitignored)
-├── .gitignore
 ├── package.json                  # One package.json for the whole project
-├── package-lock.json
-├── vercel.json                   # Routes /api/* → backend/api/* and sets build paths
+├── vercel.json                   # Routes /api/* and sets build paths
 └── README.md
 ```
 
-The three conceptual layers map to `frontend/` (React app), `api/` + `backend/` (serverless functions + maintenance scripts), and `database/` (Supabase SQL). `api/` lives at the repo root because Vercel requires it there — it can't be relocated via config. `vercel.json` at the root points the build at `frontend/` and sets the output directory.
+The three conceptual layers map to `frontend/` (React app), `api/` + `backend/` (serverless functions + maintenance scripts), and `database/` (Supabase SQL). `api/` lives at the repo root because Vercel requires it there — it can't be relocated via config. `vercel.json` points the build at `frontend/` and sets the output directory.
 
 ---
 
 ## Local Development
 
-This project uses Vercel serverless functions for price fetching, so use `vercel dev` (not `npm run dev`) — otherwise `/api/price` and `/api/fxrate` won't be served and shares-mode price fetching will silently fail.
+Price fetching runs through Vercel serverless functions, so use `vercel dev` — **not** `npm run dev`. The plain Vite server doesn't serve `/api/*`, so shares-mode pricing silently fails.
 
 ```bash
 npm install
@@ -132,9 +208,20 @@ npm install -g vercel
 vercel dev
 ```
 
+Other commands:
+
+```bash
+npm run build        # production build → frontend/dist/
+npm run lint         # eslint over frontend/
+npm run preview      # preview the production build
+npm run import-etf   # sync etf_data.json → Supabase
+```
+
 ---
 
 ## Environment Variables
+
+`.env` lives at the **repo root**, not inside `frontend/` — Vite is configured with `envDir: '..'`.
 
 ```
 VITE_SUPABASE_URL=
@@ -146,21 +233,21 @@ Set the same variables in the Vercel project dashboard under Environment Variabl
 
 ---
 
-## Database
+## Data & Database
 
-Schema lives in [database/](database/). The Supabase tables (`etf_metadata`, `etf_holdings`, `stock_info`) mirror [frontend/src/data/etf_data.json](frontend/src/data/etf_data.json), which remains the source of truth for decomposition logic. To repopulate the tables from the JSON:
+[frontend/src/data/etf_data.json](frontend/src/data/etf_data.json) is the single source of truth for all ETF and stock data (~280 KB, bundled with the app). The Supabase tables (`etf_metadata`, `etf_holdings`, `stock_info`) are **admin-only mirrors** — never queried by the frontend. After editing the JSON:
 
 ```bash
 npm run import-etf
 ```
 
-User-saved portfolios live in the `portfolios` table. `database/002_security_fixes.sql` enables Row-Level Security on it (owner-only access) and hardens the `delete_user()` account-deletion function. There is no migration tooling — run the `.sql` files directly in the Supabase SQL editor, in order.
+User-saved portfolios live in the `portfolios` table. [database/002_security_fixes.sql](database/002_security_fixes.sql) enables Row-Level Security on it (owner-only access) and hardens the `delete_user()` account-deletion RPC. There's no migration tooling — run the `.sql` files directly in the Supabase SQL editor, in order.
 
 ---
 
 ## Deployment
 
-Deployed on Vercel with auto-deploy from the `main` branch on GitHub.
+Deployed on Vercel with auto-deploy from the `main` branch.
 
 ```bash
 git add .
@@ -172,12 +259,13 @@ git push
 
 ## Known Limitations
 
-- ETF holdings data is static and manually maintained in `etf_data.json`. Data coverage is as of May 2026.
-- Yahoo Finance's unofficial API is used for live prices. It is not a guaranteed service and could change without notice.
+- ETF holdings data is static and manually maintained in `etf_data.json`. Coverage is as of **May 2026**.
+- Yahoo Finance's unofficial API is used for live prices. It isn't a guaranteed service and could change without notice.
 - FX conversion for non-USD/CAD currencies treats the raw price as-is and derives the other side via the USD/CAD rate.
+- Holdings weights are point-in-time; funds rebalance continuously, so decomposed values are estimates.
 
 ---
 
 ## About
 
-Built by Austin Zhai, second-year Computer Engineering student at UBC. Personal project built to get hands-on experience with full-stack development, API design, and real-world data problems.
+Built by **Austin Zhai**, second-year Computer Engineering student at UBC. A personal project built to get hands-on experience with full-stack development, API design, and real-world data problems — the kind where the data is messy, the identifiers don't line up, and the "obvious" solution breaks on the second ticker you try.

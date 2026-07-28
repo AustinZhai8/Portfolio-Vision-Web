@@ -1,3 +1,8 @@
+---
+name: add-etf
+description: Add a new ETF, stock, or ticker alias to Portfolio Vision (etf_data.json + decompose.js aliases), then sync Supabase.
+---
+
 # Skill: add-etf
 
 Use this skill when the user wants to add a new ETF, stock alias, commodity alias, or crypto alias to Portfolio Vision — or when they want to know why a ticker doesn't decompose or price correctly.
