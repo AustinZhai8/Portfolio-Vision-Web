@@ -4,6 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Breadcrumbs from '../components/Breadcrumbs';
 import { supabase } from '../lib/supabase';
 import Seg from '../components/Seg';
 
@@ -126,11 +127,15 @@ export default function Settings({ user, displayCurrency, setDisplayCurrency }) 
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
       <header className="app-header" style={{ height: 68, display: 'flex', alignItems: 'center', padding: '0 28px', gap: 14, flexShrink: 0 }}>
         <button type="button" onClick={() => navigate('/')} className="pv-btn-ghost" style={{ padding: '7px 16px' }}>← Back</button>
-        <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Settings</span>
+        <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Portfolio Vision</span>
       </header>
 
       <div className="pv-screen" style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '20px 24px 64px' }}>
         <div style={{ width: '100%', maxWidth: 560 }}>
+          <Breadcrumbs pathname="/settings" />
+          <h1 style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.01em', color: 'var(--text)', marginBottom: 18 }}>
+            Settings
+          </h1>
 
           {/* Account */}
           <div style={card}>

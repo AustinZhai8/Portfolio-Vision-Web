@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { convertAmount, isEtf, isKnownTicker, inferCurrency } from '../utils/decompose';
 import { fmtMoney } from '../utils/format';
 import { fetchPrices, getCachedPrice, getOldestFetchedAt } from '../services/fetchPrices';
@@ -159,7 +160,6 @@ export default function PortfolioPanel({
   onOpenAuth,
   onLoadPortfolio,
   onStartTour,
-  onShowLegal,
 }) {
   const [priceFetching, setPriceFetching] = useState(false);
   const [pricesFetchedAt, setPricesFetchedAt] = useState(null);
@@ -690,8 +690,8 @@ export default function PortfolioPanel({
 
       <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 28, textAlign: 'center' }}>
         Data coverage: ETF holdings · May 2026 ·{' '}
-        <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('privacy'); }}>Privacy</a> ·{' '}
-        <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('terms'); }}>Terms</a>
+        <Link to="/privacy">Privacy</Link> ·{' '}
+        <Link to="/terms">Terms</Link>
       </p>
     </div>
   );

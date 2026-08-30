@@ -2,15 +2,30 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Icons. favicon.svg is the primary mark for modern browsers; the .ico and
+         PNGs cover older browsers, Safari pinned tabs and Android home screens. -->
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0d0d0f" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Company logos are fetched once per holdings row on the results screen. -->
+    <link rel="preconnect" href="https://img.logo.dev" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-    <title>Portfolio Vision</title>
+
+    <!-- Per-route title/description/canonical/OG/JSON-LD are injected at build
+         time by scripts/generate-html.mjs, which rewrites this file into one
+         shell per route. The values below are the '/' defaults and are what
+         `vite dev` serves. Both sides read frontend/src/seo/routes.js. -->
+    <title>Portfolio Vision — See What Your ETFs Actually Hold</title>
   </head>
   <body>
     <script>
@@ -18,6 +33,17 @@
       if (t) document.documentElement.setAttribute('data-theme', t);
     </script>
     <div id="root"></div>
+    <noscript>
+      <div style="max-width: 40rem; margin: 4rem auto; padding: 0 1.5rem; font-family: system-ui, sans-serif; color: #f4f4f6">
+        <h1>Portfolio Vision</h1>
+        <p>
+          Portfolio Vision breaks your ETFs down into the companies you actually own —
+          unwrapping funds recursively, merging overlapping positions, and showing your
+          real sector and country exposure.
+        </p>
+        <p>It needs JavaScript enabled to run. Please turn it on and reload this page.</p>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
-// Single source of truth for the Privacy / Terms copy, shared by the modals
-// (Privacy/TermsModal) and the routed pages (pages/Privacy, pages/Terms).
+// Single source of truth for the Privacy / Terms copy, rendered by the routed
+// pages (pages/Privacy, pages/Terms).
 // Data + a tiny shared LegalSection live together intentionally; fast-refresh
 // isn't relevant for this static content module.
 
@@ -98,7 +98,9 @@ export const TERMS_SECTIONS = [
 export function LegalSection({ title, children }) {
   return (
     <div style={{ marginBottom: 18 }}>
-      <div style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{title}</div>
+      {/* A real heading, not a styled div — these are the section structure of
+          the page and need to appear in the document outline. */}
+      <h2 style={{ fontSize: 13.5, fontWeight: 700, color: 'var(--text)', marginBottom: 4 }}>{title}</h2>
       <div style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.55 }}>{children}</div>
     </div>
   );
