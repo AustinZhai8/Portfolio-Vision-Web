@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import HoldingRow from './HoldingRow';
 import ChartSection from './ChartSection';
 import { fmtMoney } from '../utils/format';
@@ -15,7 +16,6 @@ export default function ResultsPanel({
   displayCurrency,
   notice,
   onBack,
-  onShowLegal,
 }) {
   const allSorted = Object.entries(decomposed).sort(([, a], [, b]) => b - a);
   const totalCount = allSorted.length;
@@ -90,8 +90,8 @@ export default function ResultsPanel({
 
         <p style={{ fontSize: 12, color: 'var(--text3)', marginTop: 24, textAlign: 'center' }}>
           Data coverage: ETF holdings · May 2026 ·{' '}
-          <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('privacy'); }}>Privacy</a> ·{' '}
-          <a href="#" onClick={(e) => { e.preventDefault(); onShowLegal('terms'); }}>Terms</a>
+          <Link to="/privacy">Privacy</Link> ·{' '}
+          <Link to="/terms">Terms</Link>
         </p>
       </div>
     </div>

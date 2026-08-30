@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Per-user account page. Nothing here is useful in a search result and it
+# requires auth anyway.
+Disallow: /settings
+
+Sitemap: https://portfoliovision.online/sitemap.xml

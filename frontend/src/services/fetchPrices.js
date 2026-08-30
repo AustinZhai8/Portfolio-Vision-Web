@@ -13,7 +13,10 @@ export function loadCacheFromStorage() {
 export function saveCache(cache) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cache));
-  } catch {}
+  } catch {
+    // Best-effort only: private browsing and quota-exceeded both throw here.
+    // Losing the cache costs a refetch, so there is nothing to recover from.
+  }
 }
 
 const priceCache = loadCacheFromStorage();
@@ -49,7 +52,12 @@ async function fetchOnePrice(ticker) {
   }
 }
 
-export async function fetchPrices(tickers, usdCadRate, _force = false) {
+// Note: there is no cache-skip path — every call refetches each ticker from
+// /api/price. The cache is written for getCachedPrice()/getOldestFetchedAt()
+// to read, not to short-circuit this function. A `force` flag used to be
+// accepted here and silently ignored; it was removed rather than left as a
+// no-op that implies a behaviour that doesn't exist.
+export async function fetchPrices(tickers, usdCadRate) {
   const now = Date.now();
   const result = {};
   const toFetch = [...new Set(tickers)];

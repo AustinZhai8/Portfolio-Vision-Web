@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite frontend",
-    "build": "vite build frontend",
+    "build": "vite build frontend && node scripts/generate-html.mjs",
     "lint": "eslint frontend",
     "preview": "vite preview frontend",
-    "import-etf": "node backend/scripts/importEtfData.js"
+    "import-etf": "node backend/scripts/importEtfData.js",
+    "gen-icons": "node scripts/generate-icons.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.105.3",

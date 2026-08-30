@@ -39,7 +39,11 @@ export default function CompanyLogo({ ticker, size = 34 }) {
   return (
     <img
       src={`https://img.logo.dev/ticker/${encodeURIComponent(dt)}?token=${LOGO_DEV_KEY}`}
-      alt={dt}
+      alt={`${dt} logo`}
+      width={size}
+      height={size}
+      loading="lazy"
+      decoding="async"
       onError={() => setFailed(true)}
       style={{
         width: size,

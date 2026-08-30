@@ -260,6 +260,12 @@ Mistake: Creating `frontend/.env`. Vite is configured with `envDir: '..'` in `vi
 **R10: Canadian ETFs on Cboe Canada (formerly NEO Exchange) use `.NE` on Yahoo Finance, not `.TO`.**
 Mistake: Mapping `FEQT` → `FEQT.TO` in `PRICE_ALIASES`. Yahoo Finance only serves Cboe Canada listings as `.NE`. The DB key can be `.TO` (it is, for Fidelity ETFs); the PRICE_ALIAS must be `.NE`.
 
+**R11: Adding a route means adding it to `frontend/src/seo/routes.js` AND to `rewrites` in `vercel.json`.**
+Mistake: Adding `<Route path="/about">` in `App.jsx` and nothing else. There is deliberately **no** SPA catch-all rewrite — the build emits one real HTML file per route (`scripts/generate-html.mjs`) so that unknown paths keep a genuine 404 instead of a 200 soft-404. A route missing from `ROUTES` gets no HTML file generated, and a route missing from `rewrites` is not mapped to it, so it hard-404s in production while working perfectly in `vite dev`. The one meta table drives the static shells, the runtime `useSeo()` head, the JSON-LD, and `sitemap.xml`.
+
+**R12: `frontend/src/seo/routes.js` and `schema.js` are imported by Node at build time.**
+Mistake: Adding a JSX element, a `react` import, or `import.meta.env` to either file. `scripts/generate-html.mjs` imports them directly in Node, where all three are syntax or runtime errors. Keep both files inert ESM.
+
 ---
 
 ## Quality Bars (Checkable, Not Adjective)

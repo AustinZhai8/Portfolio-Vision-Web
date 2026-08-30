@@ -1,0 +1,56 @@
+# Portfolio Vision
+
+> A free web app that breaks an ETF portfolio down into the individual companies
+> you actually own. Enter your positions and it recursively unwraps every fund —
+> including ETFs held inside other ETFs — merges overlapping positions, and shows
+> your true exposure by company, sector, and country.
+
+Portfolio Vision exists because brokerages show you funds, not ownership. If you
+hold VFV, XEQT, and some AAPL, your brokerage shows three rows — but VFV holds
+500 companies, XEQT holds four other ETFs which together hold thousands, and
+AAPL already sits inside both. Portfolio Vision resolves that into one accurate
+picture.
+
+## How it works
+
+1. **Add your positions.** Each ETF or stock you own, by dollar amount or share
+   count, in USD or CAD. A Wealthsimple CSV can be imported instead of typing.
+2. **Decomposition runs.** Every ETF is unpacked into its underlying holdings,
+   recursively up to five levels deep, weighted by what you actually hold.
+   This runs entirely client-side against a bundled dataset.
+3. **See what you really hold.** One combined view of every company, sector,
+   and country across the whole portfolio, with a per-holding breakdown of
+   which funds the money comes from.
+
+## Pages
+
+- [Portfolio builder and results](https://portfoliovision.online/): the whole app
+- [Privacy Policy](https://portfoliovision.online/privacy): what is stored, what is never collected, how to delete an account
+- [Terms of Service](https://portfoliovision.online/terms): usage terms and accuracy limits
+
+## Notable behaviour
+
+- **Weights are estimates.** ETF holdings data is point-in-time and funds
+  rebalance continuously. Weightings may be off by roughly a percent.
+- **"Untracked" is surfaced, not hidden.** Holdings weights rarely sum to 100%.
+  The remainder is reported explicitly rather than normalized away, so the
+  portfolio total stays accurate.
+- **Covered-call and leveraged ETFs are excluded.** They do not reflect true
+  ownership of the underlying stocks.
+- **Commodities are entered by name** — "Gold" rather than GLD, "Silver" rather
+  than SLV.
+- **Unrecognized tickers still work.** They are marked in amber and tracked
+  as-is rather than being rejected.
+
+## Coverage and limits
+
+ETF holdings data is manually maintained and current as of May 2026. Live prices
+come from Yahoo Finance via a server-side proxy, covering TSX, TSX-V, Cboe Canada,
+CSE, and US exchanges, plus FX and crypto. FX conversion for currencies other than
+USD/CAD derives the other side via the USD/CAD rate.
+
+Nothing on the site is financial advice.
+
+## About
+
+Built by Austin Zhai. Contact: austinhzhai@gmail.com

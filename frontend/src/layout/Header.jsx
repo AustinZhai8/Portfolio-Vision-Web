@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 import Seg from '../components/Seg';
 
@@ -120,13 +120,22 @@ export default function Header({ displayCurrency, setDisplayCurrency, user, onOp
         padding: '0 28px', gap: 14, flexShrink: 0,
       }}
     >
-      <img
-        src="/PortfolioVision.png"
-        alt="Portfolio Vision"
-        className="header-logo"
-        style={{ width: 52, height: 52, objectFit: 'contain' }}
-      />
-      <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Portfolio Vision</span>
+      {/* Crawlable link home. alt="" because the wordmark beside it already
+          names the site — a screen reader would otherwise announce it twice. */}
+      <Link
+        to="/"
+        style={{ display: 'flex', alignItems: 'center', gap: 14, textDecoration: 'none', color: 'inherit' }}
+      >
+        <img
+          src="/logo-96.png"
+          alt=""
+          width={52}
+          height={52}
+          className="header-logo"
+          style={{ width: 52, height: 52, objectFit: 'contain' }}
+        />
+        <span style={{ fontSize: 16, fontWeight: 700, letterSpacing: '-0.01em' }}>Portfolio Vision</span>
+      </Link>
       <div style={{ flex: 1 }} />
       <div data-tour="display-currency">
         <Seg
