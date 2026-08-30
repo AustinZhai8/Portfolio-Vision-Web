@@ -9,7 +9,14 @@
 
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getRouteMeta, canonicalFor, SITE_NAME, OG_IMAGE, OG_IMAGE_ALT } from './routes.js';
+import {
+  getRouteMeta,
+  canonicalFor,
+  isNotFound,
+  SITE_NAME,
+  OG_IMAGE,
+  OG_IMAGE_ALT,
+} from './routes.js';
 import { schemaFor } from './schema.js';
 
 // Upsert <meta>, keyed by name= or property= depending on the tag family.
@@ -23,8 +30,15 @@ function setMeta(attr, key, content) {
   el.setAttribute('content', content);
 }
 
+// A null href removes the tag. That removal matters: navigating from a real
+// page to a 404 must not leave the previous page's canonical behind, pointing
+// search engines at the wrong URL.
 function setCanonical(href) {
   let el = document.head.querySelector('link[rel="canonical"]');
+  if (href == null) {
+    if (el) el.remove();
+    return;
+  }
   if (!el) {
     el = document.createElement('link');
     el.setAttribute('rel', 'canonical');
@@ -48,11 +62,12 @@ export default function useSeo() {
 
   useEffect(() => {
     const meta = getRouteMeta(pathname);
+    const missing = isNotFound(pathname);
     const url = canonicalFor(pathname);
 
     document.title = meta.title;
     setMeta('name', 'description', meta.description);
-    setCanonical(url);
+    setCanonical(missing ? null : url);
 
     // noindex pages still get "follow" so link equity passes through them.
     setMeta('name', 'robots', meta.index ? 'index, follow' : 'noindex, follow');

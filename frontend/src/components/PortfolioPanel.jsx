@@ -633,7 +633,7 @@ export default function PortfolioPanel({
                   setPriceError('');
                   setPriceStatusMsg('');
                   try {
-                    const prices = await fetchPrices(tickers, undefined, true);
+                    const prices = await fetchPrices(tickers);
                     const priceErrors = {};
                     const mergedRows = rows.map((row) => {
                       const ticker = row.ticker.trim().toUpperCase();

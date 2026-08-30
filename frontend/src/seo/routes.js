@@ -76,3 +76,12 @@ export function getRouteMeta(pathname) {
 export function canonicalFor(pathname) {
   return pathname === '/' ? `${SITE_URL}/` : `${SITE_URL}${pathname}`;
 }
+
+// True for any path with no route of its own. A 404 gets no canonical tag at
+// all: '/404' is not a real URL, and pointing the tag at the bad path the user
+// typed would nominate a broken URL as canonical. Absent is the correct answer.
+export function isNotFound(pathname) {
+  const clean =
+    pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+  return clean === DEFAULT_ROUTE || !ROUTES[clean];
+}

@@ -146,9 +146,9 @@ Decomposition itself runs entirely client-side against a bundled dataset: no rou
 portfolio-vision-web/
 │
 ├── frontend/                     # FRONTEND (React + Vite)
-│   ├── public/                   # Static files served as-is
+│   ├── public/                   # Static files served as-is (icons, robots.txt,
+│   │                             #   llms.txt, og-image.png, site.webmanifest)
 │   ├── src/
-│   │   ├── assets/               # Static images
 │   │   ├── components/           # Reusable UI components
 │   │   │   ├── AuthModal.jsx
 │   │   │   ├── ChartSection.jsx
@@ -160,7 +160,9 @@ portfolio-vision-web/
 │   │   │   ├── PortfolioPanel.jsx
 │   │   │   └── ResultsPanel.jsx
 │   │   ├── layout/               # App shell / global chrome (Header, etc.)
-│   │   ├── pages/                # Route-level views (Settings, Privacy, Terms)
+│   │   ├── pages/                # Route-level views (Settings, Privacy, Terms, NotFound)
+│   │   ├── seo/                  # routes.js meta table, schema.js JSON-LD, useSeo hook
+│   │   ├── legal/                # Shared Privacy / Terms copy
 │   │   ├── hooks/                # Custom React hooks (reserved)
 │   │   ├── context/              # React context providers (reserved)
 │   │   ├── services/             # API clients (fetchPrices.js)
@@ -169,11 +171,14 @@ portfolio-vision-web/
 │   │   ├── data/                 # Reference data (etf_data.json, source of truth)
 │   │   ├── App.jsx
 │   │   ├── main.jsx
-│   │   ├── App.css
 │   │   └── index.css             # Full design system: tokens, utilities, mobile overrides
 │   ├── index.html
 │   ├── vite.config.js
 │   └── eslint.config.js
+│
+├── scripts/                      # Build + asset tooling (Node, not app code)
+│   ├── generate-html.mjs         # Post-build: one HTML shell per route + sitemap.xml
+│   └── generate-icons.mjs        # Favicons, header logo, OG card (needs ffmpeg)
 │
 ├── api/                          # Vercel serverless functions (MUST live at repo root)
 │   ├── price.js                  # Yahoo Finance price proxy

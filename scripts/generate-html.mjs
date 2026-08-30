@@ -21,6 +21,7 @@ import {
   OG_IMAGE,
   OG_IMAGE_ALT,
   canonicalFor,
+  isNotFound,
 } from '../frontend/src/seo/routes.js';
 import { schemaFor } from '../frontend/src/seo/schema.js';
 
@@ -48,7 +49,8 @@ function headFor(pathname) {
   return [
     `<title>${attr(meta.title)}</title>`,
     `<meta name="description" content="${attr(meta.description)}" />`,
-    `<link rel="canonical" href="${attr(url)}" />`,
+    // The 404 shell gets no canonical — see isNotFound() in seo/routes.js.
+    ...(isNotFound(pathname) ? [] : [`<link rel="canonical" href="${attr(url)}" />`]),
     // noindex pages keep "follow" so link equity still flows through them.
     `<meta name="robots" content="${meta.index ? 'index, follow' : 'noindex, follow'}" />`,
 

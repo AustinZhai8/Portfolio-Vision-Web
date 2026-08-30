@@ -55,20 +55,22 @@ export default function App() {
   const [decomposeNotice, setDecomposeNotice] = useState('');
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-    });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
+    // The saved currency is applied here, inside the auth callback, rather than
+    // in a second effect keyed on `user`. Doing it there set state synchronously
+    // during an effect body, which cascades an extra render on every auth event.
+    function applySession(session) {
+      const nextUser = session?.user ?? null;
+      setUser(nextUser);
+      const saved = nextUser?.user_metadata?.defaultCurrency;
+      if (saved === 'USD' || saved === 'CAD') setDisplayCurrency(saved);
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => applySession(session));
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => applySession(session),
+    );
     return () => subscription.unsubscribe();
   }, []);
-
-  // Sync display currency from user metadata on login
-  useEffect(() => {
-    const saved = user?.user_metadata?.defaultCurrency;
-    if (saved === 'USD' || saved === 'CAD') setDisplayCurrency(saved);
-  }, [user]);
 
   // Keep the visible screen in sync with the current tour step
   useEffect(() => {
