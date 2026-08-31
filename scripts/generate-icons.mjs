@@ -28,13 +28,15 @@ function ffmpeg(args) {
 }
 
 // The 1024x1024 master has the hexagon mark inset in roughly the middle 55%
-// of the canvas (measured from its alpha channel: content spans x 251-770,
-// y 207-790 — ~20-25% empty padding on every side). Left uncropped, that
-// padding survives every downscale, so at favicon size the mark reads as a
-// small blob with a wide empty ring around it — smaller than every other
-// tab's icon. Cropping to a square centered on the content first, with a
-// modest margin, makes the mark fill the frame the way a normal favicon does.
-const CONTENT_CROP = 'crop=672:672:175:163';
+// of the canvas (measured from its alpha channel at several thresholds — the
+// edges are hard, not a soft glow, so this isn't an anti-aliasing artifact:
+// content is solid, spanning x 252-770, y 207-790, i.e. ~519x584 on a 1024
+// canvas). Left uncropped, that padding survives every downscale, so at
+// favicon size the mark reads as a small blob with a wide empty ring around
+// it — noticeably smaller than every other tab's icon. Cropped tight here
+// (~8px total buffer around the content, sized to the taller dimension) so
+// the mark fills the frame edge-to-edge the way a normal favicon does.
+const CONTENT_CROP = 'crop=592:592:215:203';
 
 function square(size, outName) {
   ffmpeg([
