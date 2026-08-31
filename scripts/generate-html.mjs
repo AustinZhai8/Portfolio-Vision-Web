@@ -45,6 +45,9 @@ function jsonLd(data) {
 function headFor(pathname) {
   const meta = ROUTES[pathname];
   const url = canonicalFor(pathname);
+  // ogTitle carries the fuller, keyword-rich title for social/search cards.
+  // meta.title stays short for the browser tab (see routes.js).
+  const socialTitle = meta.ogTitle || meta.title;
 
   return [
     `<title>${attr(meta.title)}</title>`,
@@ -56,7 +59,7 @@ function headFor(pathname) {
 
     `<meta property="og:type" content="website" />`,
     `<meta property="og:site_name" content="${attr(SITE_NAME)}" />`,
-    `<meta property="og:title" content="${attr(meta.title)}" />`,
+    `<meta property="og:title" content="${attr(socialTitle)}" />`,
     `<meta property="og:description" content="${attr(meta.description)}" />`,
     `<meta property="og:url" content="${attr(url)}" />`,
     // Absolute URL is required here — scrapers reject relative og:image.
@@ -66,7 +69,7 @@ function headFor(pathname) {
     `<meta property="og:image:alt" content="${attr(OG_IMAGE_ALT)}" />`,
 
     `<meta name="twitter:card" content="summary_large_image" />`,
-    `<meta name="twitter:title" content="${attr(meta.title)}" />`,
+    `<meta name="twitter:title" content="${attr(socialTitle)}" />`,
     `<meta name="twitter:description" content="${attr(meta.description)}" />`,
     `<meta name="twitter:image" content="${attr(OG_IMAGE)}" />`,
 

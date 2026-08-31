@@ -24,7 +24,12 @@ export const DEFAULT_ROUTE = '/404';
 // `breadcrumb` is the trailing crumb label; null means no breadcrumb trail.
 export const ROUTES = {
   '/': {
-    title: 'Portfolio Vision — See What Your ETFs Actually Hold',
+    // Kept short deliberately — this is what shows in the browser tab, and a
+    // long descriptive title there reads as noise.
+    title: 'Portfolio Vision',
+    // The keyword-rich version lives here instead, used for og:title /
+    // twitter:title (getRouteMeta callers fall back to `title` when absent).
+    ogTitle: 'Portfolio Vision — See What Your ETFs Actually Hold',
     description:
       'Break your ETFs down into the companies you actually own. Portfolio Vision unwraps funds recursively, merges overlapping positions, and shows your real sector and country exposure.',
     index: true,

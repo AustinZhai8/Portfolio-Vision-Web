@@ -4,10 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Icons. favicon.svg is the primary mark for modern browsers; the .ico and
-         PNGs cover older browsers, Safari pinned tabs and Android home screens. -->
+    <!-- Icons, generated from docs/brand/PortfolioVision.png by
+         scripts/generate-icons.mjs. favicon.ico is the primary mark; the PNGs
+         cover Safari pinned tabs and Android home screens. (favicon.svg in
+         public/ is a leftover early wordmark, not this logo — deliberately
+         not linked here, since browsers prefer an SVG icon over the .ico when
+         both are declared.) -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="theme-color" content="#0d0d0f" />
@@ -23,9 +27,9 @@
 
     <!-- Per-route title/description/canonical/OG/JSON-LD are injected at build
          time by scripts/generate-html.mjs, which rewrites this file into one
-         shell per route. The values below are the '/' defaults and are what
+         shell per route. The value below is the '/' default and is what
          `vite dev` serves. Both sides read frontend/src/seo/routes.js. -->
-    <title>Portfolio Vision — See What Your ETFs Actually Hold</title>
+    <title>Portfolio Vision</title>
   </head>
   <body>
     <script>

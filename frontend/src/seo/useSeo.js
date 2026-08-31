@@ -64,6 +64,9 @@ export default function useSeo() {
     const meta = getRouteMeta(pathname);
     const missing = isNotFound(pathname);
     const url = canonicalFor(pathname);
+    // og/twitter use the fuller keyword-rich title where set (see routes.js);
+    // the browser tab (document.title) always stays short.
+    const socialTitle = meta.ogTitle || meta.title;
 
     document.title = meta.title;
     setMeta('name', 'description', meta.description);
@@ -72,7 +75,7 @@ export default function useSeo() {
     // noindex pages still get "follow" so link equity passes through them.
     setMeta('name', 'robots', meta.index ? 'index, follow' : 'noindex, follow');
 
-    setMeta('property', 'og:title', meta.title);
+    setMeta('property', 'og:title', socialTitle);
     setMeta('property', 'og:description', meta.description);
     setMeta('property', 'og:url', url);
     setMeta('property', 'og:type', 'website');
@@ -81,7 +84,7 @@ export default function useSeo() {
     setMeta('property', 'og:image:alt', OG_IMAGE_ALT);
 
     setMeta('name', 'twitter:card', 'summary_large_image');
-    setMeta('name', 'twitter:title', meta.title);
+    setMeta('name', 'twitter:title', socialTitle);
     setMeta('name', 'twitter:description', meta.description);
     setMeta('name', 'twitter:image', OG_IMAGE);
 
