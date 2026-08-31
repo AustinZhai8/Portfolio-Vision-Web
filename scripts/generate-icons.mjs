@@ -27,8 +27,21 @@ function ffmpeg(args) {
   });
 }
 
+// The 1024x1024 master has the hexagon mark inset in roughly the middle 55%
+// of the canvas (measured from its alpha channel: content spans x 251-770,
+// y 207-790 — ~20-25% empty padding on every side). Left uncropped, that
+// padding survives every downscale, so at favicon size the mark reads as a
+// small blob with a wide empty ring around it — smaller than every other
+// tab's icon. Cropping to a square centered on the content first, with a
+// modest margin, makes the mark fill the frame the way a normal favicon does.
+const CONTENT_CROP = 'crop=672:672:175:163';
+
 function square(size, outName) {
-  ffmpeg(['-i', SOURCE_LOGO, '-vf', `scale=${size}:${size}:flags=lanczos`, join(PUBLIC, outName)]);
+  ffmpeg([
+    '-i', SOURCE_LOGO,
+    '-vf', `${CONTENT_CROP},scale=${size}:${size}:flags=lanczos`,
+    join(PUBLIC, outName),
+  ]);
 }
 
 // Wrap a PNG in an ICONDIR header. A .ico may contain a PNG payload directly
